@@ -10,15 +10,15 @@ const Reports = () => {
   const [activeTab, setActiveTab] = useState("transactions"); // Active tab state
 
   return (
-    <div className="flex flex-col w-full bg-gray-100 p-6 mt-4">
+    <div className="flex flex-col w-full bg-gray-100 p-6 mt-4 dark:bg-[#404040]">
       {/* Tabs */}
-      <div className="flex space-x-4 border-b border-gray-300 pb-2">
+      <div className="flex space-x-4 border-b border-gray-300 rounded-t-lg pb-2 dark:bg-[#282828]">
         <button
           onClick={() => setActiveTab("transactions")}
           className={`px-4 py-2 transition-all duration-300 ${
             activeTab === "transactions"
               ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-              : "text-gray-600 hover:text-gray-800"
+              : "text-gray-600 hover:text-gray-800  dark:text-white"
           }`}
         >
           Transactions
@@ -28,7 +28,7 @@ const Reports = () => {
           className={`px-4 py-2 transition-all duration-300 ${
             activeTab === "campaignHistory"
               ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-              : "text-gray-600 hover:text-gray-800"
+              : "text-gray-600 hover:text-gray-800  dark:text-white"
           }`}
         >
           Campaign History
@@ -38,7 +38,7 @@ const Reports = () => {
           className={`px-4 py-2 transition-all duration-300 ${
             activeTab === "packageDetails"
               ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-              : "text-gray-600 hover:text-gray-800"
+              : "text-gray-600 hover:text-gray-800  dark:text-white"
           }`}
         >
           Package Details
@@ -48,7 +48,7 @@ const Reports = () => {
           className={`px-4 py-2 transition-all duration-300 ${
             activeTab === "globalReports"
               ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-              : "text-gray-600 hover:text-gray-800"
+              : "text-gray-600 hover:text-gray-800  dark:text-white"
           }`}
         >
           Global Reports
@@ -58,7 +58,7 @@ const Reports = () => {
           className={`px-4 py-2 transition-all duration-300 ${
             activeTab === "deliveredSMS"
               ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-              : "text-gray-600 hover:text-gray-800"
+              : "text-gray-600 hover:text-gray-800  dark:text-white"
           }`}
         >
           Delivered SMS
@@ -68,7 +68,7 @@ const Reports = () => {
           className={`px-4 py-2 transition-all duration-300 ${
             activeTab === "senderStats"
               ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-              : "text-gray-600 hover:text-gray-800"
+              : "text-gray-600 hover:text-gray-800  dark:text-white"
           }`}
         >
           Sender Stats
