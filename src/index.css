@@ -29,7 +29,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #189214;
+  background: #ce9b03;
   transition: 1s;
 }
 
@@ -39,9 +39,9 @@ body {
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background-color: #4caf50; /* Dark mode thumb */
+  background-color: #eab308; /* Dark mode thumb */
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background-color: #3d8b3d; /* Hover effect for dark mode */
+  background-color: #ce9b03; /* Hover effect for dark mode */
 }
