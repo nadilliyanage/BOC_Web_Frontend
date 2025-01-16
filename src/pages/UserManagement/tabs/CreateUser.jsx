@@ -37,7 +37,7 @@ const CreateUser = () => {
         onSubmit={handleSubmit}
         className="w-full max-w-2xl p-6 bg-white rounded-lg shadow-md dark:bg-[#282828] dark:text-white"
       >
-        <h2 className="mb-6 text-2xl font-semibold text-center text-gray-700 dark:text-white">
+        <h2 className="mb-6 text-3xl font-semibold text-center text-gray-700 dark:text-white ">
           Create User
         </h2>
         <div className="flex flex-wrap -mx-2">
@@ -55,7 +55,7 @@ const CreateUser = () => {
               name="userId"
               value={formData.userId}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 dark:text-black"
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#eab308] dark:text-black"
               required
             />
           </div>
@@ -72,7 +72,7 @@ const CreateUser = () => {
               name="userName"
               value={formData.userName}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 dark:text-black"
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#eab308] dark:text-black"
               required
             />
           </div>
@@ -91,7 +91,7 @@ const CreateUser = () => {
               name="department"
               value={formData.department}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 dark:text-black"
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#eab308] dark:text-black"
               required
             />
           </div>
@@ -107,7 +107,7 @@ const CreateUser = () => {
               name="userType"
               value={formData.userType}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 dark:text-black"
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#eab308]  dark:text-black"
               required
             >
               <option value="" disabled>
@@ -132,7 +132,7 @@ const CreateUser = () => {
               name="smsType"
               value={formData.smsType}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 dark:text-black"
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#eab308] dark:text-black"
               required
             >
               <option value="" disabled>
@@ -154,7 +154,7 @@ const CreateUser = () => {
 
         <button
           type="submit"
-          className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full  mt-4 px-4 py-2 text-white bg-[#eab308] rounded-md hover:bg-[#ce9b03] focus:outline-none focus:ring-2 focus:ring-[#a0801f]"
         >
           Create User
         </button>

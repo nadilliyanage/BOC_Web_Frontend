@@ -3,6 +3,9 @@ import { FaUserCircle, FaCaretDown, FaCaretUp } from "react-icons/fa";
 import { FiSun, FiMoon } from "react-icons/fi"; // Import sun and moon icons
 import { useLocation } from "react-router-dom";
 
+// Simulate user role (admin, user1, or user2)
+const userRole = "admin"; // Change this value to "admin", "user1", or "user2" for testing.
+
 const DesktopMenu = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
@@ -35,18 +38,26 @@ const DesktopMenu = () => {
     }
   };
 
+  // Menu items with visibility based on user roles
+  const menuItems = [
+    { href: "/home", label: "Home" },
+    { href: "/inbox", label: "Inbox" },
+    { href: "/contact", label: "Contact" },
+    { href: "/reports", label: "Reports", roles: ["admin", "user1"] }, // Only visible to admin
+    { href: "/sms", label: "SMS" },
+    { href: "/block", label: "BlockNumbers" },
+    { href: "/usermanagement", label: "UserManagement", roles: ["admin"] }, // Only visible to admin
+  ];
+
+  // Filter menu items based on user role
+  const visibleMenuItems = menuItems.filter(
+    (item) => !item.roles || item.roles.includes(userRole)
+  );
+
   return (
     <div className="hidden lg:flex space-x-4 gap-5 items-center relative">
       {/* Navigation Links */}
-      {[
-        { href: "/home", label: "Home" },
-        { href: "/inbox", label: "Inbox" },
-        { href: "/contact", label: "Contact" },
-        { href: "/reports", label: "Reports" },
-        { href: "/sms", label: "SMS" },
-        { href: "/block", label: "BlockNumbers" },
-        { href: "/usermanagement", label: "UserManagemnt" },
-      ].map(({ href, label }) => (
+      {visibleMenuItems.map(({ href, label }) => (
         <a
           key={href}
           href={href}
