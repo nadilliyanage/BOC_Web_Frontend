@@ -8,6 +8,7 @@ import ContactPage from "../pages/ContactList";
 import ReportsPage from "../pages/Reports/Reports";
 import SmsPage from "../pages/SMS/SMS";
 import BlockNumbersPage from "../pages/NumberBlocking";
+import UserManagement from "../pages/UserManagement/UserManagement";
 
 const RouterComponent = () => {
   return (
@@ -18,6 +19,7 @@ const RouterComponent = () => {
       <Route path="/reports" element={<ReportsPage />} />
       <Route path="/sms" element={<SmsPage />} />
       <Route path="/block" element={<BlockNumbersPage />} />
+      <Route path="/usermanagement" element={<UserManagement />} />
       {/* Add a default route */}
       <Route path="*" element={<HomePage />} />
     </Routes>

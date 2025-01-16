@@ -45,6 +45,7 @@ const DesktopMenu = () => {
         { href: "/reports", label: "Reports" },
         { href: "/sms", label: "SMS" },
         { href: "/block", label: "BlockNumbers" },
+        { href: "/usermanagement", label: "UserManagemnt" },
       ].map(({ href, label }) => (
         <a
           key={href}
@@ -76,12 +77,6 @@ const DesktopMenu = () => {
         </button>
         {isDropdownOpen && (
           <div className="absolute right-0 mt-2 bg-white shadow-md rounded-md w-40 z-10 dark:bg-gray-800">
-            <a
-              href="/signin"
-              className="block px-4 py-2 text-black hover:bg-gray-100 dark:text-white dark:hover:bg-black"
-            >
-              Sign In
-            </a>
             <a
               href="/signout"
               className="block px-4 py-2 text-black hover:bg-gray-100 dark:text-white dark:hover:bg-black"
