@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import RouterComponent from "./routes/router";
 import logo from "./assets/icon.png";
@@ -7,19 +7,22 @@ import DesktopMenu from "./components/DesktopMenu";
 
 // App component that contains the header and the router for navigation
 const App = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // State for mobile menu
 
   // Toggle the menu for mobile view
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
+  // Toggle dark mode
+
   return (
     <Router>
-      <div className="font-sans">
+      <div className={`font-sans `}>
         {/* Navbar */}
-        <nav className="bg-primary_2 p-4 shadow-lg">
+        <nav className="bg-primary_2 dark:bg-[#181818] p-4 shadow-lg">
           <div className="flex justify-between items-center">
+            {/* Logo */}
             <div className="hidden lg:block">
-              <img src={logo} alt="logo" className="w-[8%] " />
+              <img src={logo} alt="logo" className="w-[8%]" />
             </div>
 
             {/* Hamburger Icon for Mobile */}
@@ -39,9 +42,9 @@ const App = () => {
           }`}
           onClick={toggleMenu}
         >
-          <div className="absolute top-0 left-0 bg-white w-64 h-full p-4">
+          <div className="absolute top-0 left-0 bg-white dark:bg-gray-800 text-black dark:text-white w-64 h-full p-4">
             <div className="flex justify-between items-center mb-4">
-              <div className="text-2xl">MyApp</div>
+              <div className="text-2xl">BOC SMS Web</div>
               <button onClick={toggleMenu} className="text-gray-600">
                 <svg
                   className="w-6 h-6"
@@ -94,15 +97,6 @@ const App = () => {
             </ul>
           </div>
         </div>
-
-        {/* Main Content */}
-        {/* <main className="p-4">
-          <h1 className="text-3xl">Welcome to the App</h1>
-          <p>
-            This is a simple mobile-responsive navigation layout with Tailwind
-            CSS.
-          </p>
-        </main> */}
 
         {/* Routing to different pages */}
         <RouterComponent />

@@ -5,6 +5,12 @@
 
 body {
   font-family: "Manrope", sans-serif;
+  @apply bg-white text-black; /* Default Light Mode Styles */
+}
+
+/* Dark mode styles */
+.dark body {
+  @apply bg-[#121212] text-white; /* Dark Mode Styles */
 }
 
 /* Scroll bar  */
@@ -23,6 +29,19 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #189214;
+  background: #ce9b03;
   transition: 1s;
+}
+
+/* Dark mode scroll bar */
+.dark ::-webkit-scrollbar-track {
+  background-color: #333333; /* Dark mode track */
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: #eab308; /* Dark mode thumb */
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: #ce9b03; /* Hover effect for dark mode */
 }

@@ -1,20 +1,20 @@
 import React, { useState } from "react";
-import SendSMS from "./SendSMS";
-import SendCustomizeSMS from "./SendCustomizeSMS";
+import SendSMS from "./tabs/SendSMS";
+import SendCustomizeSMS from "./tabs/SendCustomizeSMS";
 
 const Sms = () => {
   const [activeTab, setActiveTab] = useState("sendSms"); // Active tab state
 
   return (
-    <div className="flex flex-col w-full bg-gray-100 p-6 mt-4">
+    <div className="flex flex-col w-full bg-gray-100 p-6 mt-4 dark:bg-[#404040]">
       {/* Tabs */}
-      <div className="flex space-x-4 border-b border-gray-300 pb-2">
+      <div className="flex space-x-4 border-b border-gray-300 pb-2 rounded-t-lg dark:bg-[#282828]">
         <button
           onClick={() => setActiveTab("sendSms")}
           className={`px-4 py-2 ${
             activeTab === "sendSms"
               ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-              : "text-gray-600 hover:text-gray-800"
+              : "text-gray-600 hover:text-gray-800 dark:text-white"
           }`}
         >
           Send SMS
@@ -24,7 +24,7 @@ const Sms = () => {
           className={`px-4 py-2 ${
             activeTab === "customizeBulk"
               ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-              : "text-gray-600 hover:text-gray-800"
+              : "text-gray-600 hover:text-gray-800 dark:text-white"
           }`}
         >
           Send Customize Bulk Message
@@ -34,7 +34,7 @@ const Sms = () => {
           className={`px-4 py-2 ${
             activeTab === "approveCampaign"
               ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-              : "text-gray-600 hover:text-gray-800"
+              : "text-gray-600 hover:text-gray-800 dark:text-white"
           }`}
         >
           Approve Campaign
@@ -44,7 +44,7 @@ const Sms = () => {
           className={`px-4 py-2 ${
             activeTab === "pendingCampaign"
               ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-              : "text-gray-600 hover:text-gray-800"
+              : "text-gray-600 hover:text-gray-800 dark:text-white"
           }`}
         >
           Pending Campaign
