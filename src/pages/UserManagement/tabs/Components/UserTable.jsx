@@ -1,4 +1,5 @@
 import React from "react";
+import { MdOutlineDeleteOutline, MdEdit } from "react-icons/md";
 
 const UserTable = ({ users, handleUpdate, handleDelete }) => {
   if (users.length === 0) {
@@ -9,23 +10,13 @@ const UserTable = ({ users, handleUpdate, handleDelete }) => {
     <div className="overflow-x-auto">
       <table className="table-auto w-full border-collapse border border-gray-300">
         <thead>
-          <tr className="bg-white dark:bg-dark_2">
-            <th className="border border-gray-300 px-4 py-2 text-left">
-              User ID
-            </th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Name</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">
-              Department
-            </th>
-            <th className="border border-gray-300 px-4 py-2 text-left">
-              User Type
-            </th>
-            <th className="border border-gray-300 px-4 py-2 text-left">
-              SMS Type
-            </th>
-            <th className="border border-gray-300 px-4 py-2 text-left">
-              Actions
-            </th>
+          <tr className="bg-white dark:bg-dark_2 text-center">
+            <th className="border border-gray-300 px-4 py-2 ">User ID</th>
+            <th className="border border-gray-300 px-4 py-2 ">Name</th>
+            <th className="border border-gray-300 px-4 py-2 ">Department</th>
+            <th className="border border-gray-300 px-4 py-2 ">User Type</th>
+            <th className="border border-gray-300 px-4 py-2 ">SMS Type</th>
+            <th className="border border-gray-300 px-4 py-2 ">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -51,16 +42,16 @@ const UserTable = ({ users, handleUpdate, handleDelete }) => {
               </td>
               <td className="border border-gray-300 px-4 py-2 text-center">
                 <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                  className=" text-2xl text-secondary mr-2"
                   onClick={() => handleUpdate(user)}
                 >
-                  Update
+                  <MdEdit />
                 </button>
                 <button
-                  className="bg-red-500 text-white px-4 py-2 rounded"
+                  className=" text-red-600 text-2xl"
                   onClick={() => handleDelete(user.id)}
                 >
-                  Delete
+                  <MdOutlineDeleteOutline />
                 </button>
               </td>
             </tr>

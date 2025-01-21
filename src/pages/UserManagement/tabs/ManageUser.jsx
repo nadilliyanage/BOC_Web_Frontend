@@ -35,15 +35,29 @@ const ManageUser = () => {
       text: "This action cannot be undone!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
+      confirmButtonColor: "#3085d6", // Use hex color for custom colors
+      cancelButtonColor: "#d33", // Hex color for cancel button
       confirmButtonText: "Yes, delete it!",
+      customClass: {
+        popup:
+          "bg-white dark:bg-gray-800 dark:text-white border border-gray-600 rounded-lg shadow-lg", // Modal container
+        title: "dark:text-yellow-400 font-bold text-xl", // Title
+        htmlContainer: "dark:text-gray-300", // Text content
+        confirmButton:
+          "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded", // Confirm button
+        cancelButton:
+          "bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded", // Cancel button
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         axios
           .delete(`http://localhost:8080/api/v1/deleteuser/${id}`)
           .then(() => {
-            toast.success("User deleted successfully!");
+            toast.success("User deleted successfully!", {
+              className:
+                "dark:bg-black text-green-800 dark:text-white rounded-lg shadow-lg", // Tailwind styles for the container
+              bodyClassName: "text-sm font-medium", // Tailwind styles for the body
+            });
             fetchUsers();
           })
           .catch(() => {
@@ -67,7 +81,11 @@ const ManageUser = () => {
     axios
       .put("http://localhost:8080/api/v1/updateuser", currentUser)
       .then(() => {
-        toast.success("User updated successfully!");
+        toast.success("User updated successfully!", {
+          className:
+            "dark:bg-black text-green-800 dark:text-white rounded-lg shadow-lg", // Tailwind styles for the container
+          bodyClassName: "text-sm font-medium", // Tailwind styles for the body
+        });
         fetchUsers();
         handleModalClose();
       })
@@ -97,14 +115,14 @@ const ManageUser = () => {
       />
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="bg-white p-6 rounded shadow-lg w-96">
+          <div className="bg-white p-6 rounded shadow-lg w-96 dark:bg-dark_2">
             <h2 className="text-lg font-bold mb-4">Update User</h2>
             {currentUser &&
               Object.keys(currentUser)
                 .filter((key) => key !== "id") // Exclude the 'id' field
                 .map((key) => (
                   <div className="mb-4" key={key}>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
                       {key.charAt(0).toUpperCase() + key.slice(1)}{" "}
                       {/* Capitalize the field name */}
                     </label>
@@ -119,7 +137,7 @@ const ManageUser = () => {
                             [key]: e.target.value,
                           })
                         }
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#eab308] dark:text-black"
+                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#eab308] dark:text-white dark:bg-dark_3"
                         required
                       >
                         <option value="" disabled>
@@ -143,7 +161,7 @@ const ManageUser = () => {
                             [key]: e.target.value,
                           })
                         }
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#eab308] dark:text-black"
+                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#eab308] dark:text-white dark:bg-dark_3"
                         required
                       >
                         <option value="" disabled>
@@ -167,7 +185,7 @@ const ManageUser = () => {
                     ) : (
                       <input
                         type="text"
-                        className="w-full px-3 py-2 border rounded"
+                        className="w-full px-3 py-2 border rounded dark:text-white dark:bg-dark_3"
                         value={currentUser[key]}
                         onChange={(e) =>
                           setCurrentUser({
