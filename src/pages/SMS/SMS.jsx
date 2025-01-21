@@ -6,9 +6,9 @@ const Sms = () => {
   const [activeTab, setActiveTab] = useState("sendSms"); // Active tab state
 
   return (
-    <div className="flex flex-col w-full bg-gray-100 p-6 mt-4 dark:bg-[#404040]">
+    <div className="flex flex-col w-full bg-gray-100 p-6 mt-4 dark:bg-dark_3">
       {/* Tabs */}
-      <div className="flex space-x-4 border-b border-gray-300 pb-2 rounded-t-lg dark:bg-[#282828]">
+      <div className="flex space-x-4 border-b border-gray-300 pb-2 rounded-t-lg dark:bg-dark_2">
         <button
           onClick={() => setActiveTab("sendSms")}
           className={`px-4 py-2 ${
