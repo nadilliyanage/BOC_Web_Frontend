@@ -1,7 +1,204 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
+import UserTable from "./Components/UserTable";
+import ToastContainerWrapper from "./Components/ToastContainerWrapper";
+import { toast } from "react-toastify";
 
 const ManageUser = () => {
-  return <div>ManageUser</div>;
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = () => {
+    axios
+      .get("http://localhost:8080/api/v1/getusers")
+      .then((response) => {
+        setUsers(response.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("Failed to fetch users.");
+        setLoading(false);
+      });
+  };
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This action cannot be undone!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`http://localhost:8080/api/v1/deleteuser/${id}`)
+          .then(() => {
+            toast.success("User deleted successfully!");
+            fetchUsers();
+          })
+          .catch(() => {
+            toast.error("Failed to delete user.");
+          });
+      }
+    });
+  };
+
+  const handleUpdate = (user) => {
+    setCurrentUser(user);
+    setShowModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    setCurrentUser(null);
+  };
+
+  const handleSubmitUpdate = () => {
+    axios
+      .put("http://localhost:8080/api/v1/updateuser", currentUser)
+      .then(() => {
+        toast.success("User updated successfully!");
+        fetchUsers();
+        handleModalClose();
+      })
+      .catch(() => {
+        toast.error("Failed to update user.");
+      });
+  };
+
+  if (loading) {
+    return <p>Loading users...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
+
+  return (
+    <div className="container mx-auto p-6">
+      <ToastContainerWrapper />
+      <h1 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
+        User List
+      </h1>
+      <UserTable
+        users={users}
+        handleUpdate={handleUpdate}
+        handleDelete={handleDelete}
+      />
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-lg w-96">
+            <h2 className="text-lg font-bold mb-4">Update User</h2>
+            {currentUser &&
+              Object.keys(currentUser)
+                .filter((key) => key !== "id") // Exclude the 'id' field
+                .map((key) => (
+                  <div className="mb-4" key={key}>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      {key.charAt(0).toUpperCase() + key.slice(1)}{" "}
+                      {/* Capitalize the field name */}
+                    </label>
+                    {key === "userType" ? (
+                      <select
+                        id="userType"
+                        name="userType"
+                        value={currentUser[key]}
+                        onChange={(e) =>
+                          setCurrentUser({
+                            ...currentUser,
+                            [key]: e.target.value,
+                          })
+                        }
+                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#eab308] dark:text-black"
+                        required
+                      >
+                        <option value="" disabled>
+                          Select User Type
+                        </option>
+                        <option value="2-Opr1">2-Opr1(Promotional SMS)</option>
+                        <option value="3-Opr2">
+                          3-Opr2(Non Promotional SMS)
+                        </option>
+                        <option value="4-Opr3">4-Opr3(both)</option>
+                        <option value="Loan">Loan SMS</option>
+                      </select>
+                    ) : key === "smsType" ? (
+                      <select
+                        id="smsType"
+                        name="smsType"
+                        value={currentUser[key]}
+                        onChange={(e) =>
+                          setCurrentUser({
+                            ...currentUser,
+                            [key]: e.target.value,
+                          })
+                        }
+                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#eab308] dark:text-black"
+                        required
+                      >
+                        <option value="" disabled>
+                          Select SMS Type
+                        </option>
+                        <option value="ATM">ATM</option>
+                        <option value="BSG">BSG Message</option>
+                        <option value="Branch_loan">
+                          Branch Loan Recoveries
+                        </option>
+                        <option value="BOCIT">BOC IT</option>
+                        <option value="CreditCard">Credit Card</option>
+                        <option value="InwardRemmitance">
+                          Inward Remittance Alerts
+                        </option>
+                        <option value="Loan">Loan Messages</option>
+                        <option value="LankaPay">Lanka Pay</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Remmitance">Remittance</option>
+                      </select>
+                    ) : (
+                      <input
+                        type="text"
+                        className="w-full px-3 py-2 border rounded"
+                        value={currentUser[key]}
+                        onChange={(e) =>
+                          setCurrentUser({
+                            ...currentUser,
+                            [key]: e.target.value,
+                          })
+                        }
+                      />
+                    )}
+                  </div>
+                ))}
+
+            <div className="flex justify-end">
+              <button
+                className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
+                onClick={handleModalClose}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-green-500 text-white px-4 py-2 rounded"
+                onClick={handleSubmitUpdate}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default ManageUser;

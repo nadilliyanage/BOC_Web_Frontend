@@ -4,6 +4,7 @@ import RouterComponent from "./routes/router";
 import logo from "./assets/icon.png";
 import { GiHamburgerMenu } from "react-icons/gi";
 import DesktopMenu from "./components/DesktopMenu";
+import "react-toastify/dist/ReactToastify.css";
 
 // App component that contains the header and the router for navigation
 const App = () => {
