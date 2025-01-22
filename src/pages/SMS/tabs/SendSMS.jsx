@@ -20,7 +20,7 @@ const SendSMS = () => {
             </label>
             <input
               type="text"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
+              className="mt-1 block w-full pl-1 border pl-2 border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
             />
           </div>
 
@@ -29,7 +29,7 @@ const SendSMS = () => {
             <label className="block text-gray-700 font-medium dark:text-white">
               Sender
             </label>
-            <select className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3">
+            <select className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3">
               <option>Select Sender</option>
             </select>
           </div>
@@ -39,7 +39,7 @@ const SendSMS = () => {
             <label className="block text-gray-700 font-medium dark:text-white">
               Address Book(s)
             </label>
-            <select className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3">
+            <select className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3">
               <option>Select Address Book</option>
             </select>
           </div>
@@ -51,7 +51,7 @@ const SendSMS = () => {
             </label>
             <input
               type="datetime-local"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
+              className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
             />
           </div>
 
@@ -71,7 +71,7 @@ const SendSMS = () => {
             <label className="block text-gray-700 font-medium dark:text-white">
               Template
             </label>
-            <select className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3">
+            <select className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3">
               <option>Select Template</option>
             </select>
           </div>
@@ -83,7 +83,7 @@ const SendSMS = () => {
             </label>
             <input
               type="file"
-              className="mt-1 block w-full border border-gray-300  shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white"
+              className="mt-1 block w-full  border border-gray-300  shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white"
             />
           </div>
 
@@ -94,7 +94,7 @@ const SendSMS = () => {
             </label>
             <input
               type="text"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
+              className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
             />
           </div>
 
@@ -107,7 +107,7 @@ const SendSMS = () => {
               maxLength="225"
               value={smsContent}
               onChange={handleSmsContentChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
+              className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
             ></textarea>
             <span className="text-gray-500 text-sm">
               {smsContent.length} / 225
@@ -156,13 +156,13 @@ const SendSMS = () => {
               <div className="flex flex-col h-full space-y-4">
                 {/* Default Bubble Example */}
                 {!smsContent && (
-                  <div className="self-start bg-gray-200 text-gray-800  rounded-lg px-4 py-2 text-sm shadow-sm dark:bg-dark_3 dark:text-white">
+                  <div className="self-start bg-gray-200 text-gray-800  rounded-lg px-4 py-2 text-xs shadow-sm dark:bg-dark_3 dark:text-white">
                     Your SMS text will appear here...
                   </div>
                 )}
                 {/* Dynamic Bubble for SMS Content */}
                 {smsContent && (
-                  <div className="self-start bg-gray-200 text-black rounded-lg px-4 py-2 text-sm shadow-sm break-words">
+                  <div className="self-start w-40 bg-gray-200 text-black rounded-lg px-4 py-2 text-xs shadow-sm break-words">
                     {smsContent}
                   </div>
                 )}
