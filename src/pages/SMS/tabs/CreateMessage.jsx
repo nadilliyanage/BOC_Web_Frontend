@@ -41,6 +41,17 @@ const CreateMessage = () => {
           icon: "success",
           title: "Message Saved",
           text: "Your message has been saved successfully!",
+          confirmButtonColor: "#3085d6",
+          customClass: {
+            popup:
+              "bg-white dark:bg-gray-800 dark:text-white border border-gray-600 rounded-lg shadow-lg", // Modal container
+            title: "dark:text-yellow-400 font-bold text-xl", // Title
+            htmlContainer: "dark:text-gray-300", // Text content
+            confirmButton:
+              "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded", // Confirm button
+            cancelButton:
+              "bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded", // Cancel button
+          },
         });
         setMessageLabel("");
         setSmsContent("");
@@ -103,27 +114,13 @@ const CreateMessage = () => {
         {/* Buttons */}
         <div className="flex justify-end space-x-4 my-8">
           <button
-            className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300"
-            disabled={isSubmitting}
-          >
-            Test Campaign
-          </button>
-          <button
             onClick={handleSave}
-            className={`bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 ${
+            className={`bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary2 ${
               isSubmitting ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={isSubmitting}
           >
             {isSubmitting ? "Saving..." : "Save"}
-          </button>
-          <button
-            className={`bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 ${
-              isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Sending..." : "Send"}
           </button>
         </div>
       </div>

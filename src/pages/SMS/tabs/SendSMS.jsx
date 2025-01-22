@@ -135,7 +135,7 @@ const SendSMS = () => {
           <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">
             Test Campaign
           </button>
-          <button className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">
+          <button className="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary2">
             Send
           </button>
         </div>
