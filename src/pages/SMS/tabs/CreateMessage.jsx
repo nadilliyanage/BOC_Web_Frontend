@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-import Swal from "sweetalert2";
+import SuccessAlert from "../../../components/SuccessAlert";
+import ErrorAlert from "../../../components/ErrorAlert";
+import WarningAlert from "../../../components/WarningAlert";
+import ConfirmAlert from "../../../components/ConfirmAlert";
 
 const CreateMessage = () => {
   const [smsContent, setSmsContent] = useState("");
@@ -17,13 +20,19 @@ const CreateMessage = () => {
 
   const handleSave = async () => {
     if (!messageLabel.trim() || !smsContent.trim()) {
-      Swal.fire({
-        icon: "warning",
+      WarningAlert({
         title: "Validation Error",
         text: "Both Message Label and SMS Content are required.",
       });
       return;
     }
+
+    const isConfirmed = await ConfirmAlert({
+      title: "Are you sure?",
+      text: "Do you want to save this message?",
+    });
+
+    if (!isConfirmed) return; // Exit if not confirmed
 
     setIsSubmitting(true);
 
@@ -37,35 +46,21 @@ const CreateMessage = () => {
       );
 
       if (response.status === 200) {
-        Swal.fire({
-          icon: "success",
+        SuccessAlert({
           title: "Message Saved",
           text: "Your message has been saved successfully!",
-          confirmButtonColor: "#3085d6",
-          customClass: {
-            popup:
-              "bg-white dark:bg-gray-800 dark:text-white border border-gray-600 rounded-lg shadow-lg", // Modal container
-            title: "dark:text-yellow-400 font-bold text-xl", // Title
-            htmlContainer: "dark:text-gray-300", // Text content
-            confirmButton:
-              "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded", // Confirm button
-            cancelButton:
-              "bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded", // Cancel button
-          },
         });
         setMessageLabel("");
         setSmsContent("");
       } else {
-        Swal.fire({
-          icon: "error",
+        ErrorAlert({
           title: "Save Failed",
           text: "Failed to save the message. Please try again.",
         });
       }
     } catch (error) {
       console.error("Error saving message:", error);
-      Swal.fire({
-        icon: "error",
+      ErrorAlert({
         title: "Error",
         text: "An error occurred while saving the message.",
       });
@@ -146,7 +141,7 @@ const CreateMessage = () => {
                 )}
                 {/* Dynamic Bubble for SMS Content */}
                 {smsContent && (
-                  <div className="self-start w-40 bg-gray-200 text-black rounded-lg px-4 py-2 text-xs shadow-sm break-words">
+                  <div className="self-start w-40 bg-gray-200 text-black rounded-lg px-4 py-2 text-xs shadow-sm break-words whitespace-pre-wrap">
                     {smsContent}
                   </div>
                 )}

@@ -6,6 +6,7 @@ const SendSMS = () => {
   const handleSmsContentChange = (event) => {
     setSmsContent(event.target.value);
   };
+
   return (
     <>
       {/* Form Section */}
@@ -156,13 +157,16 @@ const SendSMS = () => {
               <div className="flex flex-col h-full space-y-4">
                 {/* Default Bubble Example */}
                 {!smsContent && (
-                  <div className="self-start bg-gray-200 text-gray-800  rounded-lg px-4 py-2 text-xs shadow-sm dark:bg-dark_3 dark:text-white">
+                  <div className="self-start bg-gray-200 text-gray-800 rounded-lg px-4 py-2 text-xs shadow-sm dark:bg-dark_3 dark:text-white">
                     Your SMS text will appear here...
                   </div>
                 )}
                 {/* Dynamic Bubble for SMS Content */}
                 {smsContent && (
-                  <div className="self-start w-40 bg-gray-200 text-black rounded-lg px-4 py-2 text-xs shadow-sm break-words">
+                  <div
+                    className="self-start w-40 bg-gray-200 text-black rounded-lg px-4 py-2 text-xs shadow-sm break-words"
+                    style={{ whiteSpace: "pre-wrap" }} // This allows newlines to be preserved
+                  >
                     {smsContent}
                   </div>
                 )}
