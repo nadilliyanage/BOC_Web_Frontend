@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Swal from "sweetalert2";
+import ConfirmDialog from "../../../components/ConfirmDialog";
 import UserTable from "./Components/UserTable";
 import ToastContainerWrapper from "./Components/ToastContainerWrapper";
 import { toast } from "react-toastify";
@@ -30,24 +30,10 @@ const ManageUser = () => {
   };
 
   const handleDelete = (id) => {
-    Swal.fire({
+    ConfirmDialog({
       title: "Are you sure?",
       text: "This action cannot be undone!",
       icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6", // Use hex color for custom colors
-      cancelButtonColor: "#d33", // Hex color for cancel button
-      confirmButtonText: "Yes, delete it!",
-      customClass: {
-        popup:
-          "bg-white dark:bg-gray-800 dark:text-white border border-gray-600 rounded-lg shadow-lg", // Modal container
-        title: "dark:text-yellow-400 font-bold text-xl", // Title
-        htmlContainer: "dark:text-gray-300", // Text content
-        confirmButton:
-          "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded", // Confirm button
-        cancelButton:
-          "bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded", // Cancel button
-      },
     }).then((result) => {
       if (result.isConfirmed) {
         axios
