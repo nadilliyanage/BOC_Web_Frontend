@@ -8,6 +8,7 @@ export default {
         primary_1: "#ffffff",
         primary_2: "#E9E9E9",
         secondary: "#FDC60D",
+        secondary2: "#ce9b03",
         dark_1: "#181818",
         dark_2: "#282828",
         dark_3: "#404040",

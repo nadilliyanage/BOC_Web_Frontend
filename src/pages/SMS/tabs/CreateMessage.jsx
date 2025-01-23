@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-import Swal from "sweetalert2";
+import SuccessAlert from "../../../components/SuccessAlert";
+import ErrorAlert from "../../../components/ErrorAlert";
+import WarningAlert from "../../../components/WarningAlert";
+import ConfirmAlert from "../../../components/ConfirmAlert";
 
 const CreateMessage = () => {
   const [smsContent, setSmsContent] = useState("");
@@ -17,13 +20,19 @@ const CreateMessage = () => {
 
   const handleSave = async () => {
     if (!messageLabel.trim() || !smsContent.trim()) {
-      Swal.fire({
-        icon: "warning",
+      WarningAlert({
         title: "Validation Error",
         text: "Both Message Label and SMS Content are required.",
       });
       return;
     }
+
+    const isConfirmed = await ConfirmAlert({
+      title: "Are you sure?",
+      text: "Do you want to save this message?",
+    });
+
+    if (!isConfirmed) return; // Exit if not confirmed
 
     setIsSubmitting(true);
 
@@ -37,24 +46,21 @@ const CreateMessage = () => {
       );
 
       if (response.status === 200) {
-        Swal.fire({
-          icon: "success",
+        SuccessAlert({
           title: "Message Saved",
           text: "Your message has been saved successfully!",
         });
         setMessageLabel("");
         setSmsContent("");
       } else {
-        Swal.fire({
-          icon: "error",
+        ErrorAlert({
           title: "Save Failed",
           text: "Failed to save the message. Please try again.",
         });
       }
     } catch (error) {
       console.error("Error saving message:", error);
-      Swal.fire({
-        icon: "error",
+      ErrorAlert({
         title: "Error",
         text: "An error occurred while saving the message.",
       });
@@ -103,27 +109,13 @@ const CreateMessage = () => {
         {/* Buttons */}
         <div className="flex justify-end space-x-4 my-8">
           <button
-            className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300"
-            disabled={isSubmitting}
-          >
-            Test Campaign
-          </button>
-          <button
             onClick={handleSave}
-            className={`bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 ${
+            className={`bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary2 ${
               isSubmitting ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={isSubmitting}
           >
             {isSubmitting ? "Saving..." : "Save"}
-          </button>
-          <button
-            className={`bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 ${
-              isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Sending..." : "Send"}
           </button>
         </div>
       </div>
@@ -149,7 +141,7 @@ const CreateMessage = () => {
                 )}
                 {/* Dynamic Bubble for SMS Content */}
                 {smsContent && (
-                  <div className="self-start w-40 bg-gray-200 text-black rounded-lg px-4 py-2 text-xs shadow-sm break-words">
+                  <div className="self-start w-40 bg-gray-200 text-black rounded-lg px-4 py-2 text-xs shadow-sm break-words whitespace-pre-wrap">
                     {smsContent}
                   </div>
                 )}

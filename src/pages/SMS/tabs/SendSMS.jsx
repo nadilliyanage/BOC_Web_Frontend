@@ -6,6 +6,7 @@ const SendSMS = () => {
   const handleSmsContentChange = (event) => {
     setSmsContent(event.target.value);
   };
+
   return (
     <>
       {/* Form Section */}
@@ -20,7 +21,7 @@ const SendSMS = () => {
             </label>
             <input
               type="text"
-              className="mt-1 block w-full pl-1 border pl-2 border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
+              className="mt-1 block w-full pl-1 border  border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
             />
           </div>
 
@@ -135,7 +136,7 @@ const SendSMS = () => {
           <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">
             Test Campaign
           </button>
-          <button className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">
+          <button className="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary2">
             Send
           </button>
         </div>
@@ -156,13 +157,16 @@ const SendSMS = () => {
               <div className="flex flex-col h-full space-y-4">
                 {/* Default Bubble Example */}
                 {!smsContent && (
-                  <div className="self-start bg-gray-200 text-gray-800  rounded-lg px-4 py-2 text-xs shadow-sm dark:bg-dark_3 dark:text-white">
+                  <div className="self-start bg-gray-200 text-gray-800 rounded-lg px-4 py-2 text-xs shadow-sm dark:bg-dark_3 dark:text-white">
                     Your SMS text will appear here...
                   </div>
                 )}
                 {/* Dynamic Bubble for SMS Content */}
                 {smsContent && (
-                  <div className="self-start w-40 bg-gray-200 text-black rounded-lg px-4 py-2 text-xs shadow-sm break-words">
+                  <div
+                    className="self-start w-40 bg-gray-200 text-black rounded-lg px-4 py-2 text-xs shadow-sm break-words"
+                    style={{ whiteSpace: "pre-wrap" }} // This allows newlines to be preserved
+                  >
                     {smsContent}
                   </div>
                 )}
