@@ -21,7 +21,7 @@ const SendSMS = () => {
             </label>
             <input
               type="text"
-              className="mt-1 block w-full pl-1 border pl-2 border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
+              className="mt-1 block w-full pl-1 border  border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
             />
           </div>
 

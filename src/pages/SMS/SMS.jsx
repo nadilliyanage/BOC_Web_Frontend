@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import SendSMS from "./tabs/SendSMS";
 import SendCustomizeSMS from "./tabs/SendCustomizeSMS";
 import CreateMessage from "./tabs/CreateMessage";
+import ReviewMessage from "./tabs/ReviewMessage";
 
 const Sms = () => {
   const [activeTab, setActiveTab] = useState("sendSms"); // Active tab state
@@ -41,6 +42,16 @@ const Sms = () => {
           Create Message
         </button>
         <button
+          onClick={() => setActiveTab("reviewMessage")}
+          className={`px-4 py-2 ${
+            activeTab === "reviewMessage"
+              ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
+              : "text-gray-600 hover:text-gray-800 dark:text-white"
+          }`}
+        >
+          Review Message
+        </button>
+        <button
           onClick={() => setActiveTab("approveCampaign")}
           className={`px-4 py-2 ${
             activeTab === "approveCampaign"
@@ -70,6 +81,8 @@ const Sms = () => {
         {activeTab === "customizeBulk" && <SendCustomizeSMS />}
 
         {activeTab === "createMessage" && <CreateMessage />}
+
+        {activeTab === "reviewMessage" && <ReviewMessage />}
 
         {activeTab === "approveCampaign" && (
           <div className="bg-white w-full shadow-md rounded-lg p-6">
