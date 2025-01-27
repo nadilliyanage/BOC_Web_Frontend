@@ -8,6 +8,8 @@ const SendSMS = () => {
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [messageFile, setMessageFile] = useState(null); // Added state for message file
+  const [numberFile, setNumberFile] = useState(null); // State for the number file
+  const [numbers, setNumbers] = useState([]); // State to store fetched numbers
 
   const handleSmsContentChange = (event) => {
     setSmsContent(event.target.value);
@@ -45,6 +47,20 @@ const SendSMS = () => {
     setMessageFile(null); // Clear the message file
     setSmsContent(""); // Clear SMS content
     setSelectedTemplate(""); // Clear selected template
+  };
+
+  // Handle number file upload
+  const handleNumberFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setNumberFile(file); // Set the uploaded number file
+      const fileName = file.name;
+    }
+  };
+
+  const handleCloseNumberFile = () => {
+    setNumberFile(null); // Clear the number file
+    setNumbers([]); // Clear fetched numbers
   };
 
   useEffect(() => {
@@ -119,8 +135,21 @@ const SendSMS = () => {
             </label>
             <input
               type="file"
+              onChange={handleNumberFileUpload}
               className="mt-1 block w-full border border-gray-300  shadow-sm focus:ring-yellow-400 focus:border-yellow-400  dark:text-white"
             />
+            {numberFile && (
+              <div className="mt-2 flex justify-between items-center">
+                <span>{numberFile.name}</span>
+                <button
+                  type="button"
+                  onClick={handleCloseNumberFile}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  Close
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Template */}
@@ -199,10 +228,7 @@ const SendSMS = () => {
             <label className="block text-gray-700 font-medium dark:text-white">
               Phone Numbers
             </label>
-            <input
-              type="text"
-              className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
-            />
+            <input className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"></input>
           </div>
 
           {/* SMS Content */}
@@ -231,21 +257,26 @@ const SendSMS = () => {
             />
             <label
               htmlFor="enforceOutput"
-              className="ml-2 text-gray-700 font-medium dark:text-white"
+              className="ml-2 text-gray-700 dark:text-white"
             >
-              Enforce Output
+              Enforce output
             </label>
           </div>
-        </div>
 
-        {/* Buttons */}
-        <div className="flex justify-end space-x-4 ">
-          <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">
-            Test Campaign
-          </button>
-          <button className="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary2">
-            Send
-          </button>
+          {/* Error Message */}
+          {errorMessage && (
+            <div className="text-red-500 text-center mt-4">{errorMessage}</div>
+          )}
+
+          {/* Submit Button */}
+          <div className="col-span-full mt-4">
+            <button
+              type="button"
+              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >
+              Send SMS
+            </button>
+          </div>
         </div>
       </div>
       <MobilePreview smsContent={smsContent} />
