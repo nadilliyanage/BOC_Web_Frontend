@@ -171,7 +171,7 @@ const ContactList = () => {
                           newNumber: e.target.value,
                         })
                       }
-                      className="border p-1"
+                      className="border p-1 dark:bg-dark_2"
                     />
                     <button
                       onClick={handleEditNumber}

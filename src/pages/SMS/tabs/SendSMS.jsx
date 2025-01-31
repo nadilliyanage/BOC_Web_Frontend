@@ -123,7 +123,7 @@ const SendSMS = () => {
       'input[type="datetime-local"]'
     ).value;
 
-    // Convert the datetime-local value to a format the backend can understand
+    // Convert the datetime-local value to UTC
     const scheduleDate = schedule ? new Date(schedule).toISOString() : null;
 
     const sendMessageDTO = {
@@ -131,7 +131,7 @@ const SendSMS = () => {
       sender,
       numbers,
       message,
-      schedule: scheduleDate, // Send the date/time in ISO format
+      schedule: scheduleDate, // Send the date/time in ISO format (UTC)
     };
 
     try {
