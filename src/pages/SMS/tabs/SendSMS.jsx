@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import MobilePreview from "./components/MobilePreview";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 const SendSMS = () => {
   const [smsContent, setSmsContent] = useState("");
@@ -12,7 +14,7 @@ const SendSMS = () => {
   const [fileList, setFileList] = useState([]);
   const [selectedFileName, setSelectedFileName] = useState("");
   const [phoneNumbers, setPhoneNumbers] = useState("");
-  const [addPhoneNumbers, setAddPhoneNumbers] = useState(""); // New state for add numbers
+  const [addPhoneNumbers, setAddPhoneNumbers] = useState("");
 
   // Fetch file names
   const fetchFileNames = () => {
@@ -139,10 +141,36 @@ const SendSMS = () => {
         "http://localhost:8080/api/v1/send-message",
         sendMessageDTO
       );
-      alert("SMS campaign saved successfully!");
+
+      // Show success message with SweetAlert2
+      Swal.fire({
+        title: "Success!",
+        text: "SMS campaign saved successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
+        background: document.documentElement.classList.contains("dark")
+          ? "#1f2937"
+          : "#ffffff", // Dark mode background
+        color: document.documentElement.classList.contains("dark")
+          ? "#ffffff"
+          : "#000000", // Dark mode text color
+      });
     } catch (error) {
       console.error("Error saving SMS campaign:", error);
-      setErrorMessage("Failed to save SMS campaign. Please try again.");
+
+      // Show error message with SweetAlert2
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to save SMS campaign. Please try again.",
+        icon: "error",
+        confirmButtonText: "OK",
+        background: document.documentElement.classList.contains("dark")
+          ? "#1f2937"
+          : "#ffffff", // Dark mode background
+        color: document.documentElement.classList.contains("dark")
+          ? "#ffffff"
+          : "#000000", // Dark mode text color
+      });
     }
   };
 
