@@ -1,75 +1,63 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import MobilePreview from "./components/MobilePreview";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 const SendSMS = () => {
   const [smsContent, setSmsContent] = useState("");
   const [messageTemplates, setMessageTemplates] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [messageFile, setMessageFile] = useState(null); // Added state for message file
-  const [numberFile, setNumberFile] = useState(null); // State for the number file
-  const [numbers, setNumbers] = useState([]); // State to store fetched numbers
+  const [messageFile, setMessageFile] = useState(null);
+  const [numberFile, setNumberFile] = useState(null);
+  const [fileList, setFileList] = useState([]);
+  const [selectedFileName, setSelectedFileName] = useState("");
+  const [phoneNumbers, setPhoneNumbers] = useState("");
+  const [addPhoneNumbers, setAddPhoneNumbers] = useState("");
 
-  const handleSmsContentChange = (event) => {
-    setSmsContent(event.target.value);
+  // Fetch file names
+  const fetchFileNames = () => {
+    return axios
+      .get("http://localhost:8080/api/v1/contact-list/files", {
+        timeout: 5000,
+      })
+      .then((response) => response.data)
+      .catch((error) => {
+        console.error("Error fetching file names:", error);
+        throw error;
+      });
   };
 
-  const handleTemplateChange = (event) => {
-    const selectedValue = event.target.value;
-    setSelectedTemplate(selectedValue);
-    setSmsContent(selectedValue); // Update SMS content with the selected template
-    setMessageFile(null); // Clear the message file if template is selected
+  // Fetch contacts by file name
+  const fetchContactsByFileName = (fileName) => {
+    return axios
+      .get("http://localhost:8080/api/v1/contact-list/findByFileName", {
+        params: { fileName },
+        timeout: 5000,
+      })
+      .then((response) => response.data)
+      .catch((error) => {
+        console.error("Error fetching contacts by file name:", error);
+        throw error;
+      });
   };
 
-  const handleCloseTemplate = () => {
-    setSelectedTemplate(""); // Clear selected template
-    setSmsContent(""); // Clear SMS content
-  };
+  // Fetch file names on component load
+  useEffect(() => {
+    fetchFileNames()
+      .then((files) => setFileList(files))
+      .catch(() => alert("Error fetching file list."));
+  }, []);
 
-  const handleMessageFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setMessageFile(file); // Set the uploaded file
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setSmsContent(e.target.result); // Update SMS content with file content
-      };
-      reader.onerror = () => {
-        console.error("Error reading file");
-        setErrorMessage("Failed to read the file. Please try again.");
-      };
-      reader.readAsText(file); // Reads file as plain text
-    }
-  };
-
-  const handleCloseMessageFile = () => {
-    setMessageFile(null); // Clear the message file
-    setSmsContent(""); // Clear SMS content
-    setSelectedTemplate(""); // Clear selected template
-  };
-
-  // Handle number file upload
-  const handleNumberFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setNumberFile(file); // Set the uploaded number file
-      const fileName = file.name;
-    }
-  };
-
-  const handleCloseNumberFile = () => {
-    setNumberFile(null); // Clear the number file
-    setNumbers([]); // Clear fetched numbers
-  };
-
+  // Fetch message templates on component load
   useEffect(() => {
     const fetchDropdownOptions = async () => {
       try {
         const response = await axios.get(
           "http://localhost:8080/api/v1/create-message/accepted"
         );
-        setMessageTemplates(response.data); // Assuming response.data is an array of templates
+        setMessageTemplates(response.data);
       } catch (error) {
         console.error("Error fetching dropdown options:", error);
         setErrorMessage("Failed to fetch dropdown options. Please try again.");
@@ -79,21 +67,197 @@ const SendSMS = () => {
     fetchDropdownOptions();
   }, []);
 
+  // Handle file selection
+  const handleFileSelect = (e) => {
+    const fileName = e.target.value;
+    setSelectedFileName(fileName);
+
+    if (fileName) {
+      // Clear Number File if Contact List is selected
+      setNumberFile(null);
+      fetchContactsByFileName(fileName)
+        .then((contacts) => {
+          // Extract the `number` property from each object in the array
+          const numbers = contacts.map((contact) => contact.number);
+          setPhoneNumbers(numbers.join("\n")); // Join phone numbers with newlines
+        })
+        .catch(() => alert("Error fetching contacts for selected file."));
+    } else {
+      setPhoneNumbers(""); // Clear the textarea if no file is selected
+    }
+  };
+
+  // Handle SMS content change
+  const handleSmsContentChange = (event) => {
+    setSmsContent(event.target.value);
+  };
+
+  // Handle template change
+  const handleTemplateChange = (event) => {
+    const selectedValue = event.target.value;
+    setSelectedTemplate(selectedValue);
+    setSmsContent(selectedValue);
+    setMessageFile(null);
+  };
+
+  // Close template
+  const handleCloseTemplate = () => {
+    setSelectedTemplate("");
+    setSmsContent("");
+  };
+
+  // Close list
+  const handleCloseList = () => {
+    setSelectedFileName("");
+    setPhoneNumbers("");
+  };
+
+  // Handle Send SMS button click
+  const handleSendSMS = async () => {
+    const campaignName = document.querySelector('input[type="text"]').value;
+    const sender = document.querySelector("select").value;
+    const numbers = combinedPhoneNumbers
+      .split("\n")
+      .map((num) => num.trim())
+      .filter((num) => num.length > 0);
+    const message = smsContent;
+    const schedule = document.querySelector(
+      'input[type="datetime-local"]'
+    ).value;
+
+    // Convert the datetime-local value to UTC
+    const scheduleDate = schedule ? new Date(schedule).toISOString() : null;
+
+    const sendMessageDTO = {
+      campaignName,
+      sender,
+      numbers,
+      message,
+      schedule: scheduleDate, // Send the date/time in ISO format (UTC)
+    };
+
+    try {
+      await axios.post(
+        "http://localhost:8080/api/v1/send-message",
+        sendMessageDTO
+      );
+
+      // Show success message with SweetAlert2
+      Swal.fire({
+        title: "Success!",
+        text: "SMS campaign saved successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
+        background: document.documentElement.classList.contains("dark")
+          ? "#1f2937"
+          : "#ffffff", // Dark mode background
+        color: document.documentElement.classList.contains("dark")
+          ? "#ffffff"
+          : "#000000", // Dark mode text color
+      });
+    } catch (error) {
+      console.error("Error saving SMS campaign:", error);
+
+      // Show error message with SweetAlert2
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to save SMS campaign. Please try again.",
+        icon: "error",
+        confirmButtonText: "OK",
+        background: document.documentElement.classList.contains("dark")
+          ? "#1f2937"
+          : "#ffffff", // Dark mode background
+        color: document.documentElement.classList.contains("dark")
+          ? "#ffffff"
+          : "#000000", // Dark mode text color
+      });
+    }
+  };
+
+  // Handle message file upload
+  const handleMessageFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setMessageFile(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setSmsContent(e.target.result);
+      };
+      reader.onerror = () => {
+        console.error("Error reading file");
+        setErrorMessage("Failed to read the file. Please try again.");
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  // Close message file
+  const handleCloseMessageFile = () => {
+    setMessageFile(null);
+    setSmsContent("");
+    setSelectedTemplate("");
+  };
+
+  // Handle number file upload
+  const handleNumberFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setNumberFile(file);
+      setSelectedFileName(""); // Clear Contact List selection
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target.result;
+        const numbers = content
+          .split("\n") // Split by newlines
+          .map((line) => line.trim()) // Trim each line
+          .filter((line) => line.length > 0); // Remove empty lines
+        setPhoneNumbers(numbers.join("\n")); // Join numbers with newlines
+      };
+      reader.onerror = () => {
+        console.error("Error reading file");
+        setErrorMessage("Failed to read the file. Please try again.");
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  // Close number file
+  const handleCloseNumberFile = () => {
+    setNumberFile(null);
+    setPhoneNumbers("");
+  };
+
+  // Handle Add phone numbers change
+  const handleAddPhoneNumbersChange = (event) => {
+    const value = event.target.value;
+    setAddPhoneNumbers(value);
+  };
+
+  // Combine phone numbers from contact list/number file and Add phone numbers
+  const combinedPhoneNumbers = `${phoneNumbers}${
+    phoneNumbers && addPhoneNumbers ? "\n" : ""
+  }${addPhoneNumbers
+    .split(/[,\n]/) // Split by commas or newlines
+    .map((num) => num.trim()) // Trim each number
+    .filter((num) => num.length > 0) // Remove empty entries
+    .join("\n")}`; // Join with newlines
+
   return (
     <>
       {/* Form Section */}
       <div className="bg-white w-full md:w-11/12 shadow-md rounded-b-lg p-6 mr-0 md:mr-6 dark:bg-[#282828]">
         <h1 className="text-lg font-bold mb-4">Send SMS</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Campaign Name */}
           <div>
             <label className="block text-gray-700 font-medium dark:text-white">
               Campaign Name
             </label>
             <input
+              placeholder="Enter Campaign Name"
               type="text"
-              className="mt-1 block w-full pl-1 border  border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
+              className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
             />
           </div>
 
@@ -104,17 +268,52 @@ const SendSMS = () => {
             </label>
             <select className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3">
               <option>Select Sender</option>
+              <option value={"BOC IT"}>BOC IT</option>
             </select>
           </div>
 
-          {/* Address Book */}
+          {/* Contact List Dropdown */}
           <div>
             <label className="block text-gray-700 font-medium dark:text-white">
-              Address Book(s)
+              Contact List
             </label>
-            <select className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3">
-              <option>Select Address Book</option>
+            <select
+              value={selectedFileName}
+              onChange={handleFileSelect}
+              className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
+              disabled={!!numberFile} // Disable if Number File is uploaded
+            >
+              <option value="">Select Contact List</option>
+              {fileList.map((fileName, index) => (
+                <option key={index} value={fileName}>
+                  {fileName}
+                </option>
+              ))}
             </select>
+            {selectedFileName && (
+              <div className="flex justify-end mt-2">
+                <button
+                  type="button"
+                  onClick={handleCloseList}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  Close List
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Phone Numbers Textarea */}
+          <div className="mt-4">
+            <label className="block text-gray-700 font-medium dark:text-white">
+              Phone Numbers
+            </label>
+            <textarea
+              value={combinedPhoneNumbers} // Display combined phone numbers
+              readOnly
+              className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
+              rows="6"
+            ></textarea>
           </div>
 
           {/* Schedule */}
@@ -136,7 +335,8 @@ const SendSMS = () => {
             <input
               type="file"
               onChange={handleNumberFileUpload}
-              className="mt-1 block w-full border border-gray-300  shadow-sm focus:ring-yellow-400 focus:border-yellow-400  dark:text-white"
+              className="mt-1 block w-full border border-gray-300 shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white"
+              disabled={!!selectedFileName} // Disable if Contact List is selected
             />
             {numberFile && (
               <div className="mt-2 flex justify-between items-center">
@@ -193,11 +393,11 @@ const SendSMS = () => {
             </label>
             <input
               type="file"
-              className="mt-1 block w-full  border border-gray-300  shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white"
+              className="mt-1 block w-full border border-gray-300 shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white"
             />
           </div>
 
-          {/* Message file*/}
+          {/* Message File */}
           <div>
             <label className="block text-gray-700 font-medium dark:text-white">
               Message File
@@ -223,12 +423,18 @@ const SendSMS = () => {
             )}
           </div>
 
-          {/* Phone Numbers */}
+          {/* Add Phone Numbers */}
           <div>
             <label className="block text-gray-700 font-medium dark:text-white">
-              Phone Numbers
+              Add Phone Numbers
             </label>
-            <input className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"></input>
+            <textarea
+              value={addPhoneNumbers}
+              onChange={handleAddPhoneNumbersChange}
+              placeholder="Enter multiple phone numbers, separated by commas or newlines"
+              className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
+              rows="3"
+            />
           </div>
 
           {/* SMS Content */}
@@ -240,7 +446,7 @@ const SendSMS = () => {
               maxLength="225"
               value={smsContent}
               onChange={handleSmsContentChange}
-              disabled={messageFile || selectedTemplate} // Disable if message file or template is selected
+              disabled={messageFile || selectedTemplate}
               className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
             ></textarea>
             <span className="text-gray-500 text-sm">
@@ -272,6 +478,7 @@ const SendSMS = () => {
           <div className="col-span-full mt-4">
             <button
               type="button"
+              onClick={handleSendSMS}
               className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               Send SMS
@@ -280,7 +487,6 @@ const SendSMS = () => {
         </div>
       </div>
       <MobilePreview smsContent={smsContent} />
-      {/* Use MobilePreview component */}
     </>
   );
 };
