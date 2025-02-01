@@ -124,8 +124,10 @@ const SendSMS = () => {
     const schedule = document.querySelector(
       'input[type="datetime-local"]'
     ).value;
+    const removeBlockedNumbers = document.querySelector(
+      "#removeBlockedNumbers"
+    ).checked; // Get checkbox value
 
-    // Convert the datetime-local value to UTC
     const scheduleDate = schedule ? new Date(schedule).toISOString() : null;
 
     const sendMessageDTO = {
@@ -133,7 +135,8 @@ const SendSMS = () => {
       sender,
       numbers,
       message,
-      schedule: scheduleDate, // Send the date/time in ISO format (UTC)
+      schedule: scheduleDate,
+      removeBlockedNumbers, // Include checkbox value
     };
 
     try {
@@ -150,10 +153,10 @@ const SendSMS = () => {
         confirmButtonText: "OK",
         background: document.documentElement.classList.contains("dark")
           ? "#1f2937"
-          : "#ffffff", // Dark mode background
+          : "#ffffff",
         color: document.documentElement.classList.contains("dark")
           ? "#ffffff"
-          : "#000000", // Dark mode text color
+          : "#000000",
       });
     } catch (error) {
       console.error("Error saving SMS campaign:", error);
@@ -161,15 +164,17 @@ const SendSMS = () => {
       // Show error message with SweetAlert2
       Swal.fire({
         title: "Error!",
-        text: "Failed to save SMS campaign. Please try again.",
+        text:
+          error.response?.data ||
+          "Failed to save SMS campaign. Please try again.",
         icon: "error",
         confirmButtonText: "OK",
         background: document.documentElement.classList.contains("dark")
           ? "#1f2937"
-          : "#ffffff", // Dark mode background
+          : "#ffffff",
         color: document.documentElement.classList.contains("dark")
           ? "#ffffff"
-          : "#000000", // Dark mode text color
+          : "#000000",
       });
     }
   };
@@ -386,15 +391,18 @@ const SendSMS = () => {
             )}
           </div>
 
-          {/* Block Number File */}
-          <div>
-            <label className="block text-gray-700 font-medium dark:text-white">
-              Block Number File
-            </label>
+          <div className="flex items-center mt-1">
             <input
-              type="file"
-              className="mt-1 block w-full border border-gray-300 shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white"
+              type="checkbox"
+              id="removeBlockedNumbers"
+              className="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-400"
             />
+            <label
+              htmlFor="removeBlockedNumbers"
+              className="ml-2 text-gray-700 dark:text-white"
+            >
+              Remove blocked numbers
+            </label>
           </div>
 
           {/* Message File */}
