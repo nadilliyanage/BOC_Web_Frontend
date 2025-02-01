@@ -8,7 +8,7 @@ const MobilePreview = ({ smsContent }) => {
       </h2>
       <div className="relative flex justify-center items-center bg-gray-50 border rounded-lg p-6 dark:bg-[#282828]">
         {/* Phone Mockup */}
-        <div className="relative h-[30rem] w-[15rem] bg-black rounded-3xl shadow-lg overflow-hidden">
+        <div className="relative h-[37rem] w-[20rem] bg-black rounded-3xl shadow-lg overflow-hidden">
           {/* Camera Notch */}
           <div className="absolute top-0 w-full h-6 bg-gray-800 rounded-t-3xl dark:bg-[#121212]"></div>
           {/* Screen */}
@@ -16,14 +16,14 @@ const MobilePreview = ({ smsContent }) => {
             <div className="flex flex-col h-full space-y-4">
               {/* Default Bubble Example */}
               {!smsContent && (
-                <div className="self-start bg-gray-200 text-gray-800 rounded-lg px-4 py-2 text-xs shadow-sm dark:bg-dark_3 dark:text-white">
+                <div className="self-start bg-gray-200 text-gray-800 rounded-lg px-4 py-2 text-sm shadow-sm dark:bg-dark_3 dark:text-white">
                   Your SMS text will appear here...
                 </div>
               )}
               {/* Dynamic Bubble for SMS Content */}
               {smsContent && (
                 <div
-                  className="self-start w-40 bg-gray-200 text-black rounded-lg px-4 py-2 text-xs shadow-sm break-words"
+                  className="self-start w-40 bg-gray-200 text-black rounded-lg px-4 py-2 text-sm shadow-sm break-words"
                   style={{ whiteSpace: "pre-wrap" }} // This allows newlines to be preserved
                 >
                   {smsContent}

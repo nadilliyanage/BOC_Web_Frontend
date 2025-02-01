@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import MobilePreview from "./components/MobilePreview";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
+import MobilePreview from "./components/MobilePreview";
 
 const SendSMS = () => {
   const [smsContent, setSmsContent] = useState("");
@@ -15,6 +15,7 @@ const SendSMS = () => {
   const [selectedFileName, setSelectedFileName] = useState("");
   const [phoneNumbers, setPhoneNumbers] = useState("");
   const [addPhoneNumbers, setAddPhoneNumbers] = useState("");
+  const [removeBlockedNumbers, setRemoveBlockedNumbers] = useState(false); // Checkbox state
 
   // Fetch file names
   const fetchFileNames = () => {
@@ -79,7 +80,7 @@ const SendSMS = () => {
         .then((contacts) => {
           // Extract the `number` property from each object in the array
           const numbers = contacts.map((contact) => contact.number);
-          setPhoneNumbers(numbers.join("\n")); // Join phone numbers with newlines
+          setPhoneNumbers(numbers.join(",")); // Join phone numbers with commas
         })
         .catch(() => alert("Error fetching contacts for selected file."));
     } else {
@@ -117,9 +118,9 @@ const SendSMS = () => {
     const campaignName = document.querySelector('input[type="text"]').value;
     const sender = document.querySelector("select").value;
     const numbers = combinedPhoneNumbers
-      .split("\n")
-      .map((num) => num.trim())
-      .filter((num) => num.length > 0);
+      .split(",") // Split by commas
+      .map((num) => num.trim()) // Trim each number
+      .filter((num) => num.length > 0); // Remove empty entries
     const message = smsContent;
     const schedule = document.querySelector(
       'input[type="datetime-local"]'
@@ -128,6 +129,7 @@ const SendSMS = () => {
       "#removeBlockedNumbers"
     ).checked; // Get checkbox value
 
+    // Convert the datetime-local value to UTC
     const scheduleDate = schedule ? new Date(schedule).toISOString() : null;
 
     const sendMessageDTO = {
@@ -135,7 +137,7 @@ const SendSMS = () => {
       sender,
       numbers,
       message,
-      schedule: scheduleDate,
+      schedule: scheduleDate, // Send the date/time in ISO format (UTC)
       removeBlockedNumbers, // Include checkbox value
     };
 
@@ -153,10 +155,10 @@ const SendSMS = () => {
         confirmButtonText: "OK",
         background: document.documentElement.classList.contains("dark")
           ? "#1f2937"
-          : "#ffffff",
+          : "#ffffff", // Dark mode background
         color: document.documentElement.classList.contains("dark")
           ? "#ffffff"
-          : "#000000",
+          : "#000000", // Dark mode text color
       });
     } catch (error) {
       console.error("Error saving SMS campaign:", error);
@@ -171,10 +173,10 @@ const SendSMS = () => {
         confirmButtonText: "OK",
         background: document.documentElement.classList.contains("dark")
           ? "#1f2937"
-          : "#ffffff",
+          : "#ffffff", // Dark mode background
         color: document.documentElement.classList.contains("dark")
           ? "#ffffff"
-          : "#000000",
+          : "#000000", // Dark mode text color
       });
     }
   };
@@ -213,10 +215,10 @@ const SendSMS = () => {
       reader.onload = (e) => {
         const content = e.target.result;
         const numbers = content
-          .split("\n") // Split by newlines
+          .split(/[,\n]/) // Split by commas or newlines
           .map((line) => line.trim()) // Trim each line
           .filter((line) => line.length > 0); // Remove empty lines
-        setPhoneNumbers(numbers.join("\n")); // Join numbers with newlines
+        setPhoneNumbers(numbers.join(",")); // Join numbers with commas
       };
       reader.onerror = () => {
         console.error("Error reading file");
@@ -240,12 +242,12 @@ const SendSMS = () => {
 
   // Combine phone numbers from contact list/number file and Add phone numbers
   const combinedPhoneNumbers = `${phoneNumbers}${
-    phoneNumbers && addPhoneNumbers ? "\n" : ""
+    phoneNumbers && addPhoneNumbers ? "," : ""
   }${addPhoneNumbers
     .split(/[,\n]/) // Split by commas or newlines
     .map((num) => num.trim()) // Trim each number
     .filter((num) => num.length > 0) // Remove empty entries
-    .join("\n")}`; // Join with newlines
+    .join(",")}`; // Join with commas
 
   return (
     <>
@@ -308,30 +310,6 @@ const SendSMS = () => {
             )}
           </div>
 
-          {/* Phone Numbers Textarea */}
-          <div className="mt-4">
-            <label className="block text-gray-700 font-medium dark:text-white">
-              Phone Numbers
-            </label>
-            <textarea
-              value={combinedPhoneNumbers} // Display combined phone numbers
-              readOnly
-              className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
-              rows="6"
-            ></textarea>
-          </div>
-
-          {/* Schedule */}
-          <div>
-            <label className="block text-gray-700 font-medium dark:text-white">
-              Schedule
-            </label>
-            <input
-              type="datetime-local"
-              className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
-            />
-          </div>
-
           {/* Number File */}
           <div>
             <label className="block text-gray-700 font-medium dark:text-white">
@@ -349,6 +327,32 @@ const SendSMS = () => {
                 <button
                   type="button"
                   onClick={handleCloseNumberFile}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  Close
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Message File */}
+          <div>
+            <label className="block text-gray-700 font-medium dark:text-white">
+              Message File
+            </label>
+            <input
+              type="file"
+              accept=".txt,.docx"
+              onChange={handleMessageFileUpload}
+              className="mt-1 block w-full border border-gray-300 shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white"
+              disabled={selectedTemplate || smsContent}
+            />
+            {messageFile && (
+              <div className="mt-2 flex justify-between items-center">
+                <span>{messageFile.name}</span>
+                <button
+                  type="button"
+                  onClick={handleCloseMessageFile}
                   className="text-red-500 hover:text-red-700"
                 >
                   Close
@@ -391,46 +395,6 @@ const SendSMS = () => {
             )}
           </div>
 
-          <div className="flex items-center mt-1">
-            <input
-              type="checkbox"
-              id="removeBlockedNumbers"
-              className="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-400"
-            />
-            <label
-              htmlFor="removeBlockedNumbers"
-              className="ml-2 text-gray-700 dark:text-white"
-            >
-              Remove blocked numbers
-            </label>
-          </div>
-
-          {/* Message File */}
-          <div>
-            <label className="block text-gray-700 font-medium dark:text-white">
-              Message File
-            </label>
-            <input
-              type="file"
-              accept=".txt,.docx"
-              onChange={handleMessageFileUpload}
-              className="mt-1 block w-full border border-gray-300 shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white"
-              disabled={selectedTemplate || smsContent}
-            />
-            {messageFile && (
-              <div className="mt-2 flex justify-between items-center">
-                <span>{messageFile.name}</span>
-                <button
-                  type="button"
-                  onClick={handleCloseMessageFile}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  Close
-                </button>
-              </div>
-            )}
-          </div>
-
           {/* Add Phone Numbers */}
           <div>
             <label className="block text-gray-700 font-medium dark:text-white">
@@ -441,7 +405,18 @@ const SendSMS = () => {
               onChange={handleAddPhoneNumbersChange}
               placeholder="Enter multiple phone numbers, separated by commas or newlines"
               className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
-              rows="3"
+              rows="2"
+            />
+          </div>
+
+          {/* Schedule */}
+          <div>
+            <label className="block text-gray-700 font-medium dark:text-white">
+              Schedule
+            </label>
+            <input
+              type="datetime-local"
+              className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
             />
           </div>
 
@@ -460,20 +435,32 @@ const SendSMS = () => {
             <span className="text-gray-500 text-sm">
               {smsContent.length} / 225
             </span>
+
+            {/* Phone Numbers Textarea */}
+            <div className="mt-4">
+              <label className="block text-gray-700 font-medium dark:text-white">
+                Phone Numbers
+              </label>
+              <textarea
+                value={combinedPhoneNumbers} // Display combined phone numbers
+                readOnly
+                className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3 overflow-x-auto whitespace-nowrap"
+                rows="2"
+              ></textarea>
+            </div>
           </div>
 
-          {/* Enforce Output Toggle */}
           <div className="flex items-center mt-1">
             <input
               type="checkbox"
-              id="enforceOutput"
+              id="removeBlockedNumbers"
               className="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-400"
             />
             <label
-              htmlFor="enforceOutput"
+              htmlFor="removeBlockedNumbers"
               className="ml-2 text-gray-700 dark:text-white"
             >
-              Enforce output
+              Remove blocked numbers
             </label>
           </div>
 
