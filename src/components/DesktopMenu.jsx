@@ -41,11 +41,11 @@ const DesktopMenu = () => {
   // Menu items with visibility based on user roles
   const menuItems = [
     { href: "/home", label: "Home" },
-    { href: "/inbox", label: "Inbox" },
+    { href: "/sms", label: "SendSMS" },
+    { href: "/createMessage", label: "CreateMessage" },
     { href: "/contact", label: "Contact" },
-    { href: "/reports", label: "Reports", roles: ["admin", "user1"] }, // Only visible to admin
-    { href: "/sms", label: "SMS" },
     { href: "/block", label: "BlockNumbers" },
+    { href: "/reports", label: "Reports", roles: ["admin", "user1"] }, // Only visible to admin
     { href: "/usermanagement", label: "UserManagement", roles: ["admin"] }, // Only visible to admin
   ];
 

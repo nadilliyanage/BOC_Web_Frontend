@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 const NumberBlocking = () => {
   const [numbers, setNumbers] = useState("");
@@ -22,12 +24,24 @@ const NumberBlocking = () => {
       setBlockedNumbers(response.data);
     } catch (error) {
       setError("Failed to fetch blocked numbers.");
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to fetch blocked numbers.",
+        icon: "error",
+        confirmButtonText: "OK",
+        background: document.documentElement.classList.contains("dark")
+          ? "#1f2937"
+          : "#ffffff",
+        color: document.documentElement.classList.contains("dark")
+          ? "#ffffff"
+          : "#000000",
+      });
     }
   };
 
   // Validate number format
   const validateNumber = (number) => {
-    return number.startsWith("94") && number.length === 11;
+    return /^94\d{9}$/.test(number); // Ensure the number starts with "94" and has exactly 11 digits
   };
 
   // Add blocked numbers manually
@@ -51,6 +65,20 @@ const NumberBlocking = () => {
             ", "
           )}. Numbers must start with "94" and have a length of 11.`
         );
+        Swal.fire({
+          title: "Invalid Numbers!",
+          text: `Invalid numbers: ${invalidNumbers.join(
+            ", "
+          )}. Numbers must start with "94" and have a length of 11.`,
+          icon: "error",
+          confirmButtonText: "OK",
+          background: document.documentElement.classList.contains("dark")
+            ? "#1f2937"
+            : "#ffffff",
+          color: document.documentElement.classList.contains("dark")
+            ? "#ffffff"
+            : "#000000",
+        });
         return;
       }
 
@@ -67,11 +95,35 @@ const NumberBlocking = () => {
             number,
             error.response?.data || error.message
           );
+          Swal.fire({
+            title: "Error!",
+            text: `Failed to add number: ${number}. Please check the console for details.`,
+            icon: "error",
+            confirmButtonText: "OK",
+            background: document.documentElement.classList.contains("dark")
+              ? "#1f2937"
+              : "#ffffff",
+            color: document.documentElement.classList.contains("dark")
+              ? "#ffffff"
+              : "#000000",
+          });
         }
       }
 
       setNumbers("");
       fetchBlockedNumbers(); // Refresh the list
+      Swal.fire({
+        title: "Success!",
+        text: "Numbers added successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
+        background: document.documentElement.classList.contains("dark")
+          ? "#1f2937"
+          : "#ffffff",
+        color: document.documentElement.classList.contains("dark")
+          ? "#ffffff"
+          : "#000000",
+      });
     } catch (error) {
       console.error(
         "Error adding blocked numbers:",
@@ -80,6 +132,18 @@ const NumberBlocking = () => {
       setError(
         "Failed to add blocked numbers. Please check the console for details."
       );
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to add blocked numbers. Please check the console for details.",
+        icon: "error",
+        confirmButtonText: "OK",
+        background: document.documentElement.classList.contains("dark")
+          ? "#1f2937"
+          : "#ffffff",
+        color: document.documentElement.classList.contains("dark")
+          ? "#ffffff"
+          : "#000000",
+      });
     }
   };
 
@@ -101,6 +165,18 @@ const NumberBlocking = () => {
           }
         );
         fetchBlockedNumbers(); // Refresh the list
+        Swal.fire({
+          title: "Success!",
+          text: "CSV file uploaded successfully!",
+          icon: "success",
+          confirmButtonText: "OK",
+          background: document.documentElement.classList.contains("dark")
+            ? "#1f2937"
+            : "#ffffff",
+          color: document.documentElement.classList.contains("dark")
+            ? "#ffffff"
+            : "#000000",
+        });
       } catch (error) {
         console.error(
           "Error uploading CSV file:",
@@ -109,6 +185,18 @@ const NumberBlocking = () => {
         setError(
           "Failed to upload CSV file. Please check the console for details."
         );
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to upload CSV file. Please check the console for details.",
+          icon: "error",
+          confirmButtonText: "OK",
+          background: document.documentElement.classList.contains("dark")
+            ? "#1f2937"
+            : "#ffffff",
+          color: document.documentElement.classList.contains("dark")
+            ? "#ffffff"
+            : "#000000",
+        });
       }
     }
   };
@@ -118,6 +206,18 @@ const NumberBlocking = () => {
     try {
       await axios.delete(`http://localhost:8080/api/v1/number-block/${id}`);
       fetchBlockedNumbers(); // Refresh the list
+      Swal.fire({
+        title: "Success!",
+        text: "Number deleted successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
+        background: document.documentElement.classList.contains("dark")
+          ? "#1f2937"
+          : "#ffffff",
+        color: document.documentElement.classList.contains("dark")
+          ? "#ffffff"
+          : "#000000",
+      });
     } catch (error) {
       console.error(
         "Error deleting blocked number:",
@@ -126,6 +226,18 @@ const NumberBlocking = () => {
       setError(
         "Failed to delete blocked number. Please check the console for details."
       );
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to delete blocked number. Please check the console for details.",
+        icon: "error",
+        confirmButtonText: "OK",
+        background: document.documentElement.classList.contains("dark")
+          ? "#1f2937"
+          : "#ffffff",
+        color: document.documentElement.classList.contains("dark")
+          ? "#ffffff"
+          : "#000000",
+      });
     }
   };
 
@@ -146,23 +258,63 @@ const NumberBlocking = () => {
     try {
       if (!validateNumber(editValue)) {
         setError("Number must start with '94' and have a length of 11.");
+        Swal.fire({
+          title: "Invalid Number!",
+          text: "Number must start with '94' and have a length of 11.",
+          icon: "error",
+          confirmButtonText: "OK",
+          background: document.documentElement.classList.contains("dark")
+            ? "#1f2937"
+            : "#ffffff",
+          color: document.documentElement.classList.contains("dark")
+            ? "#ffffff"
+            : "#000000",
+        });
         return;
       }
 
-      await axios.put(
+      const response = await axios.put(
         `http://localhost:8080/api/v1/number-block/${editingNumber.id}`,
         { number: editValue }
       );
+
       closeEditModal();
       fetchBlockedNumbers(); // Refresh the list
+      Swal.fire({
+        title: "Success!",
+        text: "Number updated successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
+        background: document.documentElement.classList.contains("dark")
+          ? "#1f2937"
+          : "#ffffff",
+        color: document.documentElement.classList.contains("dark")
+          ? "#ffffff"
+          : "#000000",
+      });
     } catch (error) {
       console.error(
         "Error updating blocked number:",
         error.response?.data || error.message
       );
       setError(
-        "Failed to update blocked number. Please check the console for details."
+        error.response?.data ||
+          "Failed to update blocked number. Please check the console for details."
       );
+      Swal.fire({
+        title: "Error!",
+        text:
+          error.response?.data ||
+          "Failed to update blocked number. Please check the console for details.",
+        icon: "error",
+        confirmButtonText: "OK",
+        background: document.documentElement.classList.contains("dark")
+          ? "#1f2937"
+          : "#ffffff",
+        color: document.documentElement.classList.contains("dark")
+          ? "#ffffff"
+          : "#000000",
+      });
     }
   };
 
