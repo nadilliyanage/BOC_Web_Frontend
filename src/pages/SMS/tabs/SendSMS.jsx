@@ -453,12 +453,13 @@ const SendSMS = () => {
               type="checkbox"
               id="removeBlockedNumbers"
               className="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-400"
+              defaultChecked
             />
             <label
               htmlFor="removeBlockedNumbers"
               className="ml-2 text-gray-700 dark:text-white"
             >
-              Remove blocked numbers
+              Add blocked list
             </label>
           </div>
 

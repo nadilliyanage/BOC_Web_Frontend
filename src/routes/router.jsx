@@ -3,12 +3,12 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 // Importing existing pages
 import HomePage from "../pages/Home";
-import InboxPage from "../pages/Inbox";
 import ContactPage from "../pages/ContactList";
 import ReportsPage from "../pages/Reports/Reports";
 import SmsPage from "../pages/SMS/SMS";
 import BlockNumbersPage from "../pages/NumberBlocking";
 import UserManagement from "../pages/UserManagement/UserManagement";
+import CreateMessage from "../pages/CreateMessage/CreateMessage";
 
 // Simulating user role (admin, user1, or user2)
 const user = "admin"; // Change this value to "user1" or "user2" to test other roles
@@ -18,7 +18,7 @@ const RouterComponent = () => {
   const routesByRole = {
     admin: [
       { path: "/home", element: <HomePage /> },
-      { path: "/inbox", element: <InboxPage /> },
+      { path: "/createMessage", element: <CreateMessage /> },
       { path: "/contact", element: <ContactPage /> },
       { path: "/reports", element: <ReportsPage /> },
       { path: "/sms", element: <SmsPage /> },
@@ -27,14 +27,14 @@ const RouterComponent = () => {
     ],
     user1: [
       { path: "/home", element: <HomePage /> },
-      { path: "/inbox", element: <InboxPage /> },
+      { path: "/createMessage", element: <CreateMessage /> },
       { path: "/contact", element: <ContactPage /> },
       { path: "/sms", element: <SmsPage /> },
       { path: "/block", element: <BlockNumbersPage /> },
     ],
     user2: [
       { path: "/home", element: <HomePage /> },
-      { path: "/inbox", element: <InboxPage /> },
+      { path: "/createMessage", element: <CreateMessage /> },
       { path: "/contact", element: <ContactPage /> },
       { path: "/sms", element: <SmsPage /> },
       { path: "/block", element: <BlockNumbersPage /> },

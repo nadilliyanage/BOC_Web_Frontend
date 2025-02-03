@@ -3,7 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { MdEdit, MdDelete } from "react-icons/md";
 
-const ReviewMessages = () => {
+const MsgReview = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -381,4 +381,4 @@ const ReviewMessages = () => {
   );
 };
 
-export default ReviewMessages;
+export default MsgReview;
