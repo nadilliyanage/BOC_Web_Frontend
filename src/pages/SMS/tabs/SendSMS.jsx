@@ -150,7 +150,7 @@ const SendSMS = () => {
       // Show success message with SweetAlert2
       Swal.fire({
         title: "Success!",
-        text: "SMS campaign saved successfully!",
+        text: "SMS send successfully!",
         icon: "success",
         confirmButtonText: "OK",
         background: document.documentElement.classList.contains("dark")
@@ -166,9 +166,7 @@ const SendSMS = () => {
       // Show error message with SweetAlert2
       Swal.fire({
         title: "Error!",
-        text:
-          error.response?.data ||
-          "Failed to save SMS campaign. Please try again.",
+        text: error.response?.data || "Failed to send SMS. Please try again.",
         icon: "error",
         confirmButtonText: "OK",
         background: document.documentElement.classList.contains("dark")
