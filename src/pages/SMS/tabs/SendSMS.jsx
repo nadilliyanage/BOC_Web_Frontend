@@ -3,6 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import MobilePreview from "./components/MobilePreview";
+import SMSForm from "./components/SMSForm";
 
 const SendSMS = () => {
   const [smsContent, setSmsContent] = useState("");
@@ -16,6 +17,8 @@ const SendSMS = () => {
   const [phoneNumbers, setPhoneNumbers] = useState("");
   const [addPhoneNumbers, setAddPhoneNumbers] = useState("");
   const [removeBlockedNumbers, setRemoveBlockedNumbers] = useState(false); // Checkbox state
+  const [testNumber, setTestNumber] = useState("");
+  const [isTestModalOpen, setIsTestModalOpen] = useState(false);
 
   // Fetch file names
   const fetchFileNames = () => {
@@ -247,239 +250,119 @@ const SendSMS = () => {
     .filter((num) => num.length > 0) // Remove empty entries
     .join(",")}`; // Join with commas
 
+  // Function to handle the Test Campaign button click
+  const handleTestCampaign = () => {
+    setIsTestModalOpen(true);
+  };
+
+  // Function to handle sending the test SMS
+  const handleSendTestSMS = async () => {
+    if (!testNumber) {
+      Swal.fire({
+        title: "Error!",
+        text: "Please enter a valid mobile number.",
+        icon: "error",
+        confirmButtonText: "OK",
+        background: document.documentElement.classList.contains("dark")
+          ? "#1f2937"
+          : "#ffffff",
+        color: document.documentElement.classList.contains("dark")
+          ? "#ffffff"
+          : "#000000",
+      });
+      return;
+    }
+
+    const sender = document.querySelector("select").value;
+    const message = smsContent;
+
+    const sendMessageDTO = {
+      campaignName: "Test Campaign",
+      sender,
+      numbers: [testNumber],
+      message,
+      schedule: null, // No schedule for test campaign
+      removeBlockedNumbers: false, // No need to remove blocked numbers for test
+    };
+
+    try {
+      await axios.post(
+        "http://localhost:8080/api/v1/send-message",
+        sendMessageDTO
+      );
+
+      Swal.fire({
+        title: "Success!",
+        text: "Test SMS sent successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
+        background: document.documentElement.classList.contains("dark")
+          ? "#1f2937"
+          : "#ffffff",
+        color: document.documentElement.classList.contains("dark")
+          ? "#ffffff"
+          : "#000000",
+      });
+      setIsTestModalOpen(false); // Close the modal after sending
+    } catch (error) {
+      console.error("Error sending test SMS:", error);
+      Swal.fire({
+        title: "Error!",
+        text:
+          error.response?.data || "Failed to send test SMS. Please try again.",
+        icon: "error",
+        confirmButtonText: "OK",
+        background: document.documentElement.classList.contains("dark")
+          ? "#1f2937"
+          : "#ffffff",
+        color: document.documentElement.classList.contains("dark")
+          ? "#ffffff"
+          : "#000000",
+      });
+    }
+  };
+
   return (
     <>
-      {/* Form Section */}
-      <div className="bg-white w-full md:w-11/12 shadow-md rounded-b-lg p-6 mr-0 md:mr-6 dark:bg-[#282828]">
-        <h1 className="text-lg font-bold mb-4">Send SMS</h1>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Campaign Name */}
-          <div>
-            <label className="block text-gray-700 font-medium dark:text-white">
-              Campaign Name
-            </label>
-            <input
-              placeholder="Enter Campaign Name"
-              type="text"
-              className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
-            />
-          </div>
-
-          {/* Sender */}
-          <div>
-            <label className="block text-gray-700 font-medium dark:text-white">
-              Sender
-            </label>
-            <select className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3">
-              <option>Select Sender</option>
-              <option value={"BOC IT"}>BOC IT</option>
-            </select>
-          </div>
-
-          {/* Contact List Dropdown */}
-          <div>
-            <label className="block text-gray-700 font-medium dark:text-white">
-              Contact List
-            </label>
-            <select
-              value={selectedFileName}
-              onChange={handleFileSelect}
-              className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
-              disabled={!!numberFile} // Disable if Number File is uploaded
-            >
-              <option value="">Select Contact List</option>
-              {fileList.map((fileName, index) => (
-                <option key={index} value={fileName}>
-                  {fileName}
-                </option>
-              ))}
-            </select>
-            {selectedFileName && (
-              <div className="flex justify-end mt-2">
-                <button
-                  type="button"
-                  onClick={handleCloseList}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  Close List
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Number File */}
-          <div>
-            <label className="block text-gray-700 font-medium dark:text-white">
-              Number File
-            </label>
-            <input
-              type="file"
-              onChange={handleNumberFileUpload}
-              className="mt-1 block w-full border border-gray-300 shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white"
-              disabled={!!selectedFileName} // Disable if Contact List is selected
-            />
-            {numberFile && (
-              <div className="mt-2 flex justify-between items-center">
-                <span>{numberFile.name}</span>
-                <button
-                  type="button"
-                  onClick={handleCloseNumberFile}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  Close
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Message File */}
-          <div>
-            <label className="block text-gray-700 font-medium dark:text-white">
-              Message File
-            </label>
-            <input
-              type="file"
-              accept=".txt,.docx"
-              onChange={handleMessageFileUpload}
-              className="mt-1 block w-full border border-gray-300 shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white"
-              disabled={selectedTemplate || smsContent}
-            />
-            {messageFile && (
-              <div className="mt-2 flex justify-between items-center">
-                <span>{messageFile.name}</span>
-                <button
-                  type="button"
-                  onClick={handleCloseMessageFile}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  Close
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Template */}
-          <div>
-            <label className="block text-gray-700 font-medium dark:text-white">
-              Template
-            </label>
-            <select
-              id="messageTemplate"
-              name="messageTemplate"
-              value={selectedTemplate}
-              onChange={handleTemplateChange}
-              className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
-              required
-              disabled={messageFile || smsContent}
-            >
-              <option value="">Select Template</option>
-              {messageTemplates.map((template) => (
-                <option key={template.id} value={template.message}>
-                  {template.label}
-                </option>
-              ))}
-            </select>
-            {selectedTemplate && (
-              <div className="flex justify-end mt-2">
-                <button
-                  type="button"
-                  onClick={handleCloseTemplate}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  Close Template
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Add Phone Numbers */}
-          <div>
-            <label className="block text-gray-700 font-medium dark:text-white">
-              Add Phone Numbers
-            </label>
-            <textarea
-              value={addPhoneNumbers}
-              onChange={handleAddPhoneNumbersChange}
-              placeholder="Enter multiple phone numbers, separated by commas or newlines"
-              className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
-              rows="2"
-            />
-          </div>
-
-          {/* Schedule */}
-          <div>
-            <label className="block text-gray-700 font-medium dark:text-white">
-              Schedule
-            </label>
-            <input
-              type="datetime-local"
-              className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
-            />
-          </div>
-
-          {/* SMS Content */}
-          <div className="md:col-span-2">
-            <label className="block text-gray-700 font-medium dark:text-white">
-              SMS Content
-            </label>
-            <textarea
-              maxLength="225"
-              value={smsContent}
-              onChange={handleSmsContentChange}
-              disabled={messageFile || selectedTemplate}
-              className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
-            ></textarea>
-            <span className="text-gray-500 text-sm">
-              {smsContent.length} / 225
-            </span>
-
-            {/* Phone Numbers Textarea */}
-            <div className="mt-4">
-              <label className="block text-gray-700 font-medium dark:text-white">
-                Phone Numbers
-              </label>
-              <textarea
-                value={combinedPhoneNumbers} // Display combined phone numbers
-                readOnly
-                className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3 overflow-x-auto whitespace-nowrap"
-                rows="2"
-              ></textarea>
-            </div>
-          </div>
-
-          <div className="flex items-center mt-1">
-            <input
-              type="checkbox"
-              id="removeBlockedNumbers"
-              className="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-400"
-              defaultChecked
-            />
-            <label
-              htmlFor="removeBlockedNumbers"
-              className="ml-2 text-gray-700 dark:text-white"
-            >
-              Add blocked list
-            </label>
-          </div>
-
-          {/* Error Message */}
-          {errorMessage && (
-            <div className="text-red-500 text-center mt-4">{errorMessage}</div>
-          )}
-
-          {/* Submit Button */}
-          <div className="col-span-full mt-4">
-            <button
-              type="button"
-              onClick={handleSendSMS}
-              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-              Send SMS
-            </button>
-          </div>
-        </div>
-      </div>
+      <SMSForm
+        smsContent={smsContent}
+        setSmsContent={setSmsContent}
+        messageTemplates={messageTemplates}
+        selectedTemplate={selectedTemplate}
+        setSelectedTemplate={setSelectedTemplate}
+        errorMessage={errorMessage}
+        messageFile={messageFile}
+        setMessageFile={setMessageFile}
+        numberFile={numberFile}
+        setNumberFile={setNumberFile}
+        fileList={fileList}
+        selectedFileName={selectedFileName}
+        setSelectedFileName={setSelectedFileName}
+        phoneNumbers={phoneNumbers}
+        setPhoneNumbers={setPhoneNumbers}
+        addPhoneNumbers={addPhoneNumbers}
+        setAddPhoneNumbers={setAddPhoneNumbers}
+        removeBlockedNumbers={removeBlockedNumbers}
+        setRemoveBlockedNumbers={setRemoveBlockedNumbers}
+        testNumber={testNumber}
+        setTestNumber={setTestNumber}
+        isTestModalOpen={isTestModalOpen}
+        setIsTestModalOpen={setIsTestModalOpen}
+        handleFileSelect={handleFileSelect}
+        handleSmsContentChange={handleSmsContentChange}
+        handleTemplateChange={handleTemplateChange}
+        handleCloseTemplate={handleCloseTemplate}
+        handleCloseList={handleCloseList}
+        handleSendSMS={handleSendSMS}
+        handleMessageFileUpload={handleMessageFileUpload}
+        handleCloseMessageFile={handleCloseMessageFile}
+        handleNumberFileUpload={handleNumberFileUpload}
+        handleCloseNumberFile={handleCloseNumberFile}
+        handleAddPhoneNumbersChange={handleAddPhoneNumbersChange}
+        combinedPhoneNumbers={combinedPhoneNumbers}
+        handleTestCampaign={handleTestCampaign}
+        handleSendTestSMS={handleSendTestSMS}
+      />
       <MobilePreview smsContent={smsContent} />
     </>
   );
