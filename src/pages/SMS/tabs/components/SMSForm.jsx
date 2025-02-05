@@ -1,28 +1,16 @@
 // SMSForm.js
-import React, { useState } from "react";
-import Swal from "sweetalert2";
-import "sweetalert2/dist/sweetalert2.min.css";
+import React from "react";
 
 const SMSForm = ({
   smsContent,
-  setSmsContent,
   messageTemplates,
   selectedTemplate,
-  setSelectedTemplate,
   errorMessage,
   messageFile,
-  setMessageFile,
   numberFile,
-  setNumberFile,
   fileList,
   selectedFileName,
-  setSelectedFileName,
-  phoneNumbers,
-  setPhoneNumbers,
   addPhoneNumbers,
-  setAddPhoneNumbers,
-  removeBlockedNumbers,
-  setRemoveBlockedNumbers,
   testNumber,
   setTestNumber,
   isTestModalOpen,
@@ -245,12 +233,12 @@ const SMSForm = ({
           <input
             type="checkbox"
             id="removeBlockedNumbers"
-            className="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-400"
+            className="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-400 ml-4"
             defaultChecked
           />
           <label
             htmlFor="removeBlockedNumbers"
-            className="ml-2 text-gray-700 dark:text-white"
+            className="ml-2 text-gray-700 dark:text-white font-bold"
           >
             Add blocked list
           </label>
@@ -262,18 +250,18 @@ const SMSForm = ({
         )}
 
         {/* Submit Button */}
-        <div className="col-span-full mt-4">
+        <div className="flex flex-row-reverse mt-4 ">
           <button
             type="button"
             onClick={handleSendSMS}
-            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="mx-2 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             Send SMS
           </button>
           <button
             type="button"
             onClick={handleTestCampaign}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="mx-2 bg-dark_3 hover:bg-dark_1 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             Test Campaign
           </button>

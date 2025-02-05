@@ -38,8 +38,6 @@ const FinishedMessage = () => {
 
   return (
     <div className=" w-[200%] dark:bg-dark_2 p-6 rounded-b-md">
-      <h1 className="text-xl font-bold mb-4">Finished Messages</h1>
-
       <input
         type="text"
         placeholder="Search by Campaign Name, Sender, Number, Message, or Ref No"
