@@ -16,6 +16,8 @@ const SendSMS = () => {
   const [phoneNumbers, setPhoneNumbers] = useState("");
   const [addPhoneNumbers, setAddPhoneNumbers] = useState("");
   const [removeBlockedNumbers, setRemoveBlockedNumbers] = useState(false); // Checkbox state
+  const [testNumber, setTestNumber] = useState("");
+  const [isTestModalOpen, setIsTestModalOpen] = useState(false);
 
   // Fetch file names
   const fetchFileNames = () => {
@@ -247,6 +249,78 @@ const SendSMS = () => {
     .filter((num) => num.length > 0) // Remove empty entries
     .join(",")}`; // Join with commas
 
+  // Function to handle the Test Campaign button click
+  const handleTestCampaign = () => {
+    setIsTestModalOpen(true);
+  };
+
+  // Function to handle sending the test SMS
+  const handleSendTestSMS = async () => {
+    if (!testNumber) {
+      Swal.fire({
+        title: "Error!",
+        text: "Please enter a valid mobile number.",
+        icon: "error",
+        confirmButtonText: "OK",
+        background: document.documentElement.classList.contains("dark")
+          ? "#1f2937"
+          : "#ffffff",
+        color: document.documentElement.classList.contains("dark")
+          ? "#ffffff"
+          : "#000000",
+      });
+      return;
+    }
+
+    const sender = document.querySelector("select").value;
+    const message = smsContent;
+
+    const sendMessageDTO = {
+      campaignName: "Test Campaign",
+      sender,
+      numbers: [testNumber],
+      message,
+      schedule: null, // No schedule for test campaign
+      removeBlockedNumbers: false, // No need to remove blocked numbers for test
+    };
+
+    try {
+      await axios.post(
+        "http://localhost:8080/api/v1/send-message",
+        sendMessageDTO
+      );
+
+      Swal.fire({
+        title: "Success!",
+        text: "Test SMS sent successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
+        background: document.documentElement.classList.contains("dark")
+          ? "#1f2937"
+          : "#ffffff",
+        color: document.documentElement.classList.contains("dark")
+          ? "#ffffff"
+          : "#000000",
+      });
+      setIsTestModalOpen(false); // Close the modal after sending
+    } catch (error) {
+      console.error("Error sending test SMS:", error);
+      Swal.fire({
+        title: "Error!",
+        text:
+          error.response?.data || "Failed to send test SMS. Please try again.",
+        icon: "error",
+        confirmButtonText: "OK",
+        background: document.documentElement.classList.contains("dark")
+          ? "#1f2937"
+          : "#ffffff",
+        color: document.documentElement.classList.contains("dark")
+          ? "#ffffff"
+          : "#000000",
+      });
+    }
+  };
+
   return (
     <>
       {/* Form Section */}
@@ -469,16 +543,53 @@ const SendSMS = () => {
           )}
 
           {/* Submit Button */}
-          <div className="col-span-full mt-4">
+          <div className="flex flex-row-reverse mt-4 ">
             <button
               type="button"
               onClick={handleSendSMS}
-              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="mx-2 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               Send SMS
             </button>
+            <button
+              type="button"
+              onClick={handleTestCampaign}
+              className="mx-2 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >
+              Test Campaign
+            </button>
           </div>
         </div>
+        {isTestModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-[#282828] p-6 rounded-lg shadow-lg w-11/12 md:w-1/3">
+              <h2 className="text-lg font-bold mb-4 dark:text-white">
+                Enter Test Mobile Number
+              </h2>
+              <input
+                type="text"
+                value={testNumber}
+                onChange={(e) => setTestNumber(e.target.value)}
+                placeholder="Enter mobile number"
+                className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
+              />
+              <div className="mt-4 flex justify-end">
+                <button
+                  onClick={() => setIsTestModalOpen(false)}
+                  className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mr-2"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSendTestSMS}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
+                >
+                  Send Test SMS
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       <MobilePreview smsContent={smsContent} />
     </>

@@ -8,7 +8,7 @@ const MobilePreview = ({ smsContent }) => {
       </h2>
       <div className="relative flex justify-center items-center bg-gray-50 border rounded-lg p-6 dark:bg-[#282828]">
         {/* Phone Mockup */}
-        <div className="relative h-[37rem] w-[20rem] bg-black rounded-3xl shadow-lg overflow-hidden">
+        <div className="relative h-[35rem] w-[20rem] bg-black rounded-3xl shadow-lg overflow-hidden">
           {/* Camera Notch */}
           <div className="absolute top-0 w-full h-6 bg-gray-800 rounded-t-3xl dark:bg-[#121212]"></div>
           {/* Screen */}

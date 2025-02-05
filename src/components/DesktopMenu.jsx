@@ -43,7 +43,7 @@ const DesktopMenu = () => {
     { href: "/home", label: "Home" },
     { href: "/sms", label: "SendSMS" },
     { href: "/createMessage", label: "CreateMessage" },
-    { href: "/contact", label: "Contact" },
+    { href: "/contacts", label: "Contacts" },
     { href: "/block", label: "BlockNumbers" },
     { href: "/reports", label: "Reports", roles: ["admin", "user1"] }, // Only visible to admin
     { href: "/usermanagement", label: "UserManagement", roles: ["admin"] }, // Only visible to admin
