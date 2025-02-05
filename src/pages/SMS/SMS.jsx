@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import SendSMS from "./tabs/SendSMS";
 import SendCustomizeSMS from "./tabs/SendCustomizeSMS";
+import PendingMessage from "./tabs/PendingMessage";
+import ScheduledMessage from "./tabs/ScheduledMessge";
 
 const Sms = () => {
   const [activeTab, setActiveTab] = useState("sendSms"); // Active tab state
@@ -31,14 +33,14 @@ const Sms = () => {
         </button>
 
         <button
-          onClick={() => setActiveTab("approveCampaign")}
+          onClick={() => setActiveTab("scheduledCampaign")}
           className={`px-4 py-2 ${
-            activeTab === "approveCampaign"
+            activeTab === "scheduledCampaign"
               ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
               : "text-gray-600 hover:text-gray-800 dark:text-white"
           }`}
         >
-          Approve Campaign
+          Scheduled Campaign
         </button>
 
         <button
@@ -63,23 +65,9 @@ const Sms = () => {
 
         {activeTab === "reviewMessage" && <ReviewMessage />}
 
-        {activeTab === "approveCampaign" && (
-          <div className="bg-white w-full shadow-md rounded-lg p-6">
-            <h1 className="text-lg font-bold">Approve Campaign</h1>
-            <p className="text-gray-600 mt-4">
-              This section is under construction...
-            </p>
-          </div>
-        )}
+        {activeTab === "scheduledCampaign" && <ScheduledMessage />}
 
-        {activeTab === "pendingCampaign" && (
-          <div className="bg-white w-full shadow-md rounded-lg p-6">
-            <h1 className="text-lg font-bold">Pending Campaign</h1>
-            <p className="text-gray-600 mt-4">
-              This section is under construction...
-            </p>
-          </div>
-        )}
+        {activeTab === "pendingCampaign" && <PendingMessage />}
       </div>
     </div>
   );
