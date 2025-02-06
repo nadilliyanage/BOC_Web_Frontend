@@ -224,7 +224,7 @@ const NumberBlocking = () => {
         />
         <button
           onClick={handleAddNumbers}
-          className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          className="mt-2 bg-secondary text-white px-4 py-2 rounded-md hover:bg-secondary2 font-bold"
         >
           Add Numbers
         </button>
@@ -263,9 +263,12 @@ const NumberBlocking = () => {
         {filteredNumbers.length === 0 ? (
           <p>No numbers found.</p>
         ) : (
-          <div className="grid grid-cols-10 gap-4">
+          <div className="grid grid-cols-10 gap-4 ">
             {filteredNumbers.map((numberBlock) => (
-              <div key={numberBlock.id} className="p-2 border-b ">
+              <div
+                key={numberBlock.id}
+                className="p-2 border-b hover:bg-secondary dark:hover:bg-slate-950 hover:transition-opacity duration-700"
+              >
                 <span>{numberBlock.number}</span>
               </div>
             ))}

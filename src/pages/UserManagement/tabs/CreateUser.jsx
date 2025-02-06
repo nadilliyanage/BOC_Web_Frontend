@@ -233,7 +233,7 @@ const CreateUser = () => {
         </div>
         <button
           type="submit"
-          className="w-full mt-4 px-4 py-2 text-white bg-[#eab308] rounded-md hover:bg-[#ce9b03] focus:outline-none focus:ring-2 focus:ring-[#a0801f]"
+          className="w-full mt-4 px-4 py-2 text-white bg-[#eab308] rounded-md hover:bg-[#ce9b03] focus:outline-none focus:ring-2 focus:ring-[#a0801f] font-bold"
         >
           Create User
         </button>

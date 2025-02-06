@@ -58,7 +58,7 @@ const AddContacts = () => {
   return (
     <div className="p-6 w-full mx-auto bg-white rounded-lg shadow-lg dark:bg-dark_2 flex flex-row gap-10 min-h-[500px] ">
       <div className="w-1/2 m-auto border-r pr-4 ">
-        <h2 className="text-2xl font-semibold mb-6">Upload CSV File</h2>
+        <h2 className="text-2xl font-bold mb-6">Upload CSV File</h2>
         <input
           type="file"
           onChange={handleFileChange}
@@ -67,13 +67,13 @@ const AddContacts = () => {
         />
         <button
           onClick={handleUpload}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className="bg-secondary hover:bg-secondary2 font-bold text-white px-4 py-2 rounded"
         >
           Upload
         </button>
       </div>
       <div className="w-1/2">
-        <h3 className="text-xl font-semibold my-6">Uploaded Files</h3>
+        <h3 className="text-xl my-6 font-bold">Uploaded Files</h3>
         <div className="max-h-80 overflow-y-auto">
           <ul>
             {fileList.map((fileName, index) => (
@@ -83,7 +83,7 @@ const AddContacts = () => {
               >
                 <span
                   onClick={() => fetchContactsByFileName(fileName)}
-                  className="cursor-pointer text-blue-500"
+                  className="cursor-pointer text-secondary2 dark:text-secondary font-bold"
                 >
                   {fileName}
                 </span>
