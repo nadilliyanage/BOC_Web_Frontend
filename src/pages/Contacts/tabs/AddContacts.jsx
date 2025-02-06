@@ -74,7 +74,7 @@ const AddContacts = () => {
       </div>
       <div className="w-1/2">
         <h3 className="text-xl font-semibold my-6">Uploaded Files</h3>
-        <div className="max-h-96 overflow-y-auto">
+        <div className="max-h-80 overflow-y-auto">
           <ul>
             {fileList.map((fileName, index) => (
               <li

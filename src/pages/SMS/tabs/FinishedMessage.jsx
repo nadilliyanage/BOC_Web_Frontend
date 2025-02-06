@@ -30,7 +30,8 @@ const FinishedMessage = () => {
       msg.sender.toLowerCase().includes(searchTerm.toLowerCase()) ||
       msg.numbers.join(", ").includes(searchTerm) ||
       msg.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (msg.refno && msg.refno.toString().includes(searchTerm))
+      (msg.referenceNumber &&
+        msg.referenceNumber.toString().includes(searchTerm))
   );
 
   if (loading) return <div className="m-2">Loading...</div>;
@@ -49,17 +50,22 @@ const FinishedMessage = () => {
       <table className="min-w-full border-collapse border border-gray-300">
         <thead>
           <tr className="bg-gray-100 dark:bg-dark_3">
-            <th className="border border-gray-300 px-4 py-2">Campaign Name</th>
-            <th className="border border-gray-300 px-4 py-2">Sender</th>
-            <th className="border border-gray-300 px-4 py-2">Numbers</th>
-            <th className="border border-gray-300 px-4 py-2">Message</th>
             <th className="border border-gray-300 px-4 py-2">Reference No</th>
+            <th className="border border-gray-300 px-4 py-2">Campaign Name</th>
+
+            <th className="border border-gray-300 px-4 py-2">Sender</th>
+            <th className="border border-gray-300 px-4 py-2">Number</th>
+            <th className="border border-gray-300 px-4 py-2">Message</th>
+
             <th className="border border-gray-300 px-4 py-2">Status</th>
           </tr>
         </thead>
         <tbody>
           {filteredMessages.map((msg, index) => (
             <tr key={index} className="text-center">
+              <td className="border border-gray-300 px-4 py-2">
+                {msg.referenceNumber || "N/A"}
+              </td>
               <td className="border border-gray-300 px-4 py-2">
                 {msg.campaignName}
               </td>
@@ -70,15 +76,12 @@ const FinishedMessage = () => {
               <td className="border border-gray-300 px-4 py-2 whitespace-pre-wrap">
                 {msg.message}
               </td>
-              <td className="border border-gray-300 px-4 py-2">
-                {msg.refno || "N/A"}
-              </td>
               <td
                 className={`border border-gray-300 px-4 py-2 ${
-                  msg.refno ? "text-green-500" : "text-yellow-500"
+                  msg.referenceNumber ? "text-green-500" : "text-yellow-500"
                 }`}
               >
-                {msg.refno ? "Done" : "Pending"}
+                {msg.referenceNumber ? "Done" : "Pending"}
               </td>
             </tr>
           ))}

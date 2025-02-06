@@ -356,6 +356,7 @@ const MsgReview = () => {
               <textarea
                 name="message"
                 value={currentMessage?.message || ""}
+                rows={6}
                 onChange={handleInputChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-dark_3 pl-1"
               />

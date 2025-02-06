@@ -111,7 +111,7 @@ const CreateUser = () => {
     <div className="flex justify-center h-full p-4 bg-gray-100 dark:bg-[#282828] dark:text-white">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-2xl p-6 bg-white rounded-lg shadow-md dark:bg-[#181818] dark:text-white"
+        className="w-full p-6 bg-white rounded-lg shadow-md dark:bg-[#282828] dark:text-white"
       >
         <h2 className="mb-6 text-3xl font-semibold text-center text-gray-700 dark:text-white">
           Create User

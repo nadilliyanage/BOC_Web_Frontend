@@ -33,7 +33,7 @@ const ManageUser = () => {
     );
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="dark:bg-dark_2 p-6 rounded-b-md">
       <h1 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
         User List
       </h1>
@@ -65,7 +65,7 @@ const ManageUser = () => {
               {users.map((user) => (
                 <tr
                   key={user.id}
-                  className="even:bg-gray-50 dark:even:bg-dark_2 hover:bg-gray-100 dark:hover:bg-dark_2"
+                  className="even:bg-gray-50 dark:even:bg-dark_2 hover:bg-gray-100 dark:hover:bg-dark_3"
                 >
                   <td className="border border-gray-300 px-4 py-2">
                     {user.userId}
