@@ -48,7 +48,7 @@ const App = () => {
               <img
                 src={darkMode ? iconWhite : logo}
                 alt="logo"
-                className="w-[18%]"
+                className="w-[16%]"
               />
             </div>
 
