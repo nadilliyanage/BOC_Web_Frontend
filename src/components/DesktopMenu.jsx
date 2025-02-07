@@ -1,69 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FaUserCircle, FaCaretDown, FaCaretUp } from "react-icons/fa";
-import { FiSun, FiMoon } from "react-icons/fi"; // Import sun and moon icons
+import { FiSun, FiMoon } from "react-icons/fi";
 import { useLocation } from "react-router-dom";
 
 // Simulate user role (admin, user1, or user2)
-const userRole = "admin"; // Change this value to "admin", "user1", or "user2" for testing.
+const userRole = "admin";
 
-const DesktopMenu = () => {
+const DesktopMenu = ({ darkMode, toggleDarkMode }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
   const location = useLocation();
-
-  // Load theme from localStorage on mount
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      setDarkMode(true);
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
 
   // Toggle dropdown visibility
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    const newMode = !darkMode;
-    setDarkMode(newMode);
-    localStorage.setItem("theme", newMode ? "dark" : "light");
-
-    if (newMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
-
-  // Menu items with visibility based on user roles
   const menuItems = [
     { href: "/home", label: "Home" },
     { href: "/sms", label: "SendSMS" },
     { href: "/createMessage", label: "CreateMessage" },
     { href: "/contacts", label: "Contacts" },
     { href: "/block", label: "BlockNumbers" },
-    { href: "/reports", label: "Reports", roles: ["admin", "user1"] }, // Only visible to admin
-    { href: "/usermanagement", label: "UserManagement", roles: ["admin"] }, // Only visible to admin
+    { href: "/reports", label: "Reports", roles: ["admin", "user1"] },
+    { href: "/usermanagement", label: "UserManagement", roles: ["admin"] },
   ];
 
-  // Filter menu items based on user role
   const visibleMenuItems = menuItems.filter(
     (item) => !item.roles || item.roles.includes(userRole)
   );
 
   return (
     <div className="hidden lg:flex space-x-4 gap-5 items-center relative">
-      {/* Navigation Links */}
       {visibleMenuItems.map(({ href, label }) => (
         <a
           key={href}
           href={href}
           className={`text-lg font-semibold group relative ${
             location.pathname === href
-              ? "text-secondary dark:text-secondary" // Active tab color
+              ? "text-secondary dark:text-secondary"
               : "text-black dark:text-white hover:text-secondary dark:hover:text-secondary"
           }`}
         >
@@ -76,7 +48,7 @@ const DesktopMenu = () => {
         </a>
       ))}
 
-      {/* Profile Icon with Dropdown */}
+      {/* Profile Dropdown */}
       <div className="relative">
         <button
           onClick={toggleDropdown}
@@ -99,18 +71,16 @@ const DesktopMenu = () => {
       </div>
 
       {/* Dark Mode Toggle */}
-      <div className="flex items-center space-x-2">
-        <button
-          onClick={toggleDarkMode}
-          className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 transition duration-300"
-        >
-          {darkMode ? (
-            <FiMoon className="text-yellow-400 w-6 h-6" />
-          ) : (
-            <FiSun className="text-yellow-500 w-6 h-6" />
-          )}
-        </button>
-      </div>
+      <button
+        onClick={toggleDarkMode}
+        className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 transition duration-300"
+      >
+        {darkMode ? (
+          <FiMoon className="text-yellow-400 w-6 h-6" />
+        ) : (
+          <FiSun className="text-yellow-500 w-6 h-6" />
+        )}
+      </button>
     </div>
   );
 };

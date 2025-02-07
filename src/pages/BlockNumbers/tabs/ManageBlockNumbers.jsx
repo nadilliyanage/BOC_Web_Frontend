@@ -337,7 +337,7 @@ const ManageBlockNumbers = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search numbers..."
-            className="w-full p-2 border border-gray-300 rounded-md dark:bg-dark_2"
+            className="w-full px-4 py-2 border border-gray-300  rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white dark:bg-dark_3"
           />
         </div>
 
@@ -347,7 +347,7 @@ const ManageBlockNumbers = () => {
           {filteredNumbers.length === 0 ? (
             <p>No numbers found.</p>
           ) : (
-            <div className="grid grid-cols-4 gap-4 overflow-scroll h-80">
+            <div className="grid grid-cols-4 gap-4 overflow-scroll max-h-80">
               {filteredNumbers.map((numberBlock) => (
                 <div
                   key={numberBlock.id}
@@ -384,7 +384,7 @@ const ManageBlockNumbers = () => {
             value={numbers}
             onChange={(e) => setNumbers(e.target.value)}
             placeholder="Enter numbers separated by commas or newlines"
-            className="w-full p-2 border border-gray-300 rounded-md dark:bg-dark_2"
+            className="w-full px-4 py-2 border border-gray-300  rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white dark:bg-dark_3"
             rows="4"
           />
           <button

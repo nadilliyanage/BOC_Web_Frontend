@@ -219,7 +219,7 @@ const NumberBlocking = () => {
           value={numbers}
           onChange={(e) => setNumbers(e.target.value)}
           placeholder="Enter numbers separated by commas or newlines"
-          className="w-full p-2 border border-gray-300 rounded-md dark:bg-dark_2"
+          className="w-full px-4 py-2 border border-gray-300  rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white dark:bg-dark_3"
           rows="4"
         />
         <button
@@ -239,7 +239,7 @@ const NumberBlocking = () => {
           type="file"
           accept=".csv"
           onChange={handleFileUpload}
-          className="w-full p-2 border border-gray-300 rounded-md dark:bg-dark_2"
+          className="w-full p-2 border border-gray-300 rounded-md dark:bg-dark_2 hover:border-secondary"
         />
       </div>
 
@@ -253,7 +253,7 @@ const NumberBlocking = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search numbers..."
-          className="w-full p-2 border border-gray-300 rounded-md dark:bg-dark_2"
+          className="w-full px-4 py-2 border border-gray-300  rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white dark:bg-dark_3"
         />
       </div>
 
