@@ -7,8 +7,8 @@ const NumberBlocking = () => {
   const [numbers, setNumbers] = useState("");
   const [blockedNumbers, setBlockedNumbers] = useState([]);
   const [error, setError] = useState("");
-  const [editingNumber, setEditingNumber] = useState(null); // Track the number being edited
-  const [editValue, setEditValue] = useState(""); // Value in the edit input
+
+  const [searchTerm, setSearchTerm] = useState(""); // Search term for filtering numbers
 
   // Fetch all blocked numbers on component load
   useEffect(() => {
@@ -201,125 +201,13 @@ const NumberBlocking = () => {
     }
   };
 
-  // Delete a blocked number
-  const handleDeleteNumber = async (id) => {
-    try {
-      await axios.delete(`http://localhost:8080/api/v1/number-block/${id}`);
-      fetchBlockedNumbers(); // Refresh the list
-      Swal.fire({
-        title: "Success!",
-        text: "Number deleted successfully!",
-        icon: "success",
-        confirmButtonText: "OK",
-        background: document.documentElement.classList.contains("dark")
-          ? "#1f2937"
-          : "#ffffff",
-        color: document.documentElement.classList.contains("dark")
-          ? "#ffffff"
-          : "#000000",
-      });
-    } catch (error) {
-      console.error(
-        "Error deleting blocked number:",
-        error.response?.data || error.message
-      );
-      setError(
-        "Failed to delete blocked number. Please check the console for details."
-      );
-      Swal.fire({
-        title: "Error!",
-        text: "Failed to delete blocked number. Please check the console for details.",
-        icon: "error",
-        confirmButtonText: "OK",
-        background: document.documentElement.classList.contains("dark")
-          ? "#1f2937"
-          : "#ffffff",
-        color: document.documentElement.classList.contains("dark")
-          ? "#ffffff"
-          : "#000000",
-      });
-    }
-  };
-
-  // Open edit modal
-  const openEditModal = (numberBlock) => {
-    setEditingNumber(numberBlock);
-    setEditValue(numberBlock.number);
-  };
-
-  // Close edit modal
-  const closeEditModal = () => {
-    setEditingNumber(null);
-    setEditValue("");
-  };
-
-  // Update a blocked number
-  const handleUpdateNumber = async () => {
-    try {
-      if (!validateNumber(editValue)) {
-        setError("Number must start with '94' and have a length of 11.");
-        Swal.fire({
-          title: "Invalid Number!",
-          text: "Number must start with '94' and have a length of 11.",
-          icon: "error",
-          confirmButtonText: "OK",
-          background: document.documentElement.classList.contains("dark")
-            ? "#1f2937"
-            : "#ffffff",
-          color: document.documentElement.classList.contains("dark")
-            ? "#ffffff"
-            : "#000000",
-        });
-        return;
-      }
-
-      const response = await axios.put(
-        `http://localhost:8080/api/v1/number-block/${editingNumber.id}`,
-        { number: editValue }
-      );
-
-      closeEditModal();
-      fetchBlockedNumbers(); // Refresh the list
-      Swal.fire({
-        title: "Success!",
-        text: "Number updated successfully!",
-        icon: "success",
-        confirmButtonText: "OK",
-        background: document.documentElement.classList.contains("dark")
-          ? "#1f2937"
-          : "#ffffff",
-        color: document.documentElement.classList.contains("dark")
-          ? "#ffffff"
-          : "#000000",
-      });
-    } catch (error) {
-      console.error(
-        "Error updating blocked number:",
-        error.response?.data || error.message
-      );
-      setError(
-        error.response?.data ||
-          "Failed to update blocked number. Please check the console for details."
-      );
-      Swal.fire({
-        title: "Error!",
-        text:
-          error.response?.data ||
-          "Failed to update blocked number. Please check the console for details.",
-        icon: "error",
-        confirmButtonText: "OK",
-        background: document.documentElement.classList.contains("dark")
-          ? "#1f2937"
-          : "#ffffff",
-        color: document.documentElement.classList.contains("dark")
-          ? "#ffffff"
-          : "#000000",
-      });
-    }
-  };
+  // Filter blocked numbers based on search term
+  const filteredNumbers = blockedNumbers.filter((numberBlock) =>
+    numberBlock.number.includes(searchTerm)
+  );
 
   return (
-    <div className="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-lg mt-10 dark:bg-dark_2">
+    <div className="p-6 w-full mx-auto bg-white rounded-lg shadow-lg dark:bg-dark_2">
       <h1 className="text-2xl font-bold mb-4">Number Blocking</h1>
 
       {/* Add numbers manually */}
@@ -331,12 +219,12 @@ const NumberBlocking = () => {
           value={numbers}
           onChange={(e) => setNumbers(e.target.value)}
           placeholder="Enter numbers separated by commas or newlines"
-          className="w-full p-2 border border-gray-300 rounded-md dark:bg-dark_2"
+          className="w-full px-4 py-2 border border-gray-300  rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white dark:bg-dark_3"
           rows="4"
         />
         <button
           onClick={handleAddNumbers}
-          className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          className="mt-2 bg-secondary text-white px-4 py-2 rounded-md hover:bg-secondary2 font-bold"
         >
           Add Numbers
         </button>
@@ -351,71 +239,42 @@ const NumberBlocking = () => {
           type="file"
           accept=".csv"
           onChange={handleFileUpload}
-          className="w-full p-2 border border-gray-300 rounded-md dark:bg-dark_2"
+          className="w-full p-2 border border-gray-300 rounded-md dark:bg-dark_2 hover:border-secondary"
         />
       </div>
 
-      {/* Display blocked numbers */}
-      <div>
-        <h2 className="text-xl font-bold mb-2">Blocked Numbers</h2>
-        {blockedNumbers.length === 0 ? (
-          <p>No numbers blocked yet.</p>
-        ) : (
-          <ul>
-            {blockedNumbers.map((numberBlock) => (
-              <li
-                key={numberBlock.id}
-                className="flex justify-between items-center p-2 border-b"
-              >
-                <span>{numberBlock.number}</span>
-                <div>
-                  <button
-                    onClick={() => openEditModal(numberBlock)}
-                    className="text-blue-500 hover:text-blue-700 mr-2"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteNumber(numberBlock.id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+      {/* Search Bar */}
+      <div className="mb-4">
+        <label className="block text-gray-400 font-medium mb-2">
+          Search Numbers
+        </label>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search numbers..."
+          className="w-full px-4 py-2 border border-gray-300  rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white dark:bg-dark_3"
+        />
       </div>
 
-      {/* Edit Modal */}
-      {editingNumber && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg dark:bg-dark_2">
-            <h2 className="text-xl font-bold mb-4">Edit Number</h2>
-            <input
-              type="text"
-              value={editValue}
-              onChange={(e) => setEditValue(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md dark:bg-dark_2"
-            />
-            <div className="mt-4 flex justify-end">
-              <button
-                onClick={closeEditModal}
-                className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 mr-2"
+      {/* Display blocked numbers in 3 columns */}
+      <div>
+        <h2 className="text-xl font-bold mb-2">Blocked Numbers</h2>
+        {filteredNumbers.length === 0 ? (
+          <p>No numbers found.</p>
+        ) : (
+          <div className="grid grid-cols-10 gap-4 ">
+            {filteredNumbers.map((numberBlock) => (
+              <div
+                key={numberBlock.id}
+                className="p-2 border-b hover:bg-secondary dark:hover:bg-slate-950 hover:transition-opacity duration-700"
               >
-                Cancel
-              </button>
-              <button
-                onClick={handleUpdateNumber}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-              >
-                Save
-              </button>
-            </div>
+                <span>{numberBlock.number}</span>
+              </div>
+            ))}
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Error message */}
       {error && <p className="text-red-500 mt-4">{error}</p>}

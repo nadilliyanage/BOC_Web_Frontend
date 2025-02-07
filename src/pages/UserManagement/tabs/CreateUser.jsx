@@ -111,7 +111,7 @@ const CreateUser = () => {
     <div className="flex justify-center h-full p-4 bg-gray-100 dark:bg-[#282828] dark:text-white">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-2xl p-6 bg-white rounded-lg shadow-md dark:bg-[#181818] dark:text-white"
+        className="w-full p-6 bg-white rounded-lg shadow-md dark:bg-[#282828] dark:text-white"
       >
         <h2 className="mb-6 text-3xl font-semibold text-center text-gray-700 dark:text-white">
           Create User
@@ -233,7 +233,7 @@ const CreateUser = () => {
         </div>
         <button
           type="submit"
-          className="w-full mt-4 px-4 py-2 text-white bg-[#eab308] rounded-md hover:bg-[#ce9b03] focus:outline-none focus:ring-2 focus:ring-[#a0801f]"
+          className="w-full mt-4 px-4 py-2 text-white bg-[#eab308] rounded-md hover:bg-[#ce9b03] focus:outline-none focus:ring-2 focus:ring-[#a0801f] font-bold"
         >
           Create User
         </button>

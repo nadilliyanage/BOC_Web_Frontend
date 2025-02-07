@@ -2,27 +2,54 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import RouterComponent from "./routes/router";
 import logo from "./assets/icon.png";
+import iconWhite from "./assets/iconWhite.png";
 import { GiHamburgerMenu } from "react-icons/gi";
 import DesktopMenu from "./components/DesktopMenu";
 
-// App component that contains the header and the router for navigation
 const App = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // State for mobile menu
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
-  // Toggle the menu for mobile view
+  // Load theme from localStorage on mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      setDarkMode(true);
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, []);
+
+  // Toggle Dark Mode
+  const toggleDarkMode = () => {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    localStorage.setItem("theme", newMode ? "dark" : "light");
+
+    if (newMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
+
+  // Toggle mobile menu
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-
-  // Toggle dark mode
 
   return (
     <Router>
-      <div className={`font-sans `}>
+      <div className="font-sans">
         {/* Navbar */}
         <nav className="bg-primary_2 dark:bg-[#181818] p-4 shadow-lg">
           <div className="flex justify-between items-center">
-            {/* Logo */}
+            {/* Logo (changes based on dark mode) */}
             <div className="hidden lg:block">
-              <img src={logo} alt="logo" className="w-[8%]" />
+              <img
+                src={darkMode ? iconWhite : logo}
+                alt="logo"
+                className="w-[16%]"
+              />
             </div>
 
             {/* Hamburger Icon for Mobile */}
@@ -30,8 +57,8 @@ const App = () => {
               <GiHamburgerMenu />
             </button>
 
-            {/* Desktop Menu */}
-            <DesktopMenu />
+            {/* Desktop Menu - Pass darkMode & toggleDarkMode */}
+            <DesktopMenu darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
           </div>
         </nav>
 

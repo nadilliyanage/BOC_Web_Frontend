@@ -89,7 +89,7 @@ const ManageUser = () => {
   }
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="dark:bg-dark_2 p-6 rounded-b-md">
       <ToastContainerWrapper />
       <h1 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
         User List

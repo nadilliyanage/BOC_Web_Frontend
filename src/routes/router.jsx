@@ -6,10 +6,10 @@ import HomePage from "../pages/Home";
 
 import ReportsPage from "../pages/Reports/Reports";
 import SmsPage from "../pages/SMS/SMS";
-import BlockNumbersPage from "../pages/NumberBlocking";
 import UserManagement from "../pages/UserManagement/UserManagement";
 import CreateMessage from "../pages/CreateMessage/CreateMessage";
 import Contacts from "../pages/Contacts/Contacts";
+import BlockNumbers from "../pages/BlockNumbers/BlockNumbers";
 
 // Simulating user role (admin, user1, or user2)
 const user = "admin"; // Change this value to "user1" or "user2" to test other roles
@@ -23,7 +23,7 @@ const RouterComponent = () => {
       { path: "/contacts", element: <Contacts /> },
       { path: "/reports", element: <ReportsPage /> },
       { path: "/sms", element: <SmsPage /> },
-      { path: "/block", element: <BlockNumbersPage /> },
+      { path: "/block", element: <BlockNumbers /> },
       { path: "/usermanagement", element: <UserManagement /> },
     ],
     user1: [
@@ -31,14 +31,14 @@ const RouterComponent = () => {
       { path: "/createMessage", element: <CreateMessage /> },
       { path: "/contacts", element: <Contacts /> },
       { path: "/sms", element: <SmsPage /> },
-      { path: "/block", element: <BlockNumbersPage /> },
+      { path: "/block", element: <BlockNumbers /> },
     ],
     user2: [
       { path: "/home", element: <HomePage /> },
       { path: "/createMessage", element: <CreateMessage /> },
       { path: "/contacts", element: <Contacts /> },
       { path: "/sms", element: <SmsPage /> },
-      { path: "/block", element: <BlockNumbersPage /> },
+      { path: "/block", element: <BlockNumbers /> },
     ],
   };
 
