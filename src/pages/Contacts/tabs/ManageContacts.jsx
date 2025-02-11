@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import SuccessAlert from "../../../components/SuccessAlert";
+import ErrorAlert from "../../../components/ErrorAlert";
+import WarningAlert from "../../../components/WarningAlert";
+import ConfirmAlert from "../../../components/ConfirmAlert";
 
 const API_BASE_URL = "http://localhost:8080/api/v1/contact-list";
 
@@ -20,7 +24,10 @@ const ContactList = () => {
       const response = await axios.get(`${API_BASE_URL}/files`);
       setFileList(response.data);
     } catch (error) {
-      alert("Error fetching file list.");
+      ErrorAlert({
+        title: "Error",
+        text: "Error fetching file list.",
+      });
     }
   };
 
@@ -30,25 +37,44 @@ const ContactList = () => {
 
   const handleUpload = async () => {
     if (!file) {
-      alert("Please select a file to upload.");
+      WarningAlert({
+        title: "No File Selected",
+        text: "Please select a file to upload.",
+      });
       return;
     }
 
     if (fileList.includes(file.name)) {
-      alert("This file has already been uploaded.");
+      WarningAlert({
+        title: "File Exists",
+        text: "This file has already been uploaded.",
+      });
       return;
     }
+
+    const isConfirmed = await ConfirmAlert({
+      title: "Are you sure?",
+      text: "Do you want to upload this file?",
+    });
+
+    if (!isConfirmed) return; // Exit if not confirmed
 
     const formData = new FormData();
     formData.append("file", file);
 
     try {
       await axios.post(`${API_BASE_URL}/upload`, formData);
-      alert("File uploaded successfully!");
+      SuccessAlert({
+        title: "Success",
+        text: "File uploaded successfully!",
+      });
       setFile(null);
       fetchFileNames();
     } catch (error) {
-      alert("Error uploading file.");
+      ErrorAlert({
+        title: "Error",
+        text: "Error uploading file.",
+      });
     }
   };
 
@@ -61,19 +87,35 @@ const ContactList = () => {
       setContacts(response.data);
       setIsModalOpen(true); // Open modal when contacts are fetched
     } catch (error) {
-      alert("Error fetching contacts.");
+      ErrorAlert({
+        title: "Error",
+        text: "Error fetching contacts.",
+      });
     }
   };
 
   const handleDeleteFile = async (fileName) => {
+    const isConfirmed = await ConfirmAlert({
+      title: "Are you sure?",
+      text: "Do you want to delete this file?",
+    });
+
+    if (!isConfirmed) return; // Exit if not confirmed
+
     try {
       await axios.delete(`${API_BASE_URL}/deleteFile`, {
         params: { fileName },
       });
-      alert("File deleted successfully!");
+      SuccessAlert({
+        title: "Success",
+        text: "File deleted successfully!",
+      });
       fetchFileNames();
     } catch (error) {
-      alert("Error deleting file.");
+      ErrorAlert({
+        title: "Error",
+        text: "Error deleting file.",
+      });
     }
   };
 
@@ -83,31 +125,58 @@ const ContactList = () => {
 
   const handleEditNumber = async () => {
     if (!editNumberData || !editNumberData.newNumber) {
-      alert("Please provide a new number.");
+      WarningAlert({
+        title: "Validation Error",
+        text: "Please provide a new number.",
+      });
       return;
     }
+
+    const isConfirmed = await ConfirmAlert({
+      title: "Are you sure?",
+      text: "Do you want to update this number?",
+    });
+
+    if (!isConfirmed) return; // Exit if not confirmed
 
     try {
       await axios.put(`${API_BASE_URL}/editNumber/${editNumberData.id}`, null, {
         params: { newNumber: editNumberData.newNumber },
       });
-      alert("Number updated successfully!");
+      SuccessAlert({
+        title: "Success",
+        text: "Number updated successfully!",
+      });
       fetchContactsByFileName(selectedFileName);
       setEditNumberData(null); // Clear edit mode
     } catch (error) {
-      alert("Error editing number.");
+      ErrorAlert({
+        title: "Error",
+        text: "Error editing number.",
+      });
     }
   };
 
   const handleDeleteNumber = async (id) => {
-    if (window.confirm("Are you sure you want to delete this number?")) {
-      try {
-        await axios.delete(`${API_BASE_URL}/deleteNumber/${id}`);
-        alert("Number deleted successfully!");
-        fetchContactsByFileName(selectedFileName);
-      } catch (error) {
-        alert("Error deleting number.");
-      }
+    const isConfirmed = await ConfirmAlert({
+      title: "Are you sure?",
+      text: "Do you want to delete this number?",
+    });
+
+    if (!isConfirmed) return; // Exit if not confirmed
+
+    try {
+      await axios.delete(`${API_BASE_URL}/deleteNumber/${id}`);
+      SuccessAlert({
+        title: "Success",
+        text: "Number deleted successfully!",
+      });
+      fetchContactsByFileName(selectedFileName);
+    } catch (error) {
+      ErrorAlert({
+        title: "Error",
+        text: "Error deleting number.",
+      });
     }
   };
 
@@ -174,7 +243,7 @@ const ContactList = () => {
               &times;
             </button>
 
-            <h3 className="text-xl font-semibold mb-4  ">
+            <h3 className="text-xl font-semibold mb-4">
               Contacts in {selectedFileName}
             </h3>
             <ul className="mt-10">
@@ -200,7 +269,7 @@ const ContactList = () => {
 
                       <button
                         onClick={handleEditNumber}
-                        className=" bg-green-500 text-white px-2 py-1 rounded"
+                        className="bg-green-500 text-white px-2 py-1 rounded"
                       >
                         Save
                       </button>

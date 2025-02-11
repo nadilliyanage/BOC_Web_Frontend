@@ -1,5 +1,5 @@
-// SMSForm.js
-import React from "react";
+import React, { useState } from "react";
+import LoadingScreen from "../../../../components/LoadingScreen";
 
 const SMSForm = ({
   smsContent,
@@ -30,9 +30,33 @@ const SMSForm = ({
   handleTestCampaign,
   handleSendTestSMS,
 }) => {
+  const [loading, setLoading] = useState(false); // Add loading state
+
+  // Wrap your functions with loading logic
+  const handleSendSMSWithLoading = async () => {
+    setLoading(true);
+    try {
+      await handleSendSMS();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleTestCampaignWithLoading = async () => {
+    setLoading(true);
+    try {
+      await handleTestCampaign();
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="bg-white w-full md:w-11/12 shadow-md rounded-b-lg p-6 mr-0 md:mr-6 dark:bg-[#282828]">
       <h1 className="text-lg font-bold mb-4">Send SMS</h1>
+
+      {/* Loading Screen */}
+      {loading && <LoadingScreen />}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Campaign Name */}
@@ -253,14 +277,14 @@ const SMSForm = ({
         <div className="flex flex-row-reverse mt-4 ">
           <button
             type="button"
-            onClick={handleSendSMS}
+            onClick={handleSendSMSWithLoading} // Use the wrapped function
             className="mx-2 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             Send SMS
           </button>
           <button
             type="button"
-            onClick={handleTestCampaign}
+            onClick={handleTestCampaignWithLoading} // Use the wrapped function
             className="mx-2 bg-dark_3 hover:bg-dark_1 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             Test Campaign

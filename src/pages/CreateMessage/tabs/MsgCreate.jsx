@@ -5,11 +5,13 @@ import ErrorAlert from "../../../components/ErrorAlert";
 import WarningAlert from "../../../components/WarningAlert";
 import ConfirmAlert from "../../../components/ConfirmAlert";
 import MobilePreview from "./components/MobilePreview";
+import LoadingScreen from "../../../components/LoadingScreen";
 
 const MsgCreate = () => {
   const [smsContent, setSmsContent] = useState("");
   const [messageLabel, setMessageLabel] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSmsContentChange = (event) => {
     setSmsContent(event.target.value);
@@ -36,6 +38,7 @@ const MsgCreate = () => {
     if (!isConfirmed) return; // Exit if not confirmed
 
     setIsSubmitting(true);
+    setIsLoading(true);
 
     try {
       const response = await axios.post(
@@ -67,11 +70,13 @@ const MsgCreate = () => {
       });
     } finally {
       setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <>
+      {isLoading && <LoadingScreen />} {/* Show loading screen while saving */}
       {/* Form Section */}
       <div className="bg-white w-full md:w-11/12 shadow-md rounded-b-lg p-6 mr-0 md:mr-6 dark:bg-[#282828]">
         <h1 className="text-lg font-bold mb-4">Create Message</h1>
@@ -120,7 +125,6 @@ const MsgCreate = () => {
           </button>
         </div>
       </div>
-
       {/* Mobile Preview Section */}
       <MobilePreview smsContent={smsContent} />
     </>
