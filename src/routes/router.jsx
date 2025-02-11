@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 // Importing existing pages
-import HomePage from "../pages/Home";
+import HomePage from "../pages/Home/Home";
 
 import ReportsPage from "../pages/Reports/Reports";
 import SmsPage from "../pages/SMS/SMS";
