@@ -2,33 +2,32 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/icon.png";
-import loginImg from "../assets/loginImg.png";
+import signupImg from "../assets/signupImg.png";
 
-const LoginPage = () => {
+const SignUpPage = () => {
+  const [name, setName] = useState("");
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/auth/login",
+        "http://localhost:8080/api/auth/signup",
         {
           userId,
           password,
+          name,
         }
       );
-      const user = response.data;
 
-      // Save user details in localStorage
-      localStorage.setItem("user", JSON.stringify(user));
-
-      // Redirect based on role
-      navigate("/home");
+      if (response.status === 200) {
+        navigate("/login"); // Redirect to login page after successful sign-up
+      }
     } catch (err) {
-      setError("Invalid credentials");
+      setError("Invalid credentials or user already exists");
     }
   };
 
@@ -38,16 +37,26 @@ const LoginPage = () => {
         <img src={logo} alt="logo" className="w-16 h-12" />
       </div>
 
-      {/* Login Form and Image */}
+      {/* Sign-Up Form and Image */}
       <div className="flex flex-wrap justify-center items-center gap-16 bg-white dark:bg-dark_2 p-10 rounded-lg shadow-lg w-full max-w-5xl">
         {/* Form Section */}
         <div className="w-full lg:w-2/5">
-          <h2 className="text-3xl font-bold mb-6 dark:text-white">Login</h2>
+          <h2 className="text-3xl font-bold mb-6 dark:text-white">Sign Up</h2>
           <p className="text-gray-500 mb-4 dark:text-gray-300">
-            Login to access your account
+            Create a new account
           </p>
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleSignUp}>
+            <div className="mb-4">
+              <label className="block dark:text-white">Name</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded mt-1 dark:bg-dark_3 dark:text-white"
+                required
+              />
+            </div>
             <div className="mb-4">
               <label className="block dark:text-white">UserID</label>
               <input
@@ -68,28 +77,17 @@ const LoginPage = () => {
                 required
               />
             </div>
-            <div className="flex justify-between items-center mb-4">
-              <div>
-                <input type="checkbox" className="mr-2" />
-                <span className="text-gray-600 dark:text-gray-300">
-                  Remember me
-                </span>
-              </div>
-              <a href="/forgot-password" className="text-red-500">
-                Forgot Password?
-              </a>
-            </div>
             <button
               type="submit"
               className="w-full bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600"
             >
-              Login
+              Sign Up
             </button>
           </form>
           <p className="text-center mt-4 dark:text-gray-300">
-            Don’t have an account?{" "}
-            <a href="/signup" className="text-red-500">
-              Sign up
+            Already have an account?{" "}
+            <a href="/login" className="text-red-500">
+              Login
             </a>
           </p>
         </div>
@@ -97,8 +95,8 @@ const LoginPage = () => {
         {/* Image Section */}
         <div className="hidden lg:flex items-center justify-center w-2/5 bg-gray-100 rounded-lg dark:bg-dark_3">
           <img
-            src={loginImg}
-            alt="login illustration"
+            src={signupImg}
+            alt="sign-up illustration"
             className="w-[85%] p-10"
           />
         </div>
@@ -107,4 +105,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignUpPage;
