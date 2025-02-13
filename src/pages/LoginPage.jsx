@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import logo from "../assets/icon.png";
+import iconWhite from "../assets/iconWhite.png";
+import loginImg from "../assets/loginImg.png";
 
-const Login = ({ setIsAuthenticated }) => {
-  const [username, setUsername] = useState("");
+const LoginPage = () => {
+  const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -14,14 +17,16 @@ const Login = ({ setIsAuthenticated }) => {
       const response = await axios.post(
         "http://localhost:8080/api/auth/login",
         {
-          username,
+          userId,
           password,
         }
       );
+      const user = response.data;
 
-      const { token } = response.data;
-      localStorage.setItem("token", token);
-      setIsAuthenticated(true);
+      // Save user details in localStorage
+      localStorage.setItem("user", JSON.stringify(user));
+
+      // Redirect based on role
       navigate("/home");
     } catch (err) {
       setError("Invalid credentials");
@@ -29,45 +34,65 @@ const Login = ({ setIsAuthenticated }) => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="w-full max-w-md bg-white p-8 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-bold mb-4">Login</h2>
-        {error && <p className="text-red-500">{error}</p>}
-        <form onSubmit={handleLogin}>
-          <div className="mb-4">
-            <label htmlFor="username" className="block text-gray-700">
-              Username
-            </label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg"
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="password" className="block text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-primary_2 text-white py-2 rounded-lg"
-          >
-            Login
-          </button>
-        </form>
+    <div>
+      <div className="absolute m-8">
+        <img src={logo} alt="logo" className="w-16 h-12" />
+      </div>
+      <div className="flex justify-center items-center h-screen bg-white gap-10 dark:bg-dark_2">
+        <div className=" p-8  w-[35%]">
+          <h2 className="text-3xl font-bold mb-6 ">Login</h2>
+          <p className=" text-gray-500 mb-4">Login to access your account</p>
+          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+          <form onSubmit={handleLogin}>
+            <div className="mb-4">
+              <label className="block ">UserID</label>
+              <input
+                type="text"
+                value={userId}
+                onChange={(e) => setUserId(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded mt-1 dark:bg-dark_3"
+                required
+              />
+            </div>
+            <div className="mb-6">
+              <label className="block ">Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded mt-1 dark:bg-dark_3"
+                required
+              />
+            </div>
+            <div className="flex justify-between items-center mb-4">
+              <div>
+                <input type="checkbox" className="mr-2" />
+                <span className="text-gray-600">Remember me</span>
+              </div>
+              <a href="/forgot-password" className="text-red-500">
+                Forgot Password
+              </a>
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600"
+            >
+              Login
+            </button>
+          </form>
+          <p className="text-center mt-4">
+            Don’t have an account?{" "}
+            <a href="/signup" className="text-red-500">
+              Sign up
+            </a>
+          </p>
+        </div>
+        <div className="hidden lg:flex items-center justify-center w-[45%] h-[90%] bg-gray-100 rounded-lg dark:bg-dark_3">
+          <img src={loginImg} alt="loginImg" className="w-[85%] p-10" />
+        </div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default LoginPage;
