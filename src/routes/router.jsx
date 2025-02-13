@@ -9,7 +9,8 @@ import UserManagement from "../pages/UserManagement/UserManagement";
 import CreateMessage from "../pages/CreateMessage/CreateMessage";
 import Contacts from "../pages/Contacts/Contacts";
 import BlockNumbers from "../pages/BlockNumbers/BlockNumbers";
-import LoginPage from "../pages/LoginPage"; // Import the LoginPage
+import LoginPage from "../pages/LoginPage";
+import SignUpPage from "../pages/SignUpPage";
 
 const RouterComponent = () => {
   // Get user from localStorage
@@ -49,6 +50,7 @@ const RouterComponent = () => {
     <Routes>
       {/* Public route for login */}
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignUpPage />} />
 
       {/* Protected routes */}
       {roleRoutes.map((route, index) => (
@@ -62,7 +64,7 @@ const RouterComponent = () => {
       />
 
       {/* Default route */}
-      <Route path="*" element={<Navigate to="/home" />} />
+      <Route path="*" element={<Navigate to="/login" />} />
     </Routes>
   );
 };

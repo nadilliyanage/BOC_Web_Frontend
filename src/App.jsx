@@ -44,12 +44,13 @@ const App = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   // Check if the current route is the login page
-  const isLoginPage = location.pathname === "/login";
+  const isLoginPageOrSignUpPage =
+    location.pathname === "/login" || location.pathname === "/signup";
 
   return (
     <div className="font-sans">
       {/* Navbar - Conditionally render based on route */}
-      {!isLoginPage && (
+      {!isLoginPageOrSignUpPage && (
         <nav className="bg-primary_2 dark:bg-[#181818] p-4 shadow-lg">
           <div className="flex justify-between items-center">
             {/* Logo (changes based on dark mode) */}
@@ -73,7 +74,7 @@ const App = () => {
       )}
 
       {/* Mobile Menu */}
-      {!isLoginPage && (
+      {!isLoginPageOrSignUpPage && (
         <div
           className={`lg:hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 ${
             isMenuOpen ? "block" : "hidden"
