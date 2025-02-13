@@ -8,9 +8,10 @@ const DesktopMenu = ({ darkMode, toggleDarkMode }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Get user role from localStorage
+  // Get user details from localStorage
   const user = JSON.parse(localStorage.getItem("user"));
   const userRole = user ? user.role : null;
+  const userName = user ? user.name : null;
 
   // Toggle dropdown visibility
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
@@ -49,6 +50,11 @@ const DesktopMenu = ({ darkMode, toggleDarkMode }) => {
     navigate("/login");
   };
 
+  // Handle sign in
+  const handleSignIn = () => {
+    navigate("/login");
+  };
+
   return (
     <div className="hidden lg:flex space-x-4 gap-5 items-center relative">
       {/* Menu Items */}
@@ -71,27 +77,41 @@ const DesktopMenu = ({ darkMode, toggleDarkMode }) => {
         </a>
       ))}
 
-      {/* Profile Dropdown */}
-      <div className="relative">
+      {/* Profile Dropdown or Sign In Button */}
+      {user ? (
+        <div className="relative">
+          <button
+            onClick={toggleDropdown}
+            className="flex items-center space-x-2 text-black hover:text-secondary focus:outline-none dark:text-white dark:hover:text-secondary"
+          >
+            <FaUserCircle size={24} />
+            <span className="font-semibold text-lg">{userName}</span>
+            {isDropdownOpen ? (
+              <FaCaretUp size={18} />
+            ) : (
+              <FaCaretDown size={18} />
+            )}
+          </button>
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-2 bg-white shadow-md rounded-md w-40 z-10 dark:bg-gray-800">
+              <button
+                onClick={handleSignOut}
+                className="block px-4 py-2 text-black hover:bg-gray-100 dark:text-white dark:hover:bg-black w-full text-left"
+              >
+                Sign Out
+              </button>
+            </div>
+          )}
+        </div>
+      ) : (
         <button
-          onClick={toggleDropdown}
+          onClick={handleSignIn}
           className="flex items-center space-x-2 text-black hover:text-secondary focus:outline-none dark:text-white dark:hover:text-secondary"
         >
           <FaUserCircle size={24} />
-          <span className="font-semibold text-lg">Profile</span>
-          {isDropdownOpen ? <FaCaretUp size={18} /> : <FaCaretDown size={18} />}
+          <span className="font-semibold text-lg">Sign In</span>
         </button>
-        {isDropdownOpen && (
-          <div className="absolute right-0 mt-2 bg-white shadow-md rounded-md w-40 z-10 dark:bg-gray-800">
-            <button
-              onClick={handleSignOut}
-              className="block px-4 py-2 text-black hover:bg-gray-100 dark:text-white dark:hover:bg-black w-full text-left"
-            >
-              Sign Out
-            </button>
-          </div>
-        )}
-      </div>
+      )}
 
       {/* Dark Mode Toggle */}
       <button

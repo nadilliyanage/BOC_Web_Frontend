@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/icon.png";
-import iconWhite from "../assets/iconWhite.png";
 import loginImg from "../assets/loginImg.png";
 
 const LoginPage = () => {
@@ -34,43 +33,50 @@ const LoginPage = () => {
   };
 
   return (
-    <div>
-      <div className="absolute m-8">
+    <div className="dark:bg-dark_2 min-h-screen flex justify-center items-center">
+      <div className="absolute top-8 left-8 ">
         <img src={logo} alt="logo" className="w-16 h-12" />
       </div>
-      <div className="flex justify-center items-center h-screen bg-white gap-10 dark:bg-dark_2">
-        <div className=" p-8  w-[35%]">
-          <h2 className="text-3xl font-bold mb-6 ">Login</h2>
-          <p className=" text-gray-500 mb-4">Login to access your account</p>
+
+      {/* Login Form and Image */}
+      <div className="flex flex-wrap justify-center items-center gap-16 bg-white dark:bg-dark_2 p-10 rounded-lg shadow-lg w-full max-w-5xl">
+        {/* Form Section */}
+        <div className="w-full lg:w-2/5">
+          <h2 className="text-3xl font-bold mb-6 dark:text-white">Login</h2>
+          <p className="text-gray-500 mb-4 dark:text-gray-300">
+            Login to access your account
+          </p>
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
           <form onSubmit={handleLogin}>
             <div className="mb-4">
-              <label className="block ">UserID</label>
+              <label className="block dark:text-white">UserID</label>
               <input
                 type="text"
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded mt-1 dark:bg-dark_3"
+                className="w-full p-2 border border-gray-300 rounded mt-1 dark:bg-dark_3 dark:text-white"
                 required
               />
             </div>
             <div className="mb-6">
-              <label className="block ">Password</label>
+              <label className="block dark:text-white">Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded mt-1 dark:bg-dark_3"
+                className="w-full p-2 border border-gray-300 rounded mt-1 dark:bg-dark_3 dark:text-white"
                 required
               />
             </div>
             <div className="flex justify-between items-center mb-4">
               <div>
                 <input type="checkbox" className="mr-2" />
-                <span className="text-gray-600">Remember me</span>
+                <span className="text-gray-600 dark:text-gray-300">
+                  Remember me
+                </span>
               </div>
               <a href="/forgot-password" className="text-red-500">
-                Forgot Password
+                Forgot Password?
               </a>
             </div>
             <button
@@ -80,15 +86,21 @@ const LoginPage = () => {
               Login
             </button>
           </form>
-          <p className="text-center mt-4">
+          <p className="text-center mt-4 dark:text-gray-300">
             Don’t have an account?{" "}
             <a href="/signup" className="text-red-500">
               Sign up
             </a>
           </p>
         </div>
-        <div className="hidden lg:flex items-center justify-center w-[45%] h-[90%] bg-gray-100 rounded-lg dark:bg-dark_3">
-          <img src={loginImg} alt="loginImg" className="w-[85%] p-10" />
+
+        {/* Image Section */}
+        <div className="hidden lg:flex items-center justify-center w-2/5 bg-gray-100 rounded-lg dark:bg-dark_3">
+          <img
+            src={loginImg}
+            alt="login illustration"
+            className="w-[85%] p-10"
+          />
         </div>
       </div>
     </div>
