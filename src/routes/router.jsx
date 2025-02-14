@@ -11,6 +11,7 @@ import Contacts from "../pages/Contacts/Contacts";
 import BlockNumbers from "../pages/BlockNumbers/BlockNumbers";
 import LoginPage from "../pages/LoginPage";
 import SignUpPage from "../pages/SignUpPage";
+import WaitingPage from "../pages/WaitingPage";
 
 const RouterComponent = () => {
   // Get user from localStorage
@@ -51,6 +52,7 @@ const RouterComponent = () => {
       {/* Public route for login */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignUpPage />} />
+      <Route path="/waiting" element={<WaitingPage />} />
 
       {/* Protected routes */}
       {roleRoutes.map((route, index) => (

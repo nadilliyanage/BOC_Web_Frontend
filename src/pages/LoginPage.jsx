@@ -25,8 +25,14 @@ const LoginPage = () => {
       // Save user details in localStorage
       localStorage.setItem("user", JSON.stringify(user));
 
-      // Redirect based on role
-      navigate("/home");
+      const userdata = JSON.parse(localStorage.getItem("user"));
+      const userRole = userdata ? userdata.role : null;
+
+      if (userRole === "USER") {
+        navigate("/waiting"); // Redirect to waiting page
+      } else {
+        navigate("/home"); // Redirect to home page
+      }
     } catch (err) {
       setError("Invalid credentials");
     }
