@@ -19,6 +19,15 @@ const RouterComponent = () => {
 
   // Role-based route configuration
   const routesByRole = {
+    SUPERADMIN: [
+      { path: "/home", element: <HomePage /> },
+      { path: "/createMessage", element: <CreateMessage /> },
+      { path: "/contacts", element: <Contacts /> },
+      { path: "/reports", element: <ReportsPage /> },
+      { path: "/sms", element: <SmsPage /> },
+      { path: "/block", element: <BlockNumbers /> },
+      { path: "/usermanagement", element: <UserManagement /> },
+    ],
     ADMIN: [
       { path: "/home", element: <HomePage /> },
       { path: "/createMessage", element: <CreateMessage /> },
