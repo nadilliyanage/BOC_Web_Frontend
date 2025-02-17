@@ -58,7 +58,7 @@ const App = () => {
               <img
                 src={darkMode ? iconWhite : logo}
                 alt="logo"
-                className="w-16 h-12"
+                className="w-fit h-12"
               />
             </div>
 
