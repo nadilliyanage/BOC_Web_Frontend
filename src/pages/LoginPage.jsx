@@ -25,8 +25,14 @@ const LoginPage = () => {
       // Save user details in localStorage
       localStorage.setItem("user", JSON.stringify(user));
 
-      // Redirect based on role
-      navigate("/home");
+      const userdata = JSON.parse(localStorage.getItem("user"));
+      const userRole = userdata ? userdata.role : null;
+
+      if (userRole === "USER") {
+        navigate("/waiting"); // Redirect to waiting page
+      } else {
+        navigate("/home"); // Redirect to home page
+      }
     } catch (err) {
       setError("Invalid credentials");
     }
@@ -34,14 +40,13 @@ const LoginPage = () => {
 
   return (
     <div className="dark:bg-dark_2 min-h-screen flex justify-center items-center">
-      <div className="absolute top-8 left-8 ">
-        <img src={logo} alt="logo" className="w-16 h-12" />
-      </div>
-
       {/* Login Form and Image */}
       <div className="flex flex-wrap justify-center items-center gap-16 bg-white dark:bg-dark_2 p-10 rounded-lg shadow-lg w-full max-w-5xl">
         {/* Form Section */}
         <div className="w-full lg:w-2/5">
+          <div className="absolute top-8 left-8 ">
+            <img src={logo} alt="logo" className="w-fit h-12" />
+          </div>
           <h2 className="text-3xl font-bold mb-6 dark:text-white">Login</h2>
           <p className="text-gray-500 mb-4 dark:text-gray-300">
             Login to access your account

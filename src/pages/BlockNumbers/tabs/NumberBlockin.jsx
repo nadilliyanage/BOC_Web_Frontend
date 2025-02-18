@@ -208,13 +208,9 @@ const NumberBlocking = () => {
 
   return (
     <div className="p-6 w-full mx-auto bg-white rounded-lg shadow-lg dark:bg-dark_2">
-      <h1 className="text-2xl font-bold mb-4">Number Blocking</h1>
-
       {/* Add numbers manually */}
       <div className="mb-4">
-        <label className="block text-gray-300 font-medium mb-2">
-          Add Numbers
-        </label>
+        <label className="block  font-medium mb-2">Add Numbers</label>
         <textarea
           value={numbers}
           onChange={(e) => setNumbers(e.target.value)}

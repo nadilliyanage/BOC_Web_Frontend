@@ -71,14 +71,12 @@ const ManageUser = () => {
                 <th className="border border-gray-300 px-4 py-2 text-left">
                   Name
                 </th>
+
+                <th className="border border-gray-300 px-4 py-2 text-left">
+                  User Role
+                </th>
                 <th className="border border-gray-300 px-4 py-2 text-left">
                   Department
-                </th>
-                <th className="border border-gray-300 px-4 py-2 text-left">
-                  User Type
-                </th>
-                <th className="border border-gray-300 px-4 py-2 text-left">
-                  SMS Type
                 </th>
               </tr>
             </thead>
@@ -94,14 +92,12 @@ const ManageUser = () => {
                   <td className="border border-gray-300 px-4 py-2">
                     {user.userName}
                   </td>
+
+                  <td className="border border-gray-300 px-4 py-2">
+                    {user.role}
+                  </td>
                   <td className="border border-gray-300 px-4 py-2">
                     {user.department}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {user.userType}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {user.smsType}
                   </td>
                 </tr>
               ))}

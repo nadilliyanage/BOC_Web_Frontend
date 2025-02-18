@@ -7,6 +7,7 @@ import signupImg from "../assets/signupImg.png";
 const SignUpPage = () => {
   const [name, setName] = useState("");
   const [userId, setUserId] = useState("");
+  const [department, setDepartment] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ const SignUpPage = () => {
           userId,
           password,
           name,
+          department,
         }
       );
 
@@ -57,12 +59,23 @@ const SignUpPage = () => {
                 required
               />
             </div>
+
             <div className="mb-4">
               <label className="block dark:text-white">UserID</label>
               <input
                 type="text"
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded mt-1 dark:bg-dark_3 dark:text-white"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block dark:text-white">Department</label>
+              <input
+                type="text"
+                value={department}
+                onChange={(e) => setDepartment(e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded mt-1 dark:bg-dark_3 dark:text-white"
                 required
               />

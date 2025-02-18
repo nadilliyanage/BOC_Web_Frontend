@@ -329,9 +329,7 @@ const ManageBlockNumbers = () => {
       <div className="w-2/3 m-4">
         {/* Search Bar */}
         <div className="mb-4">
-          <label className="block text-gray-400 font-medium mb-2">
-            Search Numbers
-          </label>
+          <label className="block  font-medium mb-2">Search Numbers</label>
           <input
             type="text"
             value={searchTerm}
@@ -376,10 +374,8 @@ const ManageBlockNumbers = () => {
       </div>
       <div className="w-1/3 m-4 border-l-2 p-8 ">
         {/* Add numbers manually */}
-        <div className="mt-8">
-          <label className="block text-gray-300 font-medium mb-2 ">
-            Add Numbers
-          </label>
+        <div className="mb-8">
+          <label className="block font-medium mb-2 ">Add Numbers</label>
           <textarea
             value={numbers}
             onChange={(e) => setNumbers(e.target.value)}

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ConfirmDialog from "../../../components/ConfirmDialog";
-import UserTable from "./Components/UserTable";
 import ToastContainerWrapper from "./Components/ToastContainerWrapper";
 import { toast } from "react-toastify";
 
@@ -11,6 +10,7 @@ const ManageUser = () => {
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchUsers();
@@ -41,8 +41,8 @@ const ManageUser = () => {
           .then(() => {
             toast.success("User deleted successfully!", {
               className:
-                "dark:bg-black text-green-800 dark:text-white rounded-lg shadow-lg", // Tailwind styles for the container
-              bodyClassName: "text-sm font-medium", // Tailwind styles for the body
+                "dark:bg-black text-green-800 dark:text-white rounded-lg shadow-lg",
+              bodyClassName: "text-sm font-medium",
             });
             fetchUsers();
           })
@@ -69,8 +69,8 @@ const ManageUser = () => {
       .then(() => {
         toast.success("User updated successfully!", {
           className:
-            "dark:bg-black text-green-800 dark:text-white rounded-lg shadow-lg", // Tailwind styles for the container
-          bodyClassName: "text-sm font-medium", // Tailwind styles for the body
+            "dark:bg-black text-green-800 dark:text-white rounded-lg shadow-lg",
+          bodyClassName: "text-sm font-medium",
         });
         fetchUsers();
         handleModalClose();
@@ -79,6 +79,14 @@ const ManageUser = () => {
         toast.error("Failed to update user.");
       });
   };
+
+  // Filter users based on search term
+  const filteredUsers = users.filter(
+    (user) =>
+      user.userId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.role.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (loading) {
     return <p>Loading users...</p>;
@@ -90,110 +98,113 @@ const ManageUser = () => {
 
   return (
     <div className="dark:bg-dark_2 p-6 rounded-b-md">
-      <ToastContainerWrapper />
       <h1 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
         User List
       </h1>
-      <UserTable
-        users={users}
-        handleUpdate={handleUpdate}
-        handleDelete={handleDelete}
-      />
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="bg-white p-6 rounded shadow-lg w-96 dark:bg-dark_2">
-            <h2 className="text-lg font-bold mb-4">Update User</h2>
-            {currentUser &&
-              Object.keys(currentUser)
-                .filter((key) => key !== "id") // Exclude the 'id' field
-                .map((key) => (
-                  <div className="mb-4" key={key}>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
-                      {key.charAt(0).toUpperCase() + key.slice(1)}{" "}
-                      {/* Capitalize the field name */}
-                    </label>
-                    {key === "userType" ? (
-                      <select
-                        id="userType"
-                        name="userType"
-                        value={currentUser[key]}
-                        onChange={(e) =>
-                          setCurrentUser({
-                            ...currentUser,
-                            [key]: e.target.value,
-                          })
-                        }
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#eab308] dark:text-white dark:bg-dark_3"
-                        required
-                      >
-                        <option value="" disabled>
-                          Select User Type
-                        </option>
-                        <option value="2-Opr1">2-Opr1(Promotional SMS)</option>
-                        <option value="3-Opr2">
-                          3-Opr2(Non Promotional SMS)
-                        </option>
-                        <option value="4-Opr3">4-Opr3(both)</option>
-                        <option value="Loan">Loan SMS</option>
-                      </select>
-                    ) : key === "smsType" ? (
-                      <select
-                        id="smsType"
-                        name="smsType"
-                        value={currentUser[key]}
-                        onChange={(e) =>
-                          setCurrentUser({
-                            ...currentUser,
-                            [key]: e.target.value,
-                          })
-                        }
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#eab308] dark:text-white dark:bg-dark_3"
-                        required
-                      >
-                        <option value="" disabled>
-                          Select SMS Type
-                        </option>
-                        <option value="ATM">ATM</option>
-                        <option value="BSG">BSG Message</option>
-                        <option value="Branch_loan">
-                          Branch Loan Recoveries
-                        </option>
-                        <option value="BOCIT">BOC IT</option>
-                        <option value="CreditCard">Credit Card</option>
-                        <option value="InwardRemmitance">
-                          Inward Remittance Alerts
-                        </option>
-                        <option value="Loan">Loan Messages</option>
-                        <option value="LankaPay">Lanka Pay</option>
-                        <option value="Marketing">Marketing</option>
-                        <option value="Remmitance">Remittance</option>
-                      </select>
-                    ) : (
-                      <input
-                        type="text"
-                        className="w-full px-3 py-2 border rounded dark:text-white dark:bg-dark_3"
-                        value={currentUser[key]}
-                        onChange={(e) =>
-                          setCurrentUser({
-                            ...currentUser,
-                            [key]: e.target.value,
-                          })
-                        }
-                      />
-                    )}
-                  </div>
-                ))}
+      <div className="mb-4">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search users..."
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white dark:bg-dark_3"
+        />
+      </div>
+      {filteredUsers.length === 0 ? (
+        <p className="text-center text-gray-600">No users found.</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="table-auto w-full border-collapse border border-gray-300">
+            <thead>
+              <tr className="bg-white dark:bg-dark_2">
+                <th className="border border-gray-300 px-4 py-2 text-left">
+                  User ID
+                </th>
+                <th className="border border-gray-300 px-4 py-2 text-left">
+                  Name
+                </th>
+                <th className="border border-gray-300 px-4 py-2 text-left">
+                  User Role
+                </th>
+                <th className="border border-gray-300 px-4 py-2 text-left">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredUsers.map((user) => (
+                <tr
+                  key={user.id}
+                  className="even:bg-gray-50 dark:even:bg-dark_2 hover:bg-gray-100 dark:hover:bg-dark_3"
+                >
+                  <td className="border border-gray-300 px-4 py-2">
+                    {user.userId}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {user.userName}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {user.role}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {user.department}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <button
+                      onClick={() => handleUpdate(user)}
+                      className="bg-blue-500 text-white px-3 py-1 rounded-md mr-2 hover:bg-blue-600"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(user.id)}
+                      className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
+      {/* Update User Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white dark:bg-dark_2 p-6 rounded-lg w-1/3">
+            <h2 className="text-xl font-bold mb-4 dark:text-white">
+              Update User
+            </h2>
+            <input
+              type="text"
+              value={currentUser.userName}
+              onChange={(e) =>
+                setCurrentUser({ ...currentUser, userName: e.target.value })
+              }
+              className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4 dark:text-white dark:bg-dark_3"
+              placeholder="Name"
+            />
+            <input
+              type="text"
+              value={currentUser.role}
+              onChange={(e) =>
+                setCurrentUser({ ...currentUser, role: e.target.value })
+              }
+              className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4 dark:text-white dark:bg-dark_3"
+              placeholder="Role"
+            />
             <div className="flex justify-end">
               <button
-                className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
                 onClick={handleModalClose}
+                className="bg-gray-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-gray-600"
               >
                 Cancel
               </button>
               <button
-                className="bg-green-500 text-white px-4 py-2 rounded"
                 onClick={handleSubmitUpdate}
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
               >
                 Save
               </button>

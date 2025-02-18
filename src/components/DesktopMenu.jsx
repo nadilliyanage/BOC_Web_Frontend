@@ -18,25 +18,41 @@ const DesktopMenu = ({ darkMode, toggleDarkMode }) => {
 
   // Menu items with role-based visibility
   const menuItems = [
-    { href: "/home", label: "Home", roles: ["ADMIN", "USER1", "USER2"] },
-    { href: "/sms", label: "SendSMS", roles: ["ADMIN", "USER1", "USER2"] },
+    {
+      href: "/home",
+      label: "Home",
+      roles: ["SUPERADMIN", "ADMIN", "USER1", "USER2"],
+    },
+    {
+      href: "/sms",
+      label: "SendSMS",
+      roles: ["SUPERADMIN", "ADMIN", "USER1", "USER2"],
+    },
     {
       href: "/createMessage",
       label: "CreateMessage",
-      roles: ["ADMIN", "USER1", "USER2"],
+      roles: ["SUPERADMIN", "ADMIN", "USER1", "USER2"],
     },
     {
       href: "/contacts",
       label: "Contacts",
-      roles: ["ADMIN", "USER1", "USER2"],
+      roles: ["SUPERADMIN", "ADMIN", "USER1", "USER2"],
     },
     {
       href: "/block",
       label: "BlockNumbers",
-      roles: ["ADMIN", "USER1", "USER2"],
+      roles: ["SUPERADMIN", "ADMIN", "USER1", "USER2"],
     },
-    { href: "/reports", label: "Reports", roles: ["ADMIN", "USER1"] },
-    { href: "/usermanagement", label: "UserManagement", roles: ["ADMIN"] },
+    {
+      href: "/reports",
+      label: "Reports",
+      roles: ["SUPERADMIN", "ADMIN", "USER1"],
+    },
+    {
+      href: "/usermanagement",
+      label: "UserManagement",
+      roles: ["SUPERADMIN", "ADMIN"],
+    },
   ];
 
   // Filter menu items based on user role
