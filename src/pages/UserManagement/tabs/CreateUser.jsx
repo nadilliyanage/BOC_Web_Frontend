@@ -185,27 +185,28 @@ const CreateUser = () => {
               htmlFor="userType"
               className="block mb-2 text-sm font-medium text-gray-600 dark:text-white"
             >
-              User Type
+              User Role
             </label>
             <select
-              id="userType"
-              name="userType"
-              value={formData.userType}
+              id="role"
+              name="role"
+              value={formData.role}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#eab308] dark:text-white dark:bg-dark_3"
               required
             >
-              <option value="" disabled>
-                Select User Type
-              </option>
-              {userTypes.map((type) => (
+              <option value="">Select User Type</option>
+              <option value="ADMIN">Admin</option>
+              <option value="USER1">user1</option>
+              <option value="USER2">user2</option>
+              {/* {userTypes.map((type) => (
                 <option key={type.id} value={type.value}>
                   {type.label}
                 </option>
-              ))}
+              ))} */}
             </select>
           </div>
-          <div className="w-full px-2 mb-4">
+          {/* <div className="w-full px-2 mb-4">
             <label
               htmlFor="smsType"
               className="block mb-2 text-sm font-medium text-gray-600 dark:text-white"
@@ -229,7 +230,7 @@ const CreateUser = () => {
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
         </div>
         <button
           type="submit"
