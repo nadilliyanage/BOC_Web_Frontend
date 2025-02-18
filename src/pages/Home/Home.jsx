@@ -10,6 +10,7 @@ const Home = () => {
   const [pendingMessageCount, setPendingMessageCount] = useState(0);
   const [scheduledMessageCount, setScheduledMessageCount] = useState(0);
   const [toReviewMessageCount, setToReviewMessageCount] = useState(0);
+  const [errorMessageCount, setErrorMessageCount] = useState(0);
 
   // Fetch the user count from the backend API
   useEffect(() => {
@@ -89,6 +90,26 @@ const Home = () => {
     fetchToReviewMessageCount();
   }, []);
 
+  // Fetch the Error message count from the backend API
+  useEffect(() => {
+    const fetchToReviewMessageCount = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8080/api/v1/create-message/error-sms-count"
+        ); // Replace with your backend URL
+        if (!response.ok) {
+          throw new Error("Failed to fetch Error message count");
+        }
+        const data = await response.json();
+        setToReviewMessageCount(data); // Update the state with the ToReview message count
+      } catch (error) {
+        console.error("Error fetching ToReview message count:", error);
+      }
+    };
+
+    fetchToReviewMessageCount();
+  }, []);
+
   return (
     <div className="p-4">
       <div className="flex flex-row">
@@ -99,7 +120,7 @@ const Home = () => {
               <label className="font-bold text-lg">All Users</label>
               <label className="font-bold text-xl text-center">
                 {userCount}
-              </label>{" "}
+              </label>
               {/* Display the user count */}
             </div>
             <div className="p-6 bg-white dark:bg-dark_3 rounded-full shadow-lg hover:transition-opacity hover:bg-secondary duration-1000 dark:hover:transition-opacity dark:hover:bg-secondary">
@@ -143,7 +164,9 @@ const Home = () => {
           <div className="flex flex-row-reverse justify-center items-center">
             <div className="flex flex-col mx-6">
               <label className="font-bold text-lg">Error SMS</label>
-              <label className="font-bold text-xl text-center">Count</label>
+              <label className="font-bold text-xl text-center">
+                {errorMessageCount}
+              </label>
             </div>
             <div className="p-6 bg-white dark:bg-dark_3 rounded-full shadow-lg hover:transition-opacity hover:bg-secondary duration-1000 dark:hover:transition-opacity dark:hover:bg-secondary">
               <BiSolidMessageSquareError className="text-3xl" />

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import MsgCreate from "./tabs/MsgCreate";
 import MsgReview from "./tabs/MsgReview";
+import MsgAccept from "./tabs/MsgAccept";
+import MsgReject from "./tabs/MsgReject";
 
 const CreateMessage = () => {
   const [activeTab, setActiveTab] = useState("msgCreate"); // Active tab state
@@ -29,6 +31,26 @@ const CreateMessage = () => {
         >
           Review Message
         </button>
+        <button
+          onClick={() => setActiveTab("msgAccept")}
+          className={`px-4 py-2 ${
+            activeTab === "msgAccept"
+              ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
+              : "text-gray-600 hover:text-gray-800 dark:text-white"
+          }`}
+        >
+          Accepted Messages
+        </button>
+        <button
+          onClick={() => setActiveTab("msgReject")}
+          className={`px-4 py-2 ${
+            activeTab === "msgReject"
+              ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
+              : "text-gray-600 hover:text-gray-800 dark:text-white"
+          }`}
+        >
+          Reject Messages
+        </button>
       </div>
 
       {/* Content for each tab */}
@@ -36,6 +58,10 @@ const CreateMessage = () => {
         {activeTab === "msgCreate" && <MsgCreate />}
 
         {activeTab === "msgReview" && <MsgReview />}
+
+        {activeTab === "msgAccept" && <MsgAccept />}
+
+        {activeTab === "msgReject" && <MsgReject />}
       </div>
     </div>
   );

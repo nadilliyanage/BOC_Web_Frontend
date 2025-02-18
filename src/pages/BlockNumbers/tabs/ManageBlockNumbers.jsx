@@ -374,7 +374,7 @@ const ManageBlockNumbers = () => {
       </div>
       <div className="w-1/3 m-4 border-l-2 p-8 ">
         {/* Add numbers manually */}
-        <div className="mt-8">
+        <div className="mb-8">
           <label className="block font-medium mb-2 ">Add Numbers</label>
           <textarea
             value={numbers}

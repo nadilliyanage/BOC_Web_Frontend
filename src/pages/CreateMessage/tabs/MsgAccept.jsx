@@ -6,7 +6,7 @@ import SuccessAlert from "../../../components/SuccessAlert";
 import ErrorAlert from "../../../components/ErrorAlert";
 import ConfirmAlert from "../../../components/ConfirmAlert";
 
-const ReviewMessages = () => {
+const MsgAccept = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -134,7 +134,7 @@ const ReviewMessages = () => {
   const getFilteredMessages = () =>
     messages.filter(
       (message) =>
-        message.status === "pending" &&
+        message.status === "accepted" &&
         (message.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
           message.message.toLowerCase().includes(searchTerm.toLowerCase()))
     );
@@ -186,12 +186,6 @@ const ReviewMessages = () => {
                 </td>
                 <td className="py-4 px-4 text-center">
                   <button
-                    onClick={() => updateMessageStatus(message.id, "accepted")}
-                    className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 mr-2"
-                  >
-                    Accept
-                  </button>
-                  <button
                     onClick={() => updateMessageStatus(message.id, "rejected")}
                     className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 mr-2"
                   >
@@ -219,4 +213,4 @@ const ReviewMessages = () => {
   );
 };
 
-export default ReviewMessages;
+export default MsgAccept;
