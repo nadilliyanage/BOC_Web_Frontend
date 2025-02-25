@@ -63,7 +63,7 @@ const MessageCountChart = () => {
   }, [filter, year, month]);
 
   return (
-    <div className="text-center p-8 m-4 bg-gray-100 h-full w-full flex flex-col rounded-md dark:bg-dark_2">
+    <div className="text-center p-8 m-4 bg-white h-full flex flex-col rounded-md dark:bg-dark_1 border">
       <h2 className="text-3xl font-bold mb-6 dark:text-white">
         Message Count Chart
       </h2>
