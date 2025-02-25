@@ -139,7 +139,7 @@ const App = () => {
       )}
 
       {/* Routing to different pages */}
-      <RouterComponent />
+      <RouterComponent darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
     </div>
   );
 };
