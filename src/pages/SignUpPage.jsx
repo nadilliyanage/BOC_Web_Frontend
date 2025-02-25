@@ -34,7 +34,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="dark:bg-dark_2 min-h-screen flex justify-center items-center">
+    <div className="dark:bg-dark_1 min-h-screen flex justify-center items-center">
       <div className="absolute top-8 left-8 ">
         <img src={logo} alt="logo" className="w-16 h-12" />
       </div>

@@ -97,13 +97,13 @@ const Home = () => {
     const fetchToReviewMessageCount = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8080/api/v1/create-message/error-sms-count"
+          "http://localhost:8080/api/v1/send-message/error-sms-count"
         ); // Replace with your backend URL
         if (!response.ok) {
           throw new Error("Failed to fetch Error message count");
         }
         const data = await response.json();
-        setToReviewMessageCount(data); // Update the state with the ToReview message count
+        setErrorMessageCount(data); // Update the state with the ToReview message count
       } catch (error) {
         console.error("Error fetching ToReview message count:", error);
       }

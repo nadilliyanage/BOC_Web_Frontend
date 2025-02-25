@@ -39,7 +39,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="dark:bg-dark_2 min-h-screen flex justify-center items-center">
+    <div className="dark:bg-dark_1 min-h-screen flex justify-center items-center">
       {/* Login Form and Image */}
       <div className="flex flex-wrap justify-center items-center gap-16 bg-white dark:bg-dark_2 p-10 rounded-lg shadow-lg w-full max-w-5xl">
         {/* Form Section */}
