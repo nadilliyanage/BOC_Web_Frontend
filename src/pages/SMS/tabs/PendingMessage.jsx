@@ -24,13 +24,19 @@ const PendingMessage = () => {
     fetchMessages();
   }, []);
 
-  const filteredMessages = messages.filter(
-    (msg) =>
-      msg.campaignName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      msg.sender.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      msg.numbers.join(", ").includes(searchTerm) ||
-      msg.message.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredMessages = messages.filter((msg) => {
+    const campaignName = msg.campaignName ? msg.campaignName.toLowerCase() : "";
+    const sender = msg.sender ? msg.sender.toLowerCase() : "";
+    const numbers = msg.numbers ? msg.numbers.join(", ") : "";
+    const message = msg.message ? msg.message.toLowerCase() : "";
+
+    return (
+      campaignName.includes(searchTerm.toLowerCase()) ||
+      sender.includes(searchTerm.toLowerCase()) ||
+      numbers.includes(searchTerm) ||
+      message.includes(searchTerm.toLowerCase())
+    );
+  });
 
   if (loading) return <div className="m-2">Loading...</div>;
   if (error) return <div className="m-2 text-red-500">{error}</div>;
