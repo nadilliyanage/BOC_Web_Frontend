@@ -4,6 +4,7 @@ import SendCustomizeSMS from "./tabs/SendCustomizeSMS";
 import PendingMessage from "./tabs/PendingMessage";
 import ScheduledMessage from "./tabs/ScheduledMessge";
 import FinishedMessage from "./tabs/FinishedMessage";
+import ErrorMessage from "./tabs/ErrorMessage";
 
 const Sms = () => {
   const [activeTab, setActiveTab] = useState("sendSms"); // Active tab state
@@ -65,6 +66,17 @@ const Sms = () => {
         >
           Finished Campaign
         </button>
+
+        <button
+          onClick={() => setActiveTab("errorCampaign")}
+          className={`px-4 py-2 ${
+            activeTab === "errorCampaign"
+              ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
+              : "text-gray-600 hover:text-gray-800 dark:text-white"
+          }`}
+        >
+          Error Campaign
+        </button>
       </div>
 
       {/* Content for each tab */}
@@ -82,6 +94,8 @@ const Sms = () => {
         {activeTab === "pendingCampaign" && <PendingMessage />}
 
         {activeTab === "finishedCampaign" && <FinishedMessage />}
+
+        {activeTab === "errorCampaign" && <ErrorMessage />}
       </div>
     </div>
   );
