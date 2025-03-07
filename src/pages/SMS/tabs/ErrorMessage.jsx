@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const PendingMessage = () => {
+const ErrorMessage = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,11 +11,11 @@ const PendingMessage = () => {
     const fetchMessages = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/v1/send-message/pending"
+          "http://localhost:8080/api/v1/send-message/error"
         );
         setMessages(response.data);
       } catch (err) {
-        setError("Failed to fetch messages");
+        setError("Failed to fetch error messages");
       } finally {
         setLoading(false);
       }
@@ -42,11 +42,11 @@ const PendingMessage = () => {
   if (error) return <div className="m-2 text-red-500">{error}</div>;
 
   return (
-    <div className=" w-[200%] dark:bg-dark_2 p-6 rounded-b-md">
+    <div className="w-[200%] dark:bg-dark_2 p-6 rounded-b-md">
       <input
         type="text"
         placeholder="Search by Campaign Name, Sender, Number, or Message"
-        className="w-full p-2  mb-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-dark_3"
+        className="w-full p-2 mb-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:bg-dark_3"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
@@ -74,7 +74,7 @@ const PendingMessage = () => {
               <td className="border border-gray-300 px-4 py-2 whitespace-pre-wrap">
                 {msg.message}
               </td>
-              <td className="border border-gray-300 px-4 py-2 text-yellow-500">
+              <td className="border border-gray-300 px-4 py-2 text-red-500">
                 {msg.status}
               </td>
             </tr>
@@ -85,4 +85,4 @@ const PendingMessage = () => {
   );
 };
 
-export default PendingMessage;
+export default ErrorMessage;
