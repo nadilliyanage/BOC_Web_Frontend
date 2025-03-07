@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/icon.png";
-import signupImg from "../assets/signupImg.png";
+import signupImg from "../assets/signupImg.jpg";
+import { Paper } from "@mui/material";
 
 const SignUpPage = () => {
   const [name, setName] = useState("");
@@ -40,9 +41,12 @@ const SignUpPage = () => {
       </div>
 
       {/* Sign-Up Form and Image */}
-      <div className="flex flex-wrap justify-center items-center gap-16 bg-white dark:bg-dark_2 p-10 rounded-lg shadow-lg w-full max-w-5xl">
+      <Paper
+        elevation={5}
+        className="flex flex-wrap justify-center items-center gap-16 bg-white dark:bg-dark_2 p-8 rounded-lg shadow-lg w-full max-w-5xl"
+      >
         {/* Form Section */}
-        <div className="w-full lg:w-2/5">
+        <div className="w-full lg:w-1/2">
           <h2 className="text-3xl font-bold mb-6 dark:text-white">Sign Up</h2>
           <p className="text-gray-500 mb-4 dark:text-gray-300">
             Create a new account
@@ -110,10 +114,10 @@ const SignUpPage = () => {
           <img
             src={signupImg}
             alt="sign-up illustration"
-            className="w-[85%] p-10"
+            className="w-[100%] rounded-lg"
           />
         </div>
-      </div>
+      </Paper>
     </div>
   );
 };

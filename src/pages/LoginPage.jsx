@@ -5,6 +5,7 @@ import logo from "../assets/icon.png";
 import loginImg from "../assets/loginImg.png";
 import iconWhite from "../assets/iconWhite.png";
 import { FiSun, FiMoon } from "react-icons/fi";
+import { Paper } from "@mui/material";
 
 const LoginPage = ({ darkMode, toggleDarkMode }) => {
   const [userId, setUserId] = React.useState("");
@@ -43,9 +44,12 @@ const LoginPage = ({ darkMode, toggleDarkMode }) => {
   return (
     <div className="dark:bg-dark_1 min-h-screen flex justify-center items-center">
       {/* Login Form and Image */}
-      <div className="flex flex-wrap justify-center items-center gap-16 bg-white dark:bg-dark_2 p-10 rounded-lg shadow-lg w-full max-w-5xl">
+      <Paper
+        elevation={5}
+        className="flex flex-wrap justify-center items-center gap-20 bg-white dark:bg-dark_2 p-10 rounded-lg shadow-lg w-full max-w-4xl"
+      >
         {/* Form Section */}
-        <div className="w-full lg:w-2/5">
+        <div elevation={5} className="w-full lg:w-1/2">
           <div className="absolute top-8 left-8 ">
             <div className="hidden lg:block">
               <img
@@ -112,10 +116,10 @@ const LoginPage = ({ darkMode, toggleDarkMode }) => {
           <img
             src={loginImg}
             alt="login illustration"
-            className="w-[85%] p-10"
+            className="w-[100%] rounded-lg"
           />
         </div>
-      </div>
+      </Paper>
 
       {/* Dark Mode Toggle Button */}
       <button
