@@ -11,13 +11,18 @@ import {
 } from "recharts";
 import axios from "axios";
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"; // Import the dropdown icon
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 const MessageCountChart = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("daily");
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
+
+  const formatDate = (dateString) => {
+    const options = { day: "numeric", month: "short" };
+    return new Date(dateString).toLocaleDateString("en-US", options);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,17 +38,20 @@ const MessageCountChart = () => {
         }
 
         const response = await axios.get(url);
-        console.log("Fetched data:", response.data);
 
-        const formattedData = response.data.map((item) => ({
-          ...item,
-          month:
-            filter === "monthly"
-              ? new Date(2023, item.month - 1).toLocaleString("default", {
-                  month: "short",
-                })
-              : item.month,
-        }));
+        const formattedData = response.data.map((item) => {
+          if (filter === "monthly") {
+            return {
+              ...item,
+              month: new Date(year, item.month - 1).toLocaleString("default", {
+                month: "short",
+              }),
+            };
+          }
+          return filter === "daily"
+            ? { ...item, date: formatDate(item.date) }
+            : item;
+        });
 
         setData(formattedData);
       } catch (error) {
@@ -55,11 +63,13 @@ const MessageCountChart = () => {
   }, [filter, year, month]);
 
   return (
-    <div className="text-center p-4 m-4 bg-gray-100 h-max w-1/2 flex flex-col items-center rounded-md dark:bg-dark_2">
-      <h2 className="text-3xl font-bold mb-6">Message Count Over Time</h2>
+    <div className="text-center p-8 m-4 bg-white h-full flex flex-col rounded-md dark:bg-dark_1 border">
+      <h2 className="text-3xl font-bold mb-6 dark:text-white">
+        Message Count Chart
+      </h2>
 
-      <div className="bg-white shadow-md rounded-lg p-6 mb-6 flex flex-wrap gap-4 justify-center dark:bg-dark_1 duration-1000 hover:transition-opacity">
-        <FormControl className="w-40">
+      <div className="bg-white shadow-md rounded-lg flex flex-wrap gap-4 p-2 ml-auto -mt-10 dark:bg-dark_1">
+        <FormControl className="w-[120px]">
           <InputLabel className="dark:text-white">Filter</InputLabel>
           <Select
             className="dark:bg-dark_1 dark:text-white border dark:border-slate-500"
@@ -79,7 +89,7 @@ const MessageCountChart = () => {
         </FormControl>
 
         {filter !== "yearly" && (
-          <FormControl className="w-40">
+          <FormControl className="w-[120px]">
             <InputLabel className="dark:text-white">Year</InputLabel>
             <Select
               className="dark:bg-dark_1 dark:text-white border dark:border-slate-500"
@@ -89,7 +99,7 @@ const MessageCountChart = () => {
                 PaperProps: { className: "dark:bg-dark_1 dark:text-white" },
               }}
               IconComponent={(props) => (
-                <ArrowDropDownIcon {...props} className="dark:text-white" /> // Custom arrow color for dark mode
+                <ArrowDropDownIcon {...props} className="dark:text-white" />
               )}
             >
               {Array.from(
@@ -105,22 +115,22 @@ const MessageCountChart = () => {
         )}
 
         {filter === "daily" && (
-          <FormControl className="w-40">
+          <FormControl className="w-[140px]">
             <InputLabel className="dark:text-white">Month</InputLabel>
             <Select
-              className="dark:bg-dark_1 dark:text-white border dark:border-slate-500 "
+              className="dark:bg-dark_1 dark:text-white border dark:border-slate-500"
               value={month}
               onChange={(e) => setMonth(e.target.value)}
               MenuProps={{
                 PaperProps: { className: "dark:bg-dark_1 dark:text-white" },
               }}
               IconComponent={(props) => (
-                <ArrowDropDownIcon {...props} className="dark:text-white" /> // Custom arrow color for dark mode
+                <ArrowDropDownIcon {...props} className="dark:text-white" />
               )}
             >
               {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
                 <MenuItem key={m} value={m}>
-                  {new Date(2023, m - 1).toLocaleString("default", {
+                  {new Date(year, m - 1).toLocaleString("default", {
                     month: "long",
                   })}
                 </MenuItem>
@@ -130,7 +140,7 @@ const MessageCountChart = () => {
         )}
       </div>
 
-      <div className="w-full max-w-4xl h-96 bg-white shadow-lg rounded-lg p-2 dark:bg-dark_1">
+      <div className="max-w-full h-[500px] bg-white shadow-lg rounded-lg p-4 mt-2 dark:bg-dark_1">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={data}
@@ -145,13 +155,39 @@ const MessageCountChart = () => {
                   ? "month"
                   : "year"
               }
-              stroke="#4b5563"
+              stroke={
+                document.documentElement.classList.contains("dark")
+                  ? "#fff"
+                  : "#4b5563"
+              }
             />
-            <YAxis stroke="#4b5563" />
+            <YAxis
+              stroke={
+                document.documentElement.classList.contains("dark")
+                  ? "#fff"
+                  : "#4b5563"
+              }
+            />
             <Tooltip
-              contentStyle={{ backgroundColor: "#f9fafb", borderRadius: "8px" }}
+              contentStyle={{
+                backgroundColor: document.documentElement.classList.contains(
+                  "dark"
+                )
+                  ? "#1f2937"
+                  : "#f9fafb",
+                color: document.documentElement.classList.contains("dark")
+                  ? "#fff"
+                  : "#000",
+                borderRadius: "8px",
+              }}
             />
-            <Legend wrapperStyle={{ color: "#374151" }} />
+            <Legend
+              wrapperStyle={{
+                color: document.documentElement.classList.contains("dark")
+                  ? "#fff"
+                  : "#374151",
+              }}
+            />
             <Line
               type="monotone"
               dataKey="count"

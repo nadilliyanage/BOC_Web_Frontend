@@ -1,9 +1,11 @@
+// Home.jsx
 import React, { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { MdAccessTimeFilled, MdReviews } from "react-icons/md";
 import { IoTimer } from "react-icons/io5";
 import { BiSolidMessageSquareError } from "react-icons/bi";
 import MessageCountChart from "./Components/MessageCountChart";
+import Card from "./Components/Card"; // Import the Card component
 
 const Home = () => {
   const [userCount, setUserCount] = useState(0); // State to store the user count
@@ -95,13 +97,13 @@ const Home = () => {
     const fetchToReviewMessageCount = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8080/api/v1/create-message/error-sms-count"
+          "http://localhost:8080/api/v1/send-message/error-sms-count"
         ); // Replace with your backend URL
         if (!response.ok) {
           throw new Error("Failed to fetch Error message count");
         }
         const data = await response.json();
-        setToReviewMessageCount(data); // Update the state with the ToReview message count
+        setErrorMessageCount(data); // Update the state with the ToReview message count
       } catch (error) {
         console.error("Error fetching ToReview message count:", error);
       }
@@ -112,82 +114,47 @@ const Home = () => {
 
   return (
     <div className="p-4">
-      <div className="flex flex-row">
-        {/* Card for All Users */}
-        <div className="w-1/5 h-32 bg-white shadow-lg m-4 rounded-md border dark:bg-dark_2 dark:border-secondary flex items-center justify-center hover:bg-secondary dark:hover:bg-secondary duration-1000 hover:transition-opacity">
-          <div className="flex flex-row-reverse justify-center items-center">
-            <div className="flex flex-col mx-6">
-              <label className="font-bold text-lg">All Users</label>
-              <label className="font-bold text-xl text-center">
-                {userCount}
-              </label>
-              {/* Display the user count */}
-            </div>
-            <div className="p-6 bg-white dark:bg-dark_3 rounded-full shadow-lg hover:transition-opacity hover:bg-secondary duration-1000 dark:hover:transition-opacity dark:hover:bg-secondary">
-              <FaUser className="text-3xl" />
-            </div>
-          </div>
-        </div>
-
-        {/* Card for Pending SMS */}
-        <div className="w-1/5 h-32 bg-white shadow-lg m-4 rounded-md border dark:bg-dark_2 dark:border-secondary flex items-center justify-center hover:bg-secondary dark:hover:bg-secondary duration-1000 hover:transition-opacity">
-          <div className="flex flex-row-reverse justify-center items-center">
-            <div className="flex flex-col mx-6">
-              <label className="font-bold text-lg">Pending SMS</label>
-              <label className="font-bold text-xl text-center">
-                {pendingMessageCount}
-              </label>
-            </div>
-            <div className="p-6 bg-white dark:bg-dark_3 rounded-full shadow-lg hover:transition-opacity hover:bg-secondary duration-1000 dark:hover:transition-opacity dark:hover:bg-secondary">
-              <MdAccessTimeFilled className="text-4xl" />
-            </div>
-          </div>
-        </div>
-
-        {/* Card for Scheduled SMS */}
-        <div className="w-1/5 h-32 bg-white shadow-lg m-4 rounded-md border dark:bg-dark_2 dark:border-secondary flex items-center justify-center hover:bg-secondary dark:hover:bg-secondary duration-1000 hover:transition-opacity">
-          <div className="flex flex-row-reverse justify-center items-center">
-            <div className="flex flex-col mx-4">
-              <label className="font-bold text-lg">Scheduled SMS</label>
-              <label className="font-bold text-xl text-center">
-                {scheduledMessageCount}
-              </label>
-            </div>
-            <div className="p-6 bg-white dark:bg-dark_3 rounded-full shadow-lg hover:transition-opacity hover:bg-secondary duration-1000 dark:hover:transition-opacity dark:hover:bg-secondary">
-              <IoTimer className="text-4xl" />
-            </div>
-          </div>
-        </div>
-
-        {/* Card for Error SMS */}
-        <div className="w-1/5 h-32 bg-white shadow-lg m-4 rounded-md border dark:bg-dark_2 dark:border-secondary flex items-center justify-center hover:bg-secondary dark:hover:bg-secondary duration-1000 hover:transition-opacity">
-          <div className="flex flex-row-reverse justify-center items-center">
-            <div className="flex flex-col mx-6">
-              <label className="font-bold text-lg">Error SMS</label>
-              <label className="font-bold text-xl text-center">
-                {errorMessageCount}
-              </label>
-            </div>
-            <div className="p-6 bg-white dark:bg-dark_3 rounded-full shadow-lg hover:transition-opacity hover:bg-secondary duration-1000 dark:hover:transition-opacity dark:hover:bg-secondary">
-              <BiSolidMessageSquareError className="text-3xl" />
-            </div>
-          </div>
-        </div>
-
-        {/* Card for SMS to Review */}
-        <div className="w-1/5 h-32 bg-white shadow-lg m-4 rounded-md border dark:bg-dark_2 dark:border-secondary flex items-center justify-center hover:bg-secondary dark:hover:bg-secondary duration-1000 hover:transition-opacity">
-          <div className="flex flex-row-reverse justify-center items-center">
-            <div className="flex flex-col mx-6">
-              <label className="font-bold text-lg">SMS to Review</label>
-              <label className="font-bold text-xl text-center">
-                {toReviewMessageCount}
-              </label>
-            </div>
-            <div className="p-6 bg-white dark:bg-dark_3 rounded-full shadow-lg hover:transition-opacity hover:bg-secondary duration-1000 dark:hover:transition-opacity dark:hover:bg-secondary">
-              <MdReviews className="text-3xl" />
-            </div>
-          </div>
-        </div>
+      <div className="flex flex-wrap items-center justify-center">
+        {/* All Users Card */}
+        {/* <Card
+          title="All Users"
+          count={userCount}
+          icon={FaUser}
+          bgColor="bg-white"
+          iconColor="text-blue-600"
+        /> */}
+        {/* Pending SMS Card */}
+        <Card
+          title="Pending SMS"
+          count={pendingMessageCount}
+          icon={MdAccessTimeFilled}
+          bgColor="bg-white"
+          iconColor="text-yellow-500"
+        />
+        {/* Scheduled SMS Card */}
+        <Card
+          title="Scheduled SMS"
+          count={scheduledMessageCount}
+          icon={IoTimer}
+          bgColor="bg-white"
+          iconColor="text-green-500"
+        />
+        {/* Error SMS Card */}
+        <Card
+          title="Error SMS"
+          count={errorMessageCount}
+          icon={BiSolidMessageSquareError}
+          bgColor="bg-white"
+          iconColor="text-red-600"
+        />
+        {/* SMS to Review Card */}
+        <Card
+          title="SMS to Review"
+          count={toReviewMessageCount}
+          icon={MdReviews}
+          bgColor="bg-white"
+          iconColor="text-purple-600"
+        />
       </div>
       <MessageCountChart />
     </div>

@@ -13,7 +13,7 @@ import LoginPage from "../pages/LoginPage";
 import SignUpPage from "../pages/SignUpPage";
 import WaitingPage from "../pages/WaitingPage";
 
-const RouterComponent = () => {
+const RouterComponent = ({ darkMode, toggleDarkMode }) => {
   // Get user from localStorage
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -59,7 +59,12 @@ const RouterComponent = () => {
   return (
     <Routes>
       {/* Public route for login */}
-      <Route path="/login" element={<LoginPage />} />
+      <Route
+        path="/login"
+        element={
+          <LoginPage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+        }
+      />
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/waiting" element={<WaitingPage />} />
 

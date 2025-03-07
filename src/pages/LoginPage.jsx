@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/icon.png";
 import loginImg from "../assets/loginImg.png";
+import iconWhite from "../assets/iconWhite.png";
+import { FiSun, FiMoon } from "react-icons/fi";
 
-const LoginPage = () => {
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+const LoginPage = ({ darkMode, toggleDarkMode }) => {
+  const [userId, setUserId] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [error, setError] = React.useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -39,13 +41,19 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="dark:bg-dark_2 min-h-screen flex justify-center items-center">
+    <div className="dark:bg-dark_1 min-h-screen flex justify-center items-center">
       {/* Login Form and Image */}
       <div className="flex flex-wrap justify-center items-center gap-16 bg-white dark:bg-dark_2 p-10 rounded-lg shadow-lg w-full max-w-5xl">
         {/* Form Section */}
         <div className="w-full lg:w-2/5">
           <div className="absolute top-8 left-8 ">
-            <img src={logo} alt="logo" className="w-fit h-12" />
+            <div className="hidden lg:block">
+              <img
+                src={darkMode ? iconWhite : logo}
+                alt="logo"
+                className="w-fit h-12"
+              />
+            </div>
           </div>
           <h2 className="text-3xl font-bold mb-6 dark:text-white">Login</h2>
           <p className="text-gray-500 mb-4 dark:text-gray-300">
@@ -108,6 +116,18 @@ const LoginPage = () => {
           />
         </div>
       </div>
+
+      {/* Dark Mode Toggle Button */}
+      <button
+        onClick={toggleDarkMode}
+        className="fixed bottom-8 right-8 flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 transition duration-300"
+      >
+        {darkMode ? (
+          <FiMoon className="text-yellow-400 w-6 h-6" />
+        ) : (
+          <FiSun className="text-yellow-500 w-6 h-6" />
+        )}
+      </button>
     </div>
   );
 };
