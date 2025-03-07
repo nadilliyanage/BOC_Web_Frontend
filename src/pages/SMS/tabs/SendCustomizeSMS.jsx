@@ -57,14 +57,21 @@ const SendCustomizeSMS = () => {
       return;
     }
 
-    const generated = csvData.map((row) => ({
-      mobileNumber: row[mobileNumberColumn],
-      message: variables.reduce((msg, varChar) => {
-        const columnIndex = varChar.charCodeAt(1) - 65; // Extract column index from $A, $B, etc.
-        const columnName = columnHeaders[columnIndex];
-        return columnName ? msg.replace(varChar, row[columnName]) : msg;
-      }, smsContent),
-    }));
+    // Filter out rows with null or invalid mobile numbers
+    const generated = csvData
+      .filter(
+        (row) =>
+          row[mobileNumberColumn] != null &&
+          row[mobileNumberColumn].trim() !== ""
+      )
+      .map((row) => ({
+        number: row[mobileNumberColumn], // Recipient's number
+        message: variables.reduce((msg, varChar) => {
+          const columnIndex = varChar.charCodeAt(1) - 65; // Extract column index from $A, $B, etc.
+          const columnName = columnHeaders[columnIndex];
+          return columnName ? msg.replace(varChar, row[columnName] || "") : msg;
+        }, smsContent), // Generated message (e.g., "Hello Bob, your number is 078546985")
+      }));
 
     console.log("Generated Messages:", generated);
     setMessages(generated);
@@ -73,21 +80,33 @@ const SendCustomizeSMS = () => {
 
   // Save messages to backend
   const saveMessages = async () => {
-    if (!campaignName || !messages.length) {
+    if (!campaignName || messages.length === 0) {
       setErrorMessage("Please enter a campaign name and generate messages!");
       return;
     }
 
     setLoading(true);
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/v1/send-message",
-        {
-          campaignName,
-          messages,
-        }
-      );
-      console.log("Backend Response:", response.data);
+      // Send each generated message as a separate request
+      for (const msg of messages) {
+        const payload = {
+          campaignName: campaignName, // Campaign name
+          sender: "YourSenderName", // Sender's name or ID
+          number: msg.number, // Recipient's number
+          message: msg.message, // Generated message (e.g., "Hello Bob, your number is 078546985")
+          schedule: null, // Add schedule if applicable
+          removeBlockedNumbers: true, // Add checkbox value if applicable
+        };
+
+        console.log("Sending payload to backend:", payload);
+
+        const response = await axios.post(
+          "http://localhost:8080/api/v1/send-customize-sms", // Updated endpoint
+          payload
+        );
+        console.log("Backend Response:", response.data);
+      }
+
       Swal.fire({
         title: "Success!",
         text: "Messages saved and sent successfully!",
@@ -109,8 +128,8 @@ const SendCustomizeSMS = () => {
 
   return (
     <>
-      <div className="p-4">
-        <Paper elevation={3} className="p-4 mb-4">
+      <div className="p-4 w-[200%]">
+        <Paper elevation={5} className="p-4 mb-4">
           <Typography variant="h5" gutterBottom>
             CSV File Upload
           </Typography>
@@ -156,18 +175,19 @@ const SendCustomizeSMS = () => {
           )}
         </Paper>
 
-        <Paper elevation={3} className="p-4 mb-4">
+        <Paper elevation={5} className="p-4 mb-4">
           <Typography variant="h5" gutterBottom>
             Campaign Details
           </Typography>
-          <TextField
-            fullWidth
-            label="Campaign Name"
-            value={campaignName}
-            onChange={(e) => setCampaignName(e.target.value)}
-            className="mb-4"
-          />
-
+          <div className="mb-4">
+            <TextField
+              fullWidth
+              label="Campaign Name"
+              value={campaignName}
+              onChange={(e) => setCampaignName(e.target.value)}
+              className="mb-4"
+            />
+          </div>
           <TextField
             fullWidth
             multiline
@@ -177,7 +197,7 @@ const SendCustomizeSMS = () => {
             placeholder="Enter message template using variables ($A, $B, $C...)"
             value={smsContent}
             onChange={(e) => setSmsContent(e.target.value)}
-            helperText="Use variables like $A, $B, $C to represent CSV columns in order"
+            helperText="Use variables like $A, $B, $C... to represent CSV columns in order"
           />
 
           <Button
@@ -200,7 +220,7 @@ const SendCustomizeSMS = () => {
               {messages.map((msg, index) => (
                 <div key={index} className="p-2 mb-2 bg-gray-100 rounded">
                   <Typography variant="body2">
-                    <strong>To:</strong> {msg.mobileNumber}
+                    <strong>To:</strong> {msg.number}
                   </Typography>
                   <Typography variant="body1">{msg.message}</Typography>
                 </div>
