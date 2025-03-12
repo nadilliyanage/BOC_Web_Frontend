@@ -101,7 +101,7 @@ const SendCustomizeSMS = () => {
         console.log("Sending payload to backend:", payload);
 
         const response = await axios.post(
-          "http://localhost:8080/api/v1/send-customize-sms", // Updated endpoint
+          "http://localhost:8080/api/v1/send-customize-sms",
           payload
         );
         console.log("Backend Response:", response.data);

@@ -241,14 +241,18 @@ const SendSMS = () => {
     setAddPhoneNumbers(value);
   };
 
-  // Combine phone numbers from contact list/number file and Add phone numbers
-  const combinedPhoneNumbers = `${phoneNumbers}${
-    phoneNumbers && addPhoneNumbers ? "," : ""
-  }${addPhoneNumbers
-    .split(/[,\n]/) // Split by commas or newlines
-    .map((num) => num.trim()) // Trim each number
-    .filter((num) => num.length > 0) // Remove empty entries
-    .join(",")}`; // Join with commas
+  const combinedPhoneNumbers = [
+    ...new Set([
+      ...phoneNumbers
+        .split(",")
+        .map((num) => num.trim())
+        .filter((num) => num.length > 0), // Split and clean phoneNumbers
+      ...addPhoneNumbers
+        .split(/[,\n]/) // Split by commas or newlines
+        .map((num) => num.trim()) // Trim each number
+        .filter((num) => num.length > 0), // Remove empty entries
+    ]),
+  ].join(","); // Join with commas
 
   // Function to handle the Test Campaign button click
   const handleTestCampaign = () => {

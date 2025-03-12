@@ -30,7 +30,7 @@ const SignUpPage = () => {
         navigate("/login"); // Redirect to login page after successful sign-up
       }
     } catch (err) {
-      setError("Invalid credentials or user already exists");
+      setError("Invalid UserID or user already exists");
     }
   };
 
