@@ -116,7 +116,7 @@ const MsgCreate = () => {
         <div className="flex justify-end space-x-4 my-8">
           <button
             onClick={handleSave}
-            className={`bg-secondary text-white px-4 py-2 rounded-lg hover:bg-secondary2 ${
+            className={`bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 py-2 rounded-lg  ${
               isSubmitting ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={isSubmitting}

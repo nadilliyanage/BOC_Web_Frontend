@@ -196,7 +196,7 @@ const ContactList = () => {
       />
       <button
         onClick={handleUpload}
-        className="bg-secondary hover:bg-secondary2 font-bold text-white px-4 py-2 rounded"
+        className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 font-bold text-white px-4 py-2 rounded"
       >
         Upload
       </button>
