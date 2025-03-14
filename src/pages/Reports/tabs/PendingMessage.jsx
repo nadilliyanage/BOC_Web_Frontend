@@ -33,7 +33,7 @@ const PendingMessage = () => {
       const campaignName = msg.campaignName || "Unnamed Campaign";
       if (!acc[campaignName]) {
         acc[campaignName] = {
-          date: msg.date || "No Date",
+          created_at: msg.created_at || "No Date", // Use created_at instead of date
           messages: [],
         };
       }
@@ -78,7 +78,7 @@ const PendingMessage = () => {
       const campaignName = msg.campaignName || "Unnamed Campaign";
       if (!acc[campaignName]) {
         acc[campaignName] = {
-          date: msg.date || "No Date",
+          created_at: msg.created_at || "No Date", // Use created_at instead of date
           messages: [],
         };
       }
@@ -113,7 +113,10 @@ const PendingMessage = () => {
             >
               <div>
                 <h2 className="text-xl font-bold">{campaignName}</h2>
-
+                <p className="text-sm text-gray-500">
+                  Status: {campaignData.created_at}
+                </p>{" "}
+                {/* Use created_at */}
                 <p className="text-sm text-gray-500">
                   Message Count: {campaignData.messages.length}
                 </p>
@@ -137,6 +140,10 @@ const PendingMessage = () => {
                       Message
                     </th>
                     <th className="border border-gray-300 px-4 py-2">Status</th>
+                    <th className="border border-gray-300 px-4 py-2">
+                      Created At
+                    </th>{" "}
+                    {/* Add Created At column */}
                   </tr>
                 </thead>
                 <tbody>
@@ -154,6 +161,10 @@ const PendingMessage = () => {
                       <td className="border border-gray-300 px-4 py-2 text-yellow-500">
                         {msg.status}
                       </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {msg.created_at}
+                      </td>{" "}
+                      {/* Display created_at */}
                     </tr>
                   ))}
                 </tbody>

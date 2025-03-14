@@ -115,8 +115,8 @@ const ScheduledMessage = () => {
                 <h2 className="text-xl font-bold">{campaignName}</h2>
                 <p className="text-sm text-gray-500">
                   Date: {campaignData.created_at}
-                </p>{" "}
-                {/* Use created_at */}
+                </p>
+
                 <p className="text-sm text-gray-500">
                   Message Count: {campaignData.messages.length}
                 </p>
@@ -142,8 +142,10 @@ const ScheduledMessage = () => {
                     <th className="border border-gray-300 px-4 py-2">Status</th>
                     <th className="border border-gray-300 px-4 py-2">
                       Created At
-                    </th>{" "}
-                    {/* Add Created At column */}
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2">
+                      ScheduleZ time
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -163,8 +165,10 @@ const ScheduledMessage = () => {
                       </td>
                       <td className="border border-gray-300 px-4 py-2">
                         {msg.created_at}
-                      </td>{" "}
-                      {/* Display created_at */}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {msg.schedule}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
