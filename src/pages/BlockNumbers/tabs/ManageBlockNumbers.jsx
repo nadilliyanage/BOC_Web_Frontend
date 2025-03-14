@@ -385,7 +385,7 @@ const ManageBlockNumbers = () => {
           />
           <button
             onClick={handleAddNumbers}
-            className="mt-2 bg-secondary text-white px-4 py-2 rounded-md hover:bg-secondary2 font-bold"
+            className="mt-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 py-2 rounded-md  font-bold"
           >
             Add Numbers
           </button>

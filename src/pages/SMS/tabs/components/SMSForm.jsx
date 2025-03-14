@@ -278,14 +278,14 @@ const SMSForm = ({
           <button
             type="button"
             onClick={handleSendSMSWithLoading} // Use the wrapped function
-            className="mx-2 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="mx-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             Send SMS
           </button>
           <button
             type="button"
             onClick={handleTestCampaignWithLoading} // Use the wrapped function
-            className="mx-2 bg-dark_3 hover:bg-dark_1 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="mx-2 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             Test Campaign
           </button>
@@ -307,13 +307,13 @@ const SMSForm = ({
             <div className="mt-4 flex justify-end">
               <button
                 onClick={() => setIsTestModalOpen(false)}
-                className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mr-2"
+                className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-2 px-4 rounded mr-2"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSendTestSMS}
-                className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
+                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-bold py-2 px-4 rounded"
               >
                 Send Test SMS
               </button>

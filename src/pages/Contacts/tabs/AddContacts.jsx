@@ -92,10 +92,8 @@ const AddContacts = () => {
   };
 
   return (
-
     <div className="p-6 w-full mx-auto bg-white rounded-lg shadow-lg flex flex-row gap-10 min-h-[500px] dark:bg-dark_2">
       <div className="w-1/2 m-auto border-r pr-4">
-
         <h2 className="text-2xl font-bold mb-6">Upload CSV File</h2>
         <input
           type="file"
@@ -105,7 +103,7 @@ const AddContacts = () => {
         />
         <button
           onClick={handleUpload}
-          className="bg-secondary hover:bg-secondary2 font-bold text-white px-4 py-2 rounded"
+          className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 font-bold text-white px-4 py-2 rounded"
         >
           Upload
         </button>
@@ -121,9 +119,7 @@ const AddContacts = () => {
               >
                 <span
                   onClick={() => fetchContactsByFileName(fileName)}
-
                   className="cursor-pointer text-secondary2 font-bold"
-
                 >
                   {fileName}
                 </span>
