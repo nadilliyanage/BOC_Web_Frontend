@@ -113,7 +113,7 @@ const CreateUser = () => {
         onSubmit={handleSubmit}
         className="w-full p-6 bg-white rounded-lg shadow-md dark:bg-[#282828] dark:text-white"
       >
-        <h2 className="mb-6 text-3xl font-semibold text-center text-gray-700 dark:text-white">
+        <h2 className="mb-6 text-3xl font-bold  text-gray-700 dark:text-white border-b-2 border-yellow-400 pb-2">
           Create User
         </h2>
 

@@ -1,11 +1,16 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import MsgCreate from "./tabs/MsgCreate";
 import MsgReview from "./tabs/MsgReview";
 import MsgAccept from "./tabs/MsgAccept";
 import MsgReject from "./tabs/MsgReject";
 
 const CreateMessage = () => {
-  const [activeTab, setActiveTab] = useState("msgCreate"); // Active tab state
+  const location = useLocation();
+  ("msgCreate");
+  const [activeTab, setActiveTab] = useState(
+    location.state?.activeTab || "msgCreate"
+  );
 
   return (
     <div className="flex flex-col w-full bg-primary_2 p-6 mt-4 dark:bg-dark_3">

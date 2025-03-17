@@ -94,7 +94,9 @@ const AddContacts = () => {
   return (
     <div className="p-6 w-full mx-auto bg-white rounded-lg shadow-lg flex flex-row gap-10 min-h-[500px] dark:bg-dark_2">
       <div className="w-1/2 m-auto border-r pr-4">
-        <h2 className="text-2xl font-bold mb-6">Upload CSV File</h2>
+        <h2 className="text-2xl font-bold mb-6 border-b-2 border-yellow-400 pb-2">
+          Upload CSV File
+        </h2>
         <input
           type="file"
           onChange={handleFileChange}
@@ -109,7 +111,9 @@ const AddContacts = () => {
         </button>
       </div>
       <div className="w-1/2">
-        <h3 className="text-xl my-6 font-bold">Uploaded Files</h3>
+        <h2 className="text-gray-700 font-bold text-xl dark:text-white mb-4 border-b-2 border-yellow-400 pb-2">
+          Uploaded Files
+        </h2>
         <div className="max-h-80 overflow-y-auto">
           <ul>
             {fileList.map((fileName, index) => (

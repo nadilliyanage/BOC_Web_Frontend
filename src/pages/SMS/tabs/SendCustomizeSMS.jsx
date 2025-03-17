@@ -142,7 +142,7 @@ const SendCustomizeSMS = () => {
   };
 
   return (
-    <div className="px-4 w-full mx-auto dark:bg-dark_1 transition-colors duration-300">
+    <div className="p-4 w-full mx-auto dark:bg-dark_1 transition-colors duration-300">
       {/* CSV Upload Section */}
       <Paper
         elevation={5}

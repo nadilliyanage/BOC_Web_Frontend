@@ -375,7 +375,9 @@ const ManageBlockNumbers = () => {
       <div className="w-1/3 m-4 border-l-2 p-8 ">
         {/* Add numbers manually */}
         <div className="mb-8">
-          <label className="block font-medium mb-2 ">Add Numbers</label>
+          <label className="block font-medium mb-4 border-b-2 border-yellow-400 pb-2">
+            Add Numbers
+          </label>
           <textarea
             value={numbers}
             onChange={(e) => setNumbers(e.target.value)}
@@ -385,7 +387,7 @@ const ManageBlockNumbers = () => {
           />
           <button
             onClick={handleAddNumbers}
-            className="mt-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 py-2 rounded-md  font-bold"
+            className="mt-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 py-2 rounded-md  font-bold "
           >
             Add Numbers
           </button>
@@ -393,7 +395,7 @@ const ManageBlockNumbers = () => {
 
         {/* Upload CSV file */}
         <div className="mb-4">
-          <label className="block text-gray-400 font-medium m-2">
+          <label className="block font-medium m-2 mb-4 border-b-2 border-yellow-400 pb-2">
             Upload CSV File
           </label>
           <input
