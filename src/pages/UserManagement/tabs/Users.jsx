@@ -46,7 +46,7 @@ const ManageUser = () => {
 
   return (
     <div className="dark:bg-dark_2 p-6 rounded-b-md">
-      <h1 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
+      <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white border-b-2 border-yellow-400 pb-2">
         User List
       </h1>
       <div className="mb-4">

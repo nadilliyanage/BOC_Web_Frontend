@@ -79,7 +79,9 @@ const MsgCreate = () => {
       {isLoading && <LoadingScreen />} {/* Show loading screen while saving */}
       {/* Form Section */}
       <div className="bg-white w-full md:w-11/12 shadow-md rounded-b-lg p-6 mr-0 md:mr-6 dark:bg-[#282828]">
-        <h1 className="text-lg font-bold mb-4">Create Message</h1>
+        <h1 className="text-lg font-bold mb-4 dark:text-white border-b-2 border-yellow-400 pb-2">
+          Create Message
+        </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Message Label */}

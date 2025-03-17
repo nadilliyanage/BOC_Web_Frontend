@@ -210,7 +210,9 @@ const NumberBlocking = () => {
     <div className="p-6 w-full mx-auto bg-white rounded-lg shadow-lg dark:bg-dark_2">
       {/* Add numbers manually */}
       <div className="mb-4">
-        <label className="block  font-medium mb-2">Add Numbers</label>
+        <label className="block text-lg font-bold  mb-4 border-b-2 border-yellow-400 pb-2">
+          Add Numbers
+        </label>
         <textarea
           value={numbers}
           onChange={(e) => setNumbers(e.target.value)}
@@ -228,7 +230,7 @@ const NumberBlocking = () => {
 
       {/* Upload CSV file */}
       <div className="mb-4">
-        <label className="block text-gray-400 font-medium mb-2">
+        <label className="block font-bold  mb-4 border-b-2 border-yellow-400 pb-2">
           Upload CSV File
         </label>
         <input
