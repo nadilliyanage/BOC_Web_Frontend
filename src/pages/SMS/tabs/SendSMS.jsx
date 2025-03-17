@@ -328,46 +328,48 @@ const SendSMS = () => {
 
   return (
     <>
-      <SMSForm
-        smsContent={smsContent}
-        setSmsContent={setSmsContent}
-        messageTemplates={messageTemplates}
-        selectedTemplate={selectedTemplate}
-        setSelectedTemplate={setSelectedTemplate}
-        errorMessage={errorMessage}
-        messageFile={messageFile}
-        setMessageFile={setMessageFile}
-        numberFile={numberFile}
-        setNumberFile={setNumberFile}
-        fileList={fileList}
-        selectedFileName={selectedFileName}
-        setSelectedFileName={setSelectedFileName}
-        phoneNumbers={phoneNumbers}
-        setPhoneNumbers={setPhoneNumbers}
-        addPhoneNumbers={addPhoneNumbers}
-        setAddPhoneNumbers={setAddPhoneNumbers}
-        removeBlockedNumbers={removeBlockedNumbers}
-        setRemoveBlockedNumbers={setRemoveBlockedNumbers}
-        testNumber={testNumber}
-        setTestNumber={setTestNumber}
-        isTestModalOpen={isTestModalOpen}
-        setIsTestModalOpen={setIsTestModalOpen}
-        handleFileSelect={handleFileSelect}
-        handleSmsContentChange={handleSmsContentChange}
-        handleTemplateChange={handleTemplateChange}
-        handleCloseTemplate={handleCloseTemplate}
-        handleCloseList={handleCloseList}
-        handleSendSMS={handleSendSMS}
-        handleMessageFileUpload={handleMessageFileUpload}
-        handleCloseMessageFile={handleCloseMessageFile}
-        handleNumberFileUpload={handleNumberFileUpload}
-        handleCloseNumberFile={handleCloseNumberFile}
-        handleAddPhoneNumbersChange={handleAddPhoneNumbersChange}
-        combinedPhoneNumbers={combinedPhoneNumbers}
-        handleTestCampaign={handleTestCampaign}
-        handleSendTestSMS={handleSendTestSMS}
-      />
-      <MobilePreview smsContent={smsContent} />
+      <div className="dark:bg-dark_1 flex flex-row gap-4 px-4 transition-colors duration-300">
+        <SMSForm
+          smsContent={smsContent}
+          setSmsContent={setSmsContent}
+          messageTemplates={messageTemplates}
+          selectedTemplate={selectedTemplate}
+          setSelectedTemplate={setSelectedTemplate}
+          errorMessage={errorMessage}
+          messageFile={messageFile}
+          setMessageFile={setMessageFile}
+          numberFile={numberFile}
+          setNumberFile={setNumberFile}
+          fileList={fileList}
+          selectedFileName={selectedFileName}
+          setSelectedFileName={setSelectedFileName}
+          phoneNumbers={phoneNumbers}
+          setPhoneNumbers={setPhoneNumbers}
+          addPhoneNumbers={addPhoneNumbers}
+          setAddPhoneNumbers={setAddPhoneNumbers}
+          removeBlockedNumbers={removeBlockedNumbers}
+          setRemoveBlockedNumbers={setRemoveBlockedNumbers}
+          testNumber={testNumber}
+          setTestNumber={setTestNumber}
+          isTestModalOpen={isTestModalOpen}
+          setIsTestModalOpen={setIsTestModalOpen}
+          handleFileSelect={handleFileSelect}
+          handleSmsContentChange={handleSmsContentChange}
+          handleTemplateChange={handleTemplateChange}
+          handleCloseTemplate={handleCloseTemplate}
+          handleCloseList={handleCloseList}
+          handleSendSMS={handleSendSMS}
+          handleMessageFileUpload={handleMessageFileUpload}
+          handleCloseMessageFile={handleCloseMessageFile}
+          handleNumberFileUpload={handleNumberFileUpload}
+          handleCloseNumberFile={handleCloseNumberFile}
+          handleAddPhoneNumbersChange={handleAddPhoneNumbersChange}
+          combinedPhoneNumbers={combinedPhoneNumbers}
+          handleTestCampaign={handleTestCampaign}
+          handleSendTestSMS={handleSendTestSMS}
+        />
+        <MobilePreview smsContent={smsContent} />
+      </div>
     </>
   );
 };

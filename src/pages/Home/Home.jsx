@@ -113,7 +113,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="p-4">
+    <div className="p-4 m-4 bg-primary_2 dark:bg-dark_2">
       <div className="flex flex-wrap items-center justify-center">
         {/* All Users Card */}
         {/* <Card

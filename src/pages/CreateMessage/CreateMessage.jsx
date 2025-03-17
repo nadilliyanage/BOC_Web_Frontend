@@ -8,7 +8,7 @@ const CreateMessage = () => {
   const [activeTab, setActiveTab] = useState("msgCreate"); // Active tab state
 
   return (
-    <div className="flex flex-col w-full bg-gray-100 p-6 mt-4 dark:bg-dark_3">
+    <div className="flex flex-col w-full bg-primary_2 p-6 mt-4 dark:bg-dark_3">
       {/* Tabs */}
       <div className="flex space-x-4 border-b border-gray-300 pb-2 rounded-t-lg dark:bg-dark_2">
         <button

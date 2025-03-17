@@ -142,19 +142,19 @@ const SendCustomizeSMS = () => {
   };
 
   return (
-    <div className="p-4 w-full mx-auto dark:bg-dark_1 transition-colors duration-300">
+    <div className="px-4 w-full mx-auto dark:bg-dark_1 transition-colors duration-300">
       {/* CSV Upload Section */}
       <Paper
         elevation={5}
         className="p-6 mb-6 dark:bg-dark_2 rounded-xl shadow-lg transition-transform hover:scale-[1.005]"
       >
-        <Typography
+        <h2
           variant="h5"
           gutterBottom
           className="dark:text-white font-bold mb-4 text-2xl border-b-2 border-yellow-400 pb-2"
         >
           CSV File Upload
-        </Typography>
+        </h2>
 
         {/* File Upload Button */}
         <input
@@ -238,13 +238,13 @@ const SendCustomizeSMS = () => {
         elevation={5}
         className="p-6 mb-6 dark:bg-dark_2 rounded-xl shadow-lg transition-transform hover:scale-[1.005]"
       >
-        <Typography
+        <h2
           variant="h5"
           gutterBottom
           className="dark:text-white font-bold mb-6 text-2xl border-b-2 border-yellow-400 pb-2"
         >
-          Campaign Configuration
-        </Typography>
+          Send Customize Bulk Message
+        </h2>
 
         <div className="space-y-6">
           {/* Campaign Name Input */}
