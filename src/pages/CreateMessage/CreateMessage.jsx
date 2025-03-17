@@ -9,7 +9,7 @@ const CreateMessage = () => {
   const location = useLocation();
   ("msgCreate");
   const [activeTab, setActiveTab] = useState(
-    location.state?.activeTab || "pendingMessage"
+    location.state?.activeTab || "msgCreate"
   );
 
   return (
