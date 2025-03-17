@@ -10,6 +10,7 @@ import RouterComponent from "./routes/router";
 import logo from "./assets/icon.png";
 import iconWhite from "./assets/iconWhite.png";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { Paper } from "@mui/material";
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -51,26 +52,31 @@ const App = () => {
     <div className="font-sans">
       {/* Navbar - Conditionally render based on route */}
       {!isLoginPageOrSignUpPage && (
-        <nav className="bg-primary_2 dark:bg-[#181818] p-4 shadow-lg">
-          <div className="flex justify-between items-center">
-            {/* Logo (changes based on dark mode) */}
-            <div className="hidden lg:block">
-              <img
-                src={darkMode ? iconWhite : logo}
-                alt="logo"
-                className="w-fit h-12"
+        <Paper elevation={5}>
+          <nav className="bg-primary_1 dark:bg-dark_1 p-4 shadow-sm">
+            <div className="flex justify-between items-center">
+              {/* Logo (changes based on dark mode) */}
+              <div className="hidden lg:block">
+                <img
+                  src={darkMode ? iconWhite : logo}
+                  alt="logo"
+                  className="w-fit h-12"
+                />
+              </div>
+
+              {/* Hamburger Icon for Mobile */}
+              <button className="text-white lg:hidden" onClick={toggleMenu}>
+                <GiHamburgerMenu />
+              </button>
+
+              {/* Desktop Menu - Pass darkMode & toggleDarkMode */}
+              <DesktopMenu
+                darkMode={darkMode}
+                toggleDarkMode={toggleDarkMode}
               />
             </div>
-
-            {/* Hamburger Icon for Mobile */}
-            <button className="text-white lg:hidden" onClick={toggleMenu}>
-              <GiHamburgerMenu />
-            </button>
-
-            {/* Desktop Menu - Pass darkMode & toggleDarkMode */}
-            <DesktopMenu darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-          </div>
-        </nav>
+          </nav>
+        </Paper>
       )}
 
       {/* Mobile Menu */}

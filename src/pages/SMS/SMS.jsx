@@ -6,14 +6,14 @@ const Sms = () => {
   const [activeTab, setActiveTab] = useState("sendSms"); // Active tab state
 
   return (
-    <div className="flex flex-col w-full bg-gray-100 p-6 mt-4 dark:bg-dark_3">
+    <div className="flex flex-col w-full bg-primary_2 p-6 mt-4 dark:bg-dark_3 transition-colors duration-300">
       {/* Tabs */}
-      <div className="flex space-x-4 border-b border-gray-300 pb-2 rounded-t-lg dark:bg-dark_2">
+      <div className="flex space-x-4 border-b border-gray-300 pb-2 rounded-t-lg dark:bg-dark_2 transition-colors duration-300">
         <button
           onClick={() => setActiveTab("sendSms")}
-          className={`px-4 py-2 ${
+          className={`px-4 py-2 transition-colors duration-300 ${
             activeTab === "sendSms"
-              ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
+              ? "border-b-2 border-yellow-500 text-yellow-500 font-medium "
               : "text-gray-600 hover:text-gray-800 dark:text-white"
           }`}
         >
@@ -21,9 +21,9 @@ const Sms = () => {
         </button>
         <button
           onClick={() => setActiveTab("customizeBulk")}
-          className={`px-4 py-2 ${
+          className={`px-4 py-2 transition-colors duration-300 ${
             activeTab === "customizeBulk"
-              ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
+              ? "border-b-2 border-yellow-500 text-yellow-500 font-medium "
               : "text-gray-600 hover:text-gray-800 dark:text-white"
           }`}
         >
@@ -32,7 +32,7 @@ const Sms = () => {
       </div>
 
       {/* Content for each tab */}
-      <div className="flex flex-col md:flex-row items-start mt-6">
+      <div className=" mt-6">
         {activeTab === "sendSms" && <SendSMS />}
 
         {activeTab === "customizeBulk" && <SendCustomizeSMS />}

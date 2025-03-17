@@ -10,7 +10,13 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import axios from "axios";
-import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import {
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Paper,
+} from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 const MessageCountChart = () => {
@@ -63,7 +69,10 @@ const MessageCountChart = () => {
   }, [filter, year, month]);
 
   return (
-    <div className="text-center p-8 m-4 bg-white h-full flex flex-col rounded-md dark:bg-dark_1 border">
+    <Paper
+      elevation={5}
+      className="text-center p-8 m-4 bg-primary_1 h-full flex flex-col rounded-md dark:bg-dark_1 "
+    >
       <h2 className="text-3xl font-bold mb-6 dark:text-white">
         Message Count Chart
       </h2>
@@ -198,7 +207,7 @@ const MessageCountChart = () => {
           </LineChart>
         </ResponsiveContainer>
       </div>
-    </div>
+    </Paper>
   );
 };
 

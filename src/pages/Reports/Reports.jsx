@@ -10,7 +10,7 @@ const Reports = () => {
   const [activeTab, setActiveTab] = useState("pendingMessage"); // Active tab state
 
   return (
-    <div className="flex flex-col w-full bg-gray-100 p-6 mt-4 dark:bg-[#404040]">
+    <div className="flex flex-col w-full bg-primary_2 p-6 mt-4 dark:bg-[#404040]">
       {/* Tabs */}
       <div className="flex space-x-4 border-b border-gray-300 rounded-t-lg pb-2 dark:bg-[#282828]">
         <button

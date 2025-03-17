@@ -72,16 +72,16 @@ const DesktopMenu = ({ darkMode, toggleDarkMode }) => {
   };
 
   return (
-    <div className="hidden lg:flex space-x-4 gap-5 items-center relative">
+    <div className="hidden lg:flex space-x-4 gap-5 items-center relative ">
       {/* Menu Items */}
       {visibleMenuItems.map(({ href, label }) => (
         <a
           key={href}
           href={href}
-          className={`text-lg font-semibold group relative ${
+          className={`text-lg font-semibold group relative transition-colors duration-300 ${
             location.pathname === href
               ? "text-secondary dark:text-secondary"
-              : "text-black dark:text-white hover:text-secondary dark:hover:text-secondary"
+              : "text-black dark:text-white hover:text-secondary dark:hover:text-secondary "
           }`}
         >
           {label}
@@ -98,7 +98,7 @@ const DesktopMenu = ({ darkMode, toggleDarkMode }) => {
         <div className="relative">
           <button
             onClick={toggleDropdown}
-            className="flex items-center space-x-2 text-black hover:text-secondary focus:outline-none dark:text-white dark:hover:text-secondary"
+            className="flex items-center space-x-2 text-black hover:text-secondary focus:outline-none dark:text-white dark:hover:text-secondary transition-colors duration-300"
           >
             <FaUserCircle size={24} />
             <span className="font-semibold text-lg">{userName}</span>
@@ -109,10 +109,10 @@ const DesktopMenu = ({ darkMode, toggleDarkMode }) => {
             )}
           </button>
           {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 bg-white shadow-md rounded-md w-40 z-10 dark:bg-gray-800">
+            <div className="absolute right-0 mt-2 bg-white shadow-md rounded-md w-40 z-10 dark:bg-gray-800 transition-colors duration-300">
               <button
                 onClick={handleSignOut}
-                className="block px-4 py-2 text-black hover:bg-gray-100 dark:text-white dark:hover:bg-black w-full text-left"
+                className="block px-4 py-2 text-black hover:bg-gray-100 dark:text-white dark:hover:bg-black w-full text-left transition-colors duration-300"
               >
                 Sign Out
               </button>
@@ -122,7 +122,7 @@ const DesktopMenu = ({ darkMode, toggleDarkMode }) => {
       ) : (
         <button
           onClick={handleSignIn}
-          className="flex items-center space-x-2 text-black hover:text-secondary focus:outline-none dark:text-white dark:hover:text-secondary"
+          className="flex items-center space-x-2 text-black hover:text-secondary focus:outline-none dark:text-white dark:hover:text-secondary transition-colors duration-300"
         >
           <FaUserCircle size={24} />
           <span className="font-semibold text-lg">Sign In</span>
@@ -135,9 +135,9 @@ const DesktopMenu = ({ darkMode, toggleDarkMode }) => {
         className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 transition duration-300"
       >
         {darkMode ? (
-          <FiMoon className="text-yellow-400 w-6 h-6" />
+          <FiMoon className="text-yellow-400 w-6 h-6 transition-colors duration-300" />
         ) : (
-          <FiSun className="text-yellow-500 w-6 h-6" />
+          <FiSun className="text-yellow-500 w-6 h-6 transition-colors duration-300" />
         )}
       </button>
     </div>

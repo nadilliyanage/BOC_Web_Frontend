@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import LoadingScreen from "../../../../components/LoadingScreen";
+import { Paper } from "@mui/material";
 
 const SMSForm = ({
   smsContent,
@@ -52,8 +53,13 @@ const SMSForm = ({
   };
 
   return (
-    <div className="bg-white w-full md:w-11/12 shadow-md rounded-b-lg p-6 mr-0 md:mr-6 dark:bg-[#282828]">
-      <h1 className="text-lg font-bold mb-4">Send SMS</h1>
+    <Paper
+      elevation={5}
+      className="p-6 mb-6 dark:bg-dark_2 rounded-xl shadow-lg transition-transform hover:scale-[1.005] w-full"
+    >
+      <h1 className="text-lg font-bold mb-4 dark:text-white border-b-2 border-yellow-400 pb-2">
+        Send SMS
+      </h1>
 
       {/* Loading Screen */}
       {loading && <LoadingScreen />}
@@ -278,14 +284,15 @@ const SMSForm = ({
           <button
             type="button"
             onClick={handleSendSMSWithLoading} // Use the wrapped function
-            className="mx-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="mx-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-transform hover:scale-105"
           >
             Send SMS
           </button>
+
           <button
             type="button"
             onClick={handleTestCampaignWithLoading} // Use the wrapped function
-            className="mx-2 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="mx-2 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-transform hover:scale-105"
           >
             Test Campaign
           </button>
@@ -307,13 +314,13 @@ const SMSForm = ({
             <div className="mt-4 flex justify-end">
               <button
                 onClick={() => setIsTestModalOpen(false)}
-                className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-2 px-4 rounded mr-2"
+                className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-2 px-4 rounded mr-2 transition-transform hover:scale-105"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSendTestSMS}
-                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-bold py-2 px-4 rounded"
+                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-bold py-2 px-4 rounded transition-transform hover:scale-105"
               >
                 Send Test SMS
               </button>
@@ -321,7 +328,7 @@ const SMSForm = ({
           </div>
         </div>
       )}
-    </div>
+    </Paper>
   );
 };
 

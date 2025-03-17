@@ -1,9 +1,23 @@
 import React from "react";
+import {
+  Button,
+  TextField,
+  Typography,
+  Paper,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+  CircularProgress,
+} from "@mui/material";
 
 const MobilePreview = ({ smsContent }) => {
   return (
-    <div className="bg-white shadow-md rounded-b-lg p-4 w-full md:w-1/2 dark:bg-[#282828]">
-      <h2 className="text-gray-700 font-medium dark:text-white mb-4">
+    <Paper
+      elevation={5}
+      className="p-6 mb-6 dark:bg-dark_2 rounded-xl shadow-lg transition-transform hover:scale-[1.005]"
+    >
+      <h2 className="text-gray-700 font-medium dark:text-white mb-4 border-b-2 border-yellow-400 pb-2">
         Preview
       </h2>
       <div className="relative flex justify-center items-center bg-gray-50 border rounded-lg p-6 dark:bg-[#282828]">
@@ -35,7 +49,7 @@ const MobilePreview = ({ smsContent }) => {
           <div className="absolute bottom-0 w-full h-6 bg-gray-800 dark:bg-[#121212] rounded-b-3xl"></div>
         </div>
       </div>
-    </div>
+    </Paper>
   );
 };
 
