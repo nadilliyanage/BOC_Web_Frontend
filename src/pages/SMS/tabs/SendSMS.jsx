@@ -328,7 +328,7 @@ const SendSMS = () => {
 
   return (
     <>
-      <div className="dark:bg-dark_1 flex flex-row gap-4 px-4 transition-colors duration-300">
+      <div className="dark:bg-dark_1 flex flex-row gap-4 p-4 transition-colors duration-300">
         <SMSForm
           smsContent={smsContent}
           setSmsContent={setSmsContent}
