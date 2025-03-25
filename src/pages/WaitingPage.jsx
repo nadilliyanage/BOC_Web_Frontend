@@ -24,7 +24,7 @@ const WaitingPage = () => {
           your request.
         </p>
         <button
-          onClick={() => navigate("/login")}
+          onClick={handleSignOut}
           className="bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600"
         >
           Back to Login

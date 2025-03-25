@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import logo from "../assets/icon.png";
 import loginImg from "../assets/loginImg.png";
 import iconWhite from "../assets/iconWhite.png";
@@ -18,38 +19,37 @@ const LoginPage = ({ darkMode, toggleDarkMode }) => {
     try {
       const response = await axios.post(
         "http://localhost:8080/api/auth/login",
-        {
-          userId,
-          password,
-        }
+        { userId, password }
       );
-      const user = response.data;
 
-      // Save user details in localStorage
-      localStorage.setItem("user", JSON.stringify(user));
+      const { token } = response.data;
 
-      const userdata = JSON.parse(localStorage.getItem("user"));
-      const userRole = userdata ? userdata.role : null;
+      // Verify and decode the token
+      const decoded = jwtDecode(token);
 
-      if (userRole === "USER") {
-        navigate("/waiting"); // Redirect to waiting page
+      // Store the token
+      localStorage.setItem("token", token);
+
+      // Redirect based on verified role
+      if (decoded.role === "USER") {
+        navigate("/waiting");
       } else {
-        navigate("/home"); // Redirect to home page
+        navigate("/home");
       }
     } catch (err) {
       setError("Invalid credentials");
+      console.error("Login error:", err);
     }
   };
 
   return (
     <div className="dark:bg-dark_1 min-h-screen flex justify-center items-center">
-      {/* Login Form and Image */}
       <Paper
         elevation={5}
         className="flex flex-wrap justify-center items-center gap-20 bg-white dark:bg-dark_2 p-10 rounded-lg shadow-lg w-full max-w-4xl"
       >
         {/* Form Section */}
-        <div elevation={5} className="w-full lg:w-1/2">
+        <div className="w-full lg:w-1/2">
           <div className="absolute top-8 left-8 ">
             <div className="hidden lg:block">
               <img
@@ -85,30 +85,19 @@ const LoginPage = ({ darkMode, toggleDarkMode }) => {
                 required
               />
             </div>
-            <div className="flex justify-between items-center mb-4">
-              <div>
-                <input type="checkbox" className="mr-2" />
-                <span className="text-gray-600 dark:text-gray-300">
-                  Remember me
-                </span>
-              </div>
-              <a href="/forgot-password" className="text-red-500">
-                Forgot Password?
-              </a>
-            </div>
             <button
               type="submit"
               className="w-full bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600"
             >
               Login
             </button>
+            <p className="text-center mt-4 dark:text-gray-300">
+              Don’t have an account?{" "}
+              <a href="/signup" className="text-secondary">
+                Sign up
+              </a>
+            </p>
           </form>
-          <p className="text-center mt-4 dark:text-gray-300">
-            Don’t have an account?{" "}
-            <a href="/signup" className="text-red-500">
-              Sign up
-            </a>
-          </p>
         </div>
 
         {/* Image Section */}
@@ -121,7 +110,7 @@ const LoginPage = ({ darkMode, toggleDarkMode }) => {
         </div>
       </Paper>
 
-      {/* Dark Mode Toggle Button */}
+      {/* Dark Mode Toggle */}
       <button
         onClick={toggleDarkMode}
         className="fixed bottom-8 right-8 flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 transition duration-300"
