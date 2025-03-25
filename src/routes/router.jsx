@@ -1,7 +1,8 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
-// Importing existing pages
+// Importing pages
 import HomePage from "../pages/Home/Home";
 import ReportsPage from "../pages/Reports/Reports";
 import SmsPage from "../pages/SMS/SMS";
@@ -14,8 +15,32 @@ import SignUpPage from "../pages/SignUpPage";
 import WaitingPage from "../pages/WaitingPage";
 
 const RouterComponent = ({ darkMode, toggleDarkMode }) => {
-  // Get user from localStorage
-  const user = JSON.parse(localStorage.getItem("user"));
+  // Get token from localStorage
+  const token = localStorage.getItem("token");
+
+  // Decode token to get user info
+  let user = null;
+  let isTokenValid = false;
+
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      isTokenValid = decoded.exp * 1000 > Date.now(); // Check if token is expired
+
+      if (isTokenValid) {
+        user = {
+          userId: decoded.sub,
+          userName: decoded.name,
+          userRole: decoded.role,
+        };
+      } else {
+        localStorage.removeItem("token"); // Remove expired token
+      }
+    } catch (err) {
+      console.error("Invalid token:", err);
+      localStorage.removeItem("token");
+    }
+  }
 
   // Role-based route configuration
   const routesByRole = {
@@ -53,34 +78,80 @@ const RouterComponent = ({ darkMode, toggleDarkMode }) => {
     ],
   };
 
-  // Default route to redirect to "/home" if the path doesn't match
-  const roleRoutes = user ? routesByRole[user.role] || [] : [];
+  // Protected Route Component
+  const ProtectedRoute = ({ children, requiredRoles }) => {
+    if (!isTokenValid) {
+      return <Navigate to="/login" replace />;
+    }
+
+    if (requiredRoles && !requiredRoles.includes(user.userRole)) {
+      return <Navigate to="/unauthorized" replace />;
+    }
+
+    return children;
+  };
+
+  // Generate protected routes based on role
+  const generateProtectedRoutes = () => {
+    if (!user) return null;
+
+    const roleRoutes = routesByRole[user.userRole] || [];
+
+    return roleRoutes.map((route, index) => (
+      <Route
+        key={index}
+        path={route.path}
+        element={
+          <ProtectedRoute requiredRoles={[user.userRole]}>
+            {route.element}
+          </ProtectedRoute>
+        }
+      />
+    ));
+  };
 
   return (
     <Routes>
-      {/* Public route for login */}
+      {/* Public routes */}
       <Route
         path="/login"
         element={
-          <LoginPage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+          isTokenValid ? (
+            <Navigate to="/home" replace />
+          ) : (
+            <LoginPage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+          )
         }
       />
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/waiting" element={<WaitingPage />} />
 
       {/* Protected routes */}
-      {roleRoutes.map((route, index) => (
-        <Route key={index} path={route.path} element={route.element} />
-      ))}
+      {generateProtectedRoutes()}
 
-      {/* Redirect to login if not authenticated */}
+      {/* Redirects */}
       <Route
         path="/"
-        element={user ? <Navigate to="/home" /> : <Navigate to="/login" />}
+        element={
+          isTokenValid ? (
+            <Navigate to="/home" replace />
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
       />
 
-      {/* Default route */}
-      <Route path="*" element={<Navigate to="/login" />} />
+      {/* Catch-all route */}
+      <Route
+        path="*"
+        element={
+          isTokenValid ? (
+            <Navigate to="/home" replace />
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
     </Routes>
   );
 };

@@ -2,16 +2,32 @@ import React, { useState } from "react";
 import { FaUserCircle, FaCaretDown, FaCaretUp } from "react-icons/fa";
 import { FiSun, FiMoon } from "react-icons/fi";
 import { useLocation, useNavigate } from "react-router-dom";
-import LoadingScreen from "./LoadingScreen"; // Import the LoadingScreen component
+import LoadingScreen from "./LoadingScreen";
+import { jwtDecode } from "jwt-decode";
 
 const DesktopMenu = ({ darkMode, toggleDarkMode }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // State for loading screen
+  const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Get user details from localStorage
-  const user = JSON.parse(localStorage.getItem("user"));
+  // Get token from localStorage and decode it
+  const token = localStorage.getItem("token");
+  let user = null;
+
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      user = {
+        name: decoded.name, // Get name from token
+        role: decoded.role, // Get role from token
+      };
+    } catch (err) {
+      console.error("Invalid token:", err);
+      localStorage.removeItem("token");
+    }
+  }
+
   const userRole = user ? user.role : null;
   const userName = user ? user.name : null;
 
@@ -59,40 +75,37 @@ const DesktopMenu = ({ darkMode, toggleDarkMode }) => {
 
   // Filter menu items based on user role
   const visibleMenuItems = menuItems.filter(
-    (item) => !item.roles || item.roles.includes(userRole)
+    (item) => !item.roles || (userRole && item.roles.includes(userRole))
   );
 
   // Handle navigation with loading screen
   const handleNavigation = (href) => {
-    setIsLoading(true); // Show loading screen
+    setIsLoading(true);
     navigate(href);
-    setTimeout(() => {
-      setIsLoading(false); // Hide loading screen after a delay (simulate loading time)
-    }, 1000); // Adjust the delay as needed
+    setTimeout(() => setIsLoading(false), 1000);
   };
 
   // Handle sign out
   const handleSignOut = () => {
-    setIsLoading(true); // Show loading screen
-    localStorage.removeItem("user");
+    setIsLoading(true);
+    localStorage.removeItem("token");
     setTimeout(() => {
-      setIsLoading(false); // Hide loading screen
+      setIsLoading(false);
       navigate("/login");
-    }, 1000); // Adjust the delay as needed
+    }, 1000);
   };
 
   // Handle sign in
   const handleSignIn = () => {
-    setIsLoading(true); // Show loading screen
+    setIsLoading(true);
     setTimeout(() => {
-      setIsLoading(false); // Hide loading screen
+      setIsLoading(false);
       navigate("/login");
-    }, 1000); // Adjust the delay as needed
+    }, 1000);
   };
 
   return (
     <>
-      {/* Show loading screen if isLoading is true */}
       {isLoading && <LoadingScreen />}
 
       <div className="hidden lg:flex space-x-4 gap-5 items-center relative">
