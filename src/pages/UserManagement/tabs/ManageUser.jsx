@@ -3,6 +3,7 @@ import axios from "axios";
 import ConfirmDialog from "../../../components/ConfirmDialog";
 import ToastContainerWrapper from "./Components/ToastContainerWrapper";
 import { toast } from "react-toastify";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 const ManageUser = () => {
   const [users, setUsers] = useState([]);
@@ -41,7 +42,7 @@ const ManageUser = () => {
           .then(() => {
             toast.success("User deleted successfully!", {
               className:
-                "dark:bg-black text-green-800 dark:text-white rounded-lg shadow-lg",
+                "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-lg shadow-lg",
               bodyClassName: "text-sm font-medium",
             });
             fetchUsers();
@@ -69,7 +70,7 @@ const ManageUser = () => {
       .then(() => {
         toast.success("User updated successfully!", {
           className:
-            "dark:bg-black text-green-800 dark:text-white rounded-lg shadow-lg",
+            "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-lg shadow-lg",
           bodyClassName: "text-sm font-medium",
         });
         fetchUsers();
@@ -80,7 +81,6 @@ const ManageUser = () => {
       });
   };
 
-  // Filter users based on search term
   const filteredUsers = users.filter(
     (user) =>
       user.userId.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -89,76 +89,105 @@ const ManageUser = () => {
   );
 
   if (loading) {
-    return <p>Loading users...</p>;
+    return (
+      <div className="flex justify-center items-center min-h-[200px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return <p className="text-red-500 text-center">{error}</p>;
   }
 
   return (
-    <div className="dark:bg-dark_2 p-6 rounded-b-md">
+    <div className="bg-white dark:bg-dark_2 p-6 rounded-lg shadow-md">
       <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white border-b-2 border-yellow-400 pb-2">
         User List
       </h1>
-      <div className="mb-4">
+
+      <div className="relative mb-6">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <MagnifyingGlassIcon className="h-5 w-5" />
+        </div>
         <input
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search users..."
-          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white dark:bg-dark_3"
+          className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-dark_3 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
         />
       </div>
+
       {filteredUsers.length === 0 ? (
-        <p className="text-center text-gray-600">No users found.</p>
+        <p className="text-center text-gray-500 dark:text-gray-400">
+          No users found.
+        </p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="table-auto w-full border-collapse border border-gray-300">
-            <thead>
-              <tr className="bg-white dark:bg-dark_2">
-                <th className="border border-gray-300 px-4 py-2 text-left">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-gray-50 dark:bg-dark_3">
+              <tr>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                >
                   User ID
                 </th>
-                <th className="border border-gray-300 px-4 py-2 text-left">
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                >
                   Name
                 </th>
-                <th className="border border-gray-300 px-4 py-2 text-left">
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                >
                   User Role
                 </th>
-                <th className="border border-gray-300 px-4 py-2 text-left">
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                >
+                  Department
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                >
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="bg-white divide-y divide-gray-200 dark:bg-dark_1 dark:divide-gray-700">
               {filteredUsers.map((user) => (
                 <tr
                   key={user.id}
-                  className="even:bg-gray-50 dark:even:bg-dark_2 hover:bg-gray-100 dark:hover:bg-dark_3"
+                  className="hover:bg-gray-50 dark:hover:bg-dark_2"
                 >
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                     {user.userId}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                     {user.userName}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                     {user.role}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                     {user.department}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button
                       onClick={() => handleUpdate(user)}
-                      className="bg-blue-500 text-white px-3 py-1 rounded-md mr-2 hover:bg-blue-600"
+                      className="mr-2 text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 px-3 py-1 rounded-md text-sm font-medium"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(user.id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
+                      className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 bg-red-100 hover:bg-red-200 dark:bg-red-900 dark:hover:bg-red-800 px-3 py-1 rounded-md text-sm font-medium"
                     >
                       Delete
                     </button>
@@ -172,39 +201,54 @@ const ManageUser = () => {
 
       {/* Update User Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white dark:bg-dark_2 p-6 rounded-lg w-1/3">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md">
             <h2 className="text-xl font-bold mb-4 dark:text-white">
               Update User
             </h2>
-            <input
-              type="text"
-              value={currentUser.userName}
-              onChange={(e) =>
-                setCurrentUser({ ...currentUser, userName: e.target.value })
-              }
-              className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4 dark:text-white dark:bg-dark_3"
-              placeholder="Name"
-            />
-            <input
-              type="text"
-              value={currentUser.role}
-              onChange={(e) =>
-                setCurrentUser({ ...currentUser, role: e.target.value })
-              }
-              className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4 dark:text-white dark:bg-dark_3"
-              placeholder="Role"
-            />
-            <div className="flex justify-end">
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Name
+              </label>
+              <input
+                type="text"
+                value={currentUser?.userName || ""}
+                onChange={(e) =>
+                  setCurrentUser({ ...currentUser, userName: e.target.value })
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                placeholder="Name"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                User Role
+              </label>
+              <select
+                value={currentUser?.role || ""}
+                onChange={(e) =>
+                  setCurrentUser({ ...currentUser, role: e.target.value })
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              >
+                <option value="">Select User Type</option>
+                <option value="ADMIN">Admin</option>
+                <option value="USER1">user1</option>
+                <option value="USER2">user2</option>
+              </select>
+            </div>
+
+            <div className="flex justify-end space-x-2">
               <button
                 onClick={handleModalClose}
-                className="bg-gray-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-gray-600"
+                className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSubmitUpdate}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md dark:bg-blue-700 dark:hover:bg-blue-800"
               >
                 Save
               </button>
