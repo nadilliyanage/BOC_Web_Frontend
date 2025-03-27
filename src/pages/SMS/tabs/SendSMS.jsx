@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import MobilePreview from "./components/MobilePreview";
 import SMSForm from "./components/SMSForm";
+import { jwtDecode } from "jwt-decode";
 
 const SendSMS = () => {
   const [smsContent, setSmsContent] = useState("");
@@ -116,6 +117,28 @@ const SendSMS = () => {
     setPhoneNumbers("");
   };
 
+  // Get token from localStorage and decode it
+  const token = localStorage.getItem("token");
+  let user = null;
+
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      user = {
+        id: decoded.id,
+        name: decoded.name,
+        userId: decoded.userId,
+      };
+    } catch (err) {
+      console.error("Invalid token:", err);
+      localStorage.removeItem("token");
+    }
+  }
+
+  const id = user ? user.id : null;
+  const name = user ? user.name : null;
+  const userId = user ? user.userId : null;
+
   // Handle Send SMS button click
   const handleSendSMS = async () => {
     const campaignName = document.querySelector('input[type="text"]').value;
@@ -142,6 +165,9 @@ const SendSMS = () => {
       message,
       schedule: scheduleDate, // Send the date/time in ISO format (UTC)
       removeBlockedNumbers, // Include checkbox value
+      created_by: name,
+      created_by_id: id,
+      creted_by_userId: userId,
     };
 
     try {
@@ -287,6 +313,9 @@ const SendSMS = () => {
       message,
       schedule: null, // No schedule for test campaign
       removeBlockedNumbers: false, // No need to remove blocked numbers for test
+      created_by: name,
+      created_by_id: id,
+      creted_by_userId: userId,
     };
 
     try {

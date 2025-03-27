@@ -111,7 +111,7 @@ const SMSForm = ({
               <button
                 type="button"
                 onClick={handleCloseList}
-                className="text-red-500 hover:text-red-700"
+                className="text-secondary hover:text-secondary2"
               >
                 Close List
               </button>
@@ -157,12 +157,12 @@ const SMSForm = ({
             disabled={selectedTemplate || smsContent}
           />
           {messageFile && (
-            <div className="mt-2 flex justify-between items-center">
+            <div className="mt-2 flex justify-between items-center dark:text-white">
               <span>{messageFile.name}</span>
               <button
                 type="button"
                 onClick={handleCloseMessageFile}
-                className="text-red-500 hover:text-red-700"
+                className="text-secondary hover:text-secondary2"
               >
                 Close
               </button>
@@ -196,7 +196,7 @@ const SMSForm = ({
               <button
                 type="button"
                 onClick={handleCloseTemplate}
-                className="text-red-500 hover:text-red-700"
+                className="text-secondary hover:text-secondary2"
               >
                 Close Template
               </button>

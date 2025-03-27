@@ -1,33 +1,24 @@
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
-export const getCurrentUser = () => {
+export const getUserId = () => {
   const token = localStorage.getItem("token");
   if (!token) return null;
-
   try {
-    const decoded = jwt_decode(token);
-    return {
-      userId: decoded.sub,
-      userName: decoded.name,
-      userRole: decoded.role,
-      exp: decoded.exp,
-    };
-  } catch (err) {
-    console.error("Invalid token:", err);
+    const decoded = jwtDecode(token);
+    return decoded?.userId || decoded?.sub || null;
+  } catch (error) {
+    console.error("Error decoding token:", error);
     return null;
   }
 };
 
 export const isAuthenticated = () => {
-  const user = getCurrentUser();
-  if (!user) return false;
-
-  // Check if token is expired (exp is in seconds)
-  return user.exp * 1000 > Date.now();
-};
-
-export const logout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
-  window.location.href = "/login";
+  const token = localStorage.getItem("token");
+  if (!token) return false;
+  try {
+    const decoded = jwtDecode(token);
+    return !decoded.exp || decoded.exp * 1000 > Date.now();
+  } catch (error) {
+    return false;
+  }
 };
