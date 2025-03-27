@@ -15,6 +15,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { jwtDecode } from "jwt-decode";
 
 const SendCustomizeSMS = () => {
   const [smsContent, setSmsContent] = useState("");
@@ -91,6 +92,28 @@ const SendCustomizeSMS = () => {
     setErrorMessage("Messages generated successfully!");
   };
 
+  // Get token from localStorage and decode it
+  const token = localStorage.getItem("token");
+  let user = null;
+
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      user = {
+        id: decoded.id,
+        name: decoded.name,
+        userId: decoded.userId,
+      };
+    } catch (err) {
+      console.error("Invalid token:", err);
+      localStorage.removeItem("token");
+    }
+  }
+
+  const id = user ? user.id : null;
+  const name = user ? user.name : null;
+  const userId = user ? user.userId : null;
+
   // Save messages to backend
   const saveMessages = async () => {
     if (!campaignName || messages.length === 0 || !sender) {
@@ -111,6 +134,9 @@ const SendCustomizeSMS = () => {
           message: msg.message, // Generated message (e.g., "Hello Bob, your number is 078546985")
           schedule: schedule || null, // Add schedule if applicable
           removeBlockedNumbers: true, // Add checkbox value if applicable
+          created_by: name,
+          created_by_id: id,
+          creted_by_userId: userId,
         };
 
         console.log("Sending payload to backend:", payload);
