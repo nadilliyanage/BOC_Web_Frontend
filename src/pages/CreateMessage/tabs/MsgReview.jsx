@@ -17,6 +17,31 @@ const ReviewMessages = () => {
     fetchMessages();
   }, []);
 
+  
+  // Get token from localStorage and decode it
+  const token = localStorage.getItem("token");
+  let user = null;
+
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      console.log("Decoded Token:", decoded);
+      user = {
+        id: decoded.id,
+        name: decoded.name,
+        userId: decoded.userId,
+      };
+    } catch (err) {
+      console.error("Invalid token:", err);
+      localStorage.removeItem("token");
+    }
+  }
+
+  const id = user ? user.id : null;
+  const name = user ? user.name : null;
+  const userId = user ? user.userId : null;
+  console.log(id, name, userId);
+
   const fetchMessages = async () => {
     try {
       const response = await axios.get(
@@ -37,7 +62,12 @@ const ReviewMessages = () => {
   const updateMessageStatus = async (messageId, status) => {
     try {
       const apiEndpoint = `http://localhost:8080/api/v1/create-message/status/${messageId}`;
-      const payload = { status: status };
+      const payload = { 
+        status: status, 
+        created_by: name,
+        created_by_id: id,
+        created_by_userId: userId, 
+      };
 
       await axios.put(apiEndpoint, payload);
 

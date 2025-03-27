@@ -136,7 +136,7 @@ const SendCustomizeSMS = () => {
           removeBlockedNumbers: true, // Add checkbox value if applicable
           created_by: name,
           created_by_id: id,
-          creted_by_userId: userId,
+          created_by_userId: userId,
         };
 
         console.log("Sending payload to backend:", payload);
