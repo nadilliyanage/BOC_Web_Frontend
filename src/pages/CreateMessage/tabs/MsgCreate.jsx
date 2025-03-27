@@ -6,6 +6,7 @@ import WarningAlert from "../../../components/WarningAlert";
 import ConfirmAlert from "../../../components/ConfirmAlert";
 import MobilePreview from "./components/MobilePreview";
 import LoadingScreen from "../../../components/LoadingScreen";
+import { jwtDecode } from "jwt-decode";
 
 const MsgCreate = () => {
   const [smsContent, setSmsContent] = useState("");
@@ -20,6 +21,30 @@ const MsgCreate = () => {
   const handleMessageLabelChange = (event) => {
     setMessageLabel(event.target.value);
   };
+
+  // Get token from localStorage and decode it
+  const token = localStorage.getItem("token");
+  let user = null;
+
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      console.log("Decoded Token:", decoded);
+      user = {
+        id: decoded.id,
+        name: decoded.name,
+        userId: decoded.userId,
+      };
+    } catch (err) {
+      console.error("Invalid token:", err);
+      localStorage.removeItem("token");
+    }
+  }
+
+  const id = user ? user.id : null;
+  const name = user ? user.name : null;
+  const userId = user ? user.userId : null;
+  console.log(id, name, userId);
 
   const handleSave = async () => {
     if (!messageLabel.trim() || !smsContent.trim()) {
@@ -46,6 +71,9 @@ const MsgCreate = () => {
         {
           label: messageLabel,
           message: smsContent,
+          created_by: name,
+          created_by_id: id,
+          creted_by_userId: userId,
         }
       );
 
