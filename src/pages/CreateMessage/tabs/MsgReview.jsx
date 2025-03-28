@@ -279,7 +279,7 @@ const ReviewMessages = () => {
                     </button>
                     <button
                       onClick={() => handleDelete(message.id)}
-                      className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300 bg-gray-100 hover:bg-gray-200 dark:bg-gray-900 dark:hover:bg-gray-800 px-3 py-1 rounded-md text-sm font-medium"
+                      className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 bg-red-100 hover:bg-red-200 dark:bg-red-900 dark:hover:bg-red-800 px-3 py-1 rounded-md text-sm font-medium"
                     >
                       <MdDelete className="inline mr-1" /> Delete
                     </button>
