@@ -29,7 +29,7 @@ const MsgCreate = () => {
   if (token) {
     try {
       const decoded = jwtDecode(token);
-      console.log("Decoded Token:", decoded);
+   
       user = {
         id: decoded.id,
         name: decoded.name,
@@ -44,7 +44,7 @@ const MsgCreate = () => {
   const id = user ? user.id : null;
   const name = user ? user.name : null;
   const userId = user ? user.userId : null;
-  console.log(id, name, userId);
+
 
   const handleSave = async () => {
     if (!messageLabel.trim() || !smsContent.trim()) {
