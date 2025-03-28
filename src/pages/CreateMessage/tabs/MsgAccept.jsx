@@ -235,8 +235,10 @@ const MsgAccept = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                     {message.label}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-900 dark:text-white max-w-xs truncate">
-                    {message.message}
+                  <td className="py-4 px-4 text-gray-700 dark:text-white">
+                    <pre className="overflow-auto whitespace-pre-wrap break-words max-w-xs md:max-w-sm lg:max-w-md">
+                      {message.message}
+                    </pre>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                     {message.created_by || "N/A"}
