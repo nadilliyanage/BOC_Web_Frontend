@@ -12,13 +12,34 @@ const FinishedMessage = () => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
+        setLoading(true);
+        setError(null);
         const response = await axios.get(
           "http://localhost:8080/api/v1/send-message/finished"
         );
-        setMessages(response.data);
-        groupMessagesByCampaign(response.data);
+        if (response.data && Array.isArray(response.data)) {
+          setMessages(response.data);
+          groupMessagesByCampaign(response.data);
+        } else {
+          throw new Error("Invalid data format received from server");
+        }
       } catch (err) {
-        setError("Failed to fetch messages");
+        let errorMessage = "Failed to fetch messages";
+        if (err.response) {
+          // Server responded with a status code outside 2xx
+          errorMessage = `Server error: ${err.response.status} - ${
+            err.response.data?.message || err.message
+          }`;
+        } else if (err.request) {
+          // Request was made but no response received
+          errorMessage =
+            "No response from server. Please check your connection.";
+        } else {
+          // Something happened in setting up the request
+          errorMessage = err.message || "Request setup error";
+        }
+        setError(errorMessage);
+        console.error("Fetch error:", err);
       } finally {
         setLoading(false);
       }
@@ -33,7 +54,7 @@ const FinishedMessage = () => {
       const campaignName = msg.campaignName || "Unnamed Campaign";
       if (!acc[campaignName]) {
         acc[campaignName] = {
-          created_at: msg.created_at || "No Date", // Use created_at instead of date
+          created_at: msg.created_at || "No Date",
           messages: [],
         };
       }
@@ -48,7 +69,7 @@ const FinishedMessage = () => {
   const toggleCampaign = (campaignName) => {
     setExpandedCampaigns((prev) => ({
       ...prev,
-      [campaignName]: !prev[campaignName], // Toggle expanded state
+      [campaignName]: !prev[campaignName],
     }));
   };
 
@@ -82,7 +103,7 @@ const FinishedMessage = () => {
       const campaignName = msg.campaignName || "Unnamed Campaign";
       if (!acc[campaignName]) {
         acc[campaignName] = {
-          created_at: msg.created_at || "No Date", // Use created_at instead of date
+          created_at: msg.created_at || "No Date",
           messages: [],
         };
       }
@@ -119,19 +140,16 @@ const FinishedMessage = () => {
                 <h2 className="text-xl font-bold">{campaignName}</h2>
                 <p className="text-sm text-gray-500">
                   Date: {campaignData.created_at}
-                </p>{" "}
-                {/* Use created_at */}
+                </p>
                 <p className="text-sm text-gray-500">
                   Message Count: {campaignData.messages.length}
                 </p>
               </div>
               <span className="text-lg">
-                {expandedCampaigns[campaignName] ? "▲" : "▼"}{" "}
-                {/* Toggle icon */}
+                {expandedCampaigns[campaignName] ? "▲" : "▼"}
               </span>
             </div>
 
-            {/* Collapsible message table */}
             {expandedCampaigns[campaignName] && (
               <table className="w-full border-collapse border border-gray-300 mt-2">
                 <thead>
@@ -149,8 +167,7 @@ const FinishedMessage = () => {
                     <th className="border border-gray-300 px-4 py-2">Status</th>
                     <th className="border border-gray-300 px-4 py-2">
                       Created At
-                    </th>{" "}
-                    {/* Add Created At column */}
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -163,24 +180,17 @@ const FinishedMessage = () => {
                         {msg.sender}
                       </td>
                       <td className="border border-gray-300 px-4 py-2">
-                        {msg.numbers.join(", ")}
+                        {msg.numbers?.join(", ")}
                       </td>
                       <td className="border border-gray-300 px-4 py-2 whitespace-pre-wrap">
                         {msg.message}
                       </td>
-                      <td
-                        className={`border border-gray-300 px-4 py-2 ${
-                          msg.referenceNumber
-                            ? "text-green-500"
-                            : "text-yellow-500"
-                        }`}
-                      >
-                        {msg.referenceNumber ? "Done" : "Pending"}
+                      <td className="border border-gray-300 px-4 py-2 text-green-500">
+                        {msg.status}
                       </td>
                       <td className="border border-gray-300 px-4 py-2">
                         {msg.created_at}
-                      </td>{" "}
-                      {/* Display created_at */}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
