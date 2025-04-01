@@ -37,7 +37,7 @@ const MsgAccept = () => {
   const fetchMessages = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/v1/create-message"
+        "http://localhost:8080/api/v1/create-message/accepted"
       );
       setMessages(response.data);
       setLoading(false);
@@ -122,11 +122,17 @@ const MsgAccept = () => {
         }
       )
       .then(() => {
-        toast.success("Message updated successfully!", {
-          className:
-            "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-lg shadow-lg",
-          bodyClassName: "text-sm font-medium",
-        });
+        toast.success(
+          <div>
+            <div>Message updated successfully!</div>
+            <div>Go to review tab to review again</div>
+          </div>,
+          {
+            className:
+              "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-lg shadow-lg",
+            bodyClassName: "text-sm font-medium",
+          }
+        );
         fetchMessages();
         handleModalClose();
       })
@@ -244,19 +250,21 @@ const MsgAccept = () => {
                     {message.created_by || "N/A"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                    {message.created_by_user_id || "N/A"}
+                    {message.created_by_userId ||
+                      message.created_by_user_id ||
+                      "N/A"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                     {message.status_update_by || "N/A"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                    {message.status_update_by_user_id || "N/A"}
+                    {message.status_update_by_userId || "N/A"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                     {message.updated_by || "N/A"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                    {message.updated_by_user_id || "N/A"}
+                    {message.updated_by_userId || "N/A"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button
