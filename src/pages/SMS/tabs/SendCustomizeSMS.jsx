@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { jwtDecode } from "jwt-decode";
+import { validateSMSLength, hasEmoji } from "../../../utils/smsUtils";
 
 const SendCustomizeSMS = () => {
   const [smsContent, setSmsContent] = useState("");
@@ -28,6 +29,7 @@ const SendCustomizeSMS = () => {
   const [messages, setMessages] = useState([]);
   const [sender, setSender] = useState("");
   const [schedule, setSchedule] = useState(""); // State for schedule date and time
+  const [smsValidation, setSmsValidation] = useState(null);
 
   // Handle CSV file upload with PapaParse
   const handleFileUpload = useCallback((event) => {
@@ -53,6 +55,16 @@ const SendCustomizeSMS = () => {
     }
   }, []);
 
+  // Update validation when SMS content changes
+  useEffect(() => {
+    if (smsContent) {
+      const validation = validateSMSLength(smsContent);
+      setSmsValidation(validation);
+    } else {
+      setSmsValidation(null);
+    }
+  }, [smsContent]);
+
   // Generate messages from template
   const generateMessages = () => {
     if (!csvData.length || !smsContent || !mobileNumberColumn) {
@@ -62,30 +74,46 @@ const SendCustomizeSMS = () => {
       return;
     }
 
-    const variableRegex = /\$[A-Z]/g; // Match variables like $A, $B, $C
+    if (smsValidation && !smsValidation.isValid) {
+      setErrorMessage(smsValidation.message);
+      return;
+    }
+
+    const variableRegex = /\$[A-Z]/g;
     const variables = smsContent.match(variableRegex) || [];
 
-    // Validate mobile number column exists
     if (!columnHeaders.includes(mobileNumberColumn)) {
       setErrorMessage("Invalid mobile number column!");
       return;
     }
 
-    // Filter out rows with null or invalid mobile numbers
     const generated = csvData
       .filter(
         (row) =>
           row[mobileNumberColumn] != null &&
           row[mobileNumberColumn].trim() !== ""
       )
-      .map((row) => ({
-        number: row[mobileNumberColumn], // Recipient's number
-        message: variables.reduce((msg, varChar) => {
-          const columnIndex = varChar.charCodeAt(1) - 65; // Extract column index from $A, $B, etc.
+      .map((row) => {
+        const message = variables.reduce((msg, varChar) => {
+          const columnIndex = varChar.charCodeAt(1) - 65;
           const columnName = columnHeaders[columnIndex];
           return columnName ? msg.replace(varChar, row[columnName] || "") : msg;
-        }, smsContent), // Generated message (e.g., "Hello Bob, your number is 078546985")
-      }));
+        }, smsContent);
+
+        // Validate each generated message
+        const messageValidation = validateSMSLength(message);
+        if (!messageValidation.isValid) {
+          throw new Error(
+            `Message for number ${row[mobileNumberColumn]} exceeds maximum length`
+          );
+        }
+
+        return {
+          number: row[mobileNumberColumn],
+          message,
+          segments: messageValidation.segments,
+        };
+      });
 
     console.log("Generated Messages:", generated);
     setMessages(generated);
@@ -385,6 +413,15 @@ const SendCustomizeSMS = () => {
                 .map((_, i) => `$${String.fromCharCode(65 + i)}`)
                 .join(", ")}
             </div>
+            {smsValidation && (
+              <div
+                className={`mt-2 text-sm ${
+                  smsValidation.isValid ? "text-green-500" : "text-red-500"
+                }`}
+              >
+                {smsValidation.message}
+              </div>
+            )}
           </div>
 
           {/* Generate Button */}
@@ -417,30 +454,43 @@ const SendCustomizeSMS = () => {
 
             {/* Preview List */}
             <div className="preview-container max-h-[500px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-yellow-500 scrollbar-track-dark_1 rounded-lg">
-              {messages.map((msg, index) => (
-                <div
-                  key={index}
-                  className="p-4 mb-3 dark:bg-dark_3 rounded-lg border border-dark_1 hover:border-yellow-400/30 transition-all duration-200 group"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <Typography
-                      variant="body2"
-                      className="dark:text-slate-400 font-mono text-sm"
-                    >
-                      To: {msg.number}
-                    </Typography>
-                    <span className="dark:text-yellow-400 text-xs bg-slate-100 dark:bg-dark_1 px-2 py-1 rounded-md">
-                      #{index + 1}
-                    </span>
-                  </div>
-                  <Typography
-                    variant="body1"
-                    className="dark:text-slate-200 whitespace-pre-wrap font-medium"
+              {messages.map((msg, index) => {
+                const validation = validateSMSLength(msg.message);
+                return (
+                  <div
+                    key={index}
+                    className="p-4 mb-3 dark:bg-dark_3 rounded-lg border border-dark_1 hover:border-yellow-400/30 transition-all duration-200 group"
                   >
-                    {msg.message}
-                  </Typography>
-                </div>
-              ))}
+                    <div className="flex items-center justify-between mb-2">
+                      <Typography
+                        variant="body2"
+                        className="dark:text-slate-400 font-mono text-sm"
+                      >
+                        To: {msg.number}
+                      </Typography>
+                      <div className="flex items-center gap-2">
+                        <span className="dark:text-yellow-400 text-xs bg-slate-100 dark:bg-dark_1 px-2 py-1 rounded-md">
+                          #{index + 1}
+                        </span>
+                        <span className="dark:text-blue-400 text-xs bg-slate-100 dark:bg-dark_1 px-2 py-1 rounded-md font-mono">
+                          {validation.message}
+                          {hasEmoji(msg.message) && (
+                            <span className="ml-1 text-yellow-500">
+                              (with emoji)
+                            </span>
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                    <Typography
+                      variant="body1"
+                      className="dark:text-slate-200 whitespace-pre-wrap font-medium"
+                    >
+                      {msg.message}
+                    </Typography>
+                  </div>
+                );
+              })}
             </div>
 
             {/* Submit Button */}

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import LoadingScreen from "../../../../components/LoadingScreen";
 import { Paper } from "@mui/material";
+import { validateSMSLength, hasEmoji } from "../../../../utils/smsUtils";
 
 const SMSForm = ({
   smsContent,
@@ -31,10 +32,24 @@ const SMSForm = ({
   handleTestCampaign,
   handleSendTestSMS,
 }) => {
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
+  const [smsValidation, setSmsValidation] = useState(null);
+
+  // Update validation when SMS content changes
+  useEffect(() => {
+    if (smsContent) {
+      const validation = validateSMSLength(smsContent);
+      setSmsValidation(validation);
+    } else {
+      setSmsValidation(null);
+    }
+  }, [smsContent]);
 
   // Wrap your functions with loading logic
   const handleSendSMSWithLoading = async () => {
+    if (smsValidation && !smsValidation.isValid) {
+      return;
+    }
     setLoading(true);
     try {
       await handleSendSMS();
@@ -44,6 +59,9 @@ const SMSForm = ({
   };
 
   const handleTestCampaignWithLoading = async () => {
+    if (smsValidation && !smsValidation.isValid) {
+      return;
+    }
     setLoading(true);
     try {
       await handleTestCampaign();
@@ -97,7 +115,7 @@ const SMSForm = ({
             value={selectedFileName}
             onChange={handleFileSelect}
             className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
-            disabled={!!numberFile} // Disable if Number File is uploaded
+            disabled={!!numberFile}
           >
             <option value="">Select Contact List</option>
             {fileList.map((fileName, index) => (
@@ -128,7 +146,7 @@ const SMSForm = ({
             type="file"
             onChange={handleNumberFileUpload}
             className="mt-1 block w-full border border-gray-300 shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white"
-            disabled={!!selectedFileName} // Disable if Contact List is selected
+            disabled={!!selectedFileName}
           />
           {numberFile && (
             <div className="mt-2 flex justify-between items-center">
@@ -235,15 +253,27 @@ const SMSForm = ({
             SMS Content
           </label>
           <textarea
-            maxLength="225"
+            maxLength="1950"
+            required={true}
             value={smsContent}
             onChange={handleSmsContentChange}
             disabled={messageFile || selectedTemplate}
             className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
           ></textarea>
-          <span className="text-gray-500 text-sm">
-            {smsContent.length} / 225
-          </span>
+          <div className="flex justify-between items-center mt-2">
+            {smsValidation && (
+              <span
+                className={`text-sm font-mono ${
+                  smsValidation.isValid ? "text-secondary" : "text-red-500"
+                }`}
+              >
+                {smsValidation.message}
+                {hasEmoji(smsContent) && (
+                  <span className="ml-1 text-yellow-500">(with emoji)</span>
+                )}
+              </span>
+            )}
+          </div>
 
           {/* Phone Numbers Textarea */}
           <div className="mt-4">
@@ -251,7 +281,7 @@ const SMSForm = ({
               Phone Numbers
             </label>
             <textarea
-              value={combinedPhoneNumbers} // Display combined phone numbers
+              value={combinedPhoneNumbers}
               readOnly
               className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3 overflow-x-auto whitespace-nowrap"
               rows="2"
@@ -283,16 +313,26 @@ const SMSForm = ({
         <div className="flex flex-row-reverse mt-4 ">
           <button
             type="button"
-            onClick={handleSendSMSWithLoading} // Use the wrapped function
-            className="mx-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-transform hover:scale-105"
+            onClick={handleSendSMSWithLoading}
+            disabled={!smsContent || (smsValidation && !smsValidation.isValid)}
+            className={`mx-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-transform hover:scale-105 ${
+              !smsContent || (smsValidation && !smsValidation.isValid)
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
           >
             Send SMS
           </button>
 
           <button
             type="button"
-            onClick={handleTestCampaignWithLoading} // Use the wrapped function
-            className="mx-2 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-transform hover:scale-105"
+            onClick={handleTestCampaignWithLoading}
+            disabled={!smsContent || (smsValidation && !smsValidation.isValid)}
+            className={`mx-2 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-transform hover:scale-105 ${
+              !smsContent || (smsValidation && !smsValidation.isValid)
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
           >
             Test Campaign
           </button>
@@ -320,7 +360,12 @@ const SMSForm = ({
               </button>
               <button
                 onClick={handleSendTestSMS}
-                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-bold py-2 px-4 rounded transition-transform hover:scale-105"
+                disabled={smsValidation && !smsValidation.isValid}
+                className={`bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-bold py-2 px-4 rounded transition-transform hover:scale-105 ${
+                  smsValidation && !smsValidation.isValid
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
               >
                 Send Test SMS
               </button>
