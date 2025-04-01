@@ -269,10 +269,10 @@ const MsgReject = () => {
                     {message.status_update_by_userId || "N/A"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                    {message.updated_by || "N/A"}
+                    {message.updated_by || "Not Updated"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                    {message.updated_by_userId || "N/A"}
+                    {message.updated_by_userId || "Not Updated"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button

@@ -58,3 +58,27 @@ export const splitIntoSegments = (text) => {
 
   return segments;
 };
+
+/**
+ * Calculates the number of SMS segments a message will use
+ * @param {string} message - The message text to calculate segments for
+ * @returns {number} - The number of segments the message will use
+ */
+export const calculateMessageSegments = (message) => {
+  if (!message) return 0;
+
+  // Standard GSM character set (7-bit)
+  const standardChars = /^[A-Za-z0-9\s\p{P}\p{S}\p{Z}]+$/u;
+
+  // Count characters
+  const charCount = message.length;
+
+  // If message contains only standard GSM characters
+  if (standardChars.test(message)) {
+    // Each segment can contain 160 characters
+    return Math.ceil(charCount / 160);
+  } else {
+    // For Unicode characters (16-bit), each segment can contain 70 characters
+    return Math.ceil(charCount / 70);
+  }
+};

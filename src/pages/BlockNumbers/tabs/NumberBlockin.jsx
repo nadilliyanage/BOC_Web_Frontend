@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
+import { FaSearch, FaUpload, FaPlus, FaPhone } from "react-icons/fa";
 
 const NumberBlocking = () => {
   const [numbers, setNumbers] = useState("");
@@ -208,74 +209,114 @@ const NumberBlocking = () => {
 
   return (
     <div className="p-6 w-full mx-auto bg-white rounded-lg shadow-lg dark:bg-dark_2">
-      {/* Add numbers manually */}
-      <div className="mb-4">
-        <label className="block text-lg font-bold  mb-4 border-b-2 border-yellow-400 pb-2">
-          Add Numbers
-        </label>
-        <textarea
-          value={numbers}
-          onChange={(e) => setNumbers(e.target.value)}
-          placeholder="Enter numbers separated by commas or newlines"
-          className="w-full px-4 py-2 border border-gray-300  rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white dark:bg-dark_3"
-          rows="4"
-        />
-        <button
-          onClick={handleAddNumbers}
-          className="mt-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 py-2 rounded-md  font-bold"
-        >
-          Add Numbers
-        </button>
-      </div>
-
-      {/* Upload CSV file */}
-      <div className="mb-4">
-        <label className="block font-bold  mb-4 border-b-2 border-yellow-400 pb-2">
-          Upload CSV File
-        </label>
-        <input
-          type="file"
-          accept=".csv"
-          onChange={handleFileUpload}
-          className="w-full p-2 border border-gray-300 rounded-md dark:bg-dark_2 hover:border-secondary"
-        />
-      </div>
-
-      {/* Search Bar */}
-      <div className="mb-4">
-        <label className="block text-gray-400 font-medium mb-2">
-          Search Numbers
-        </label>
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search numbers..."
-          className="w-full px-4 py-2 border border-gray-300  rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white dark:bg-dark_3"
-        />
-      </div>
-
-      {/* Display blocked numbers in 3 columns */}
-      <div>
-        <h2 className="text-xl font-bold mb-2">Blocked Numbers</h2>
-        {filteredNumbers.length === 0 ? (
-          <p>No numbers found.</p>
-        ) : (
-          <div className="grid grid-cols-10 gap-4 ">
-            {filteredNumbers.map((numberBlock) => (
-              <div
-                key={numberBlock.id}
-                className="p-2 border-b hover:bg-secondary dark:hover:bg-slate-950 hover:transition-opacity duration-700"
-              >
-                <span>{numberBlock.number}</span>
-              </div>
-            ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Left Column - Add Numbers and Upload */}
+        <div className="space-y-6">
+          {/* Add numbers manually */}
+          <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center mb-4">
+              <FaPlus className="text-yellow-500 mr-2" />
+              <h2 className="text-lg font-bold text-gray-800 dark:text-white">
+                Add Numbers
+              </h2>
+            </div>
+            <textarea
+              value={numbers}
+              onChange={(e) => setNumbers(e.target.value)}
+              placeholder="Enter numbers separated by commas or newlines"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:text-white dark:bg-dark_2 transition-all duration-200"
+              rows="4"
+            />
+            <button
+              onClick={handleAddNumbers}
+              className="mt-4 w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center"
+            >
+              <FaPlus className="mr-2" />
+              Add Numbers
+            </button>
           </div>
-        )}
+
+          {/* Upload CSV file */}
+          <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center mb-4">
+              <FaUpload className="text-yellow-500 mr-2" />
+              <h2 className="text-lg font-bold text-gray-800 dark:text-white">
+                Upload CSV File
+              </h2>
+            </div>
+            <div className="relative">
+              <input
+                type="file"
+                accept=".csv"
+                onChange={handleFileUpload}
+                className="w-full p-3 border-2 border-dashed border-gray-300 rounded-lg dark:bg-dark_2 hover:border-yellow-500 transition-all duration-200 cursor-pointer"
+              />
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <FaUpload className="text-gray-400 text-2xl" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column - Search and Display */}
+        <div className="space-y-6">
+          {/* Search Bar */}
+          <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center mb-4">
+              <FaSearch className="text-yellow-500 mr-2" />
+              <h2 className="text-lg font-bold text-gray-800 dark:text-white">
+                Search Numbers
+              </h2>
+            </div>
+            <div className="relative">
+              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search numbers..."
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:text-white dark:bg-dark_2 transition-all duration-200"
+              />
+            </div>
+          </div>
+
+          {/* Display blocked numbers */}
+          <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center mb-4">
+              <FaPhone className="text-yellow-500 mr-2" />
+              <h2 className="text-lg font-bold text-gray-800 dark:text-white">
+                Blocked Numbers
+              </h2>
+            </div>
+            {filteredNumbers.length === 0 ? (
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                <FaPhone className="text-4xl mx-auto mb-2" />
+                <p>No numbers found</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-h-[400px] overflow-y-auto">
+                {filteredNumbers.map((numberBlock) => (
+                  <div
+                    key={numberBlock.id}
+                    className="p-3 bg-gray-50 dark:bg-dark_2 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all duration-200"
+                  >
+                    <span className="text-sm font-medium text-gray-800 dark:text-white">
+                      {numberBlock.number}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Error message */}
-      {error && <p className="text-red-500 mt-4">{error}</p>}
+      {error && (
+        <div className="mt-4 p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-100 rounded-lg">
+          {error}
+        </div>
+      )}
     </div>
   );
 };

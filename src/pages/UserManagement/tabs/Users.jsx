@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { FaUser, FaSearch, FaSpinner } from "react-icons/fa";
 
 const ManageUser = () => {
   const [users, setUsers] = useState([]);
@@ -24,79 +25,104 @@ const ManageUser = () => {
 
   // Filter users based on search term
   const filteredUsers = users.filter((user) => {
+    const searchTermLower = searchTerm.toLowerCase();
     return (
-      user.userId.toString().includes(searchTerm) || // Search by userId
-      user.userName.toLowerCase().includes(searchTerm.toLowerCase()) || // Search by userName
-      user.department.toLowerCase().includes(searchTerm.toLowerCase()) || // Search by department
-      user.userType.toLowerCase().includes(searchTerm.toLowerCase()) || // Search by userType
-      user.smsType.toLowerCase().includes(searchTerm.toLowerCase()) // Search by smsType
+      user.userId?.toString().toLowerCase().includes(searchTermLower) || // Search by userId
+      user.userName?.toLowerCase().includes(searchTermLower) || // Search by userName
+      user.role?.toLowerCase().includes(searchTermLower) || // Search by role
+      user.department?.toLowerCase().includes(searchTermLower) // Search by department
     );
   });
 
-  if (loading)
+  if (loading) {
     return (
-      <p className="text-center text-lg font-medium text-gray-600">
-        Loading users...
-      </p>
+      <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
+        <FaSpinner className="animate-spin text-4xl text-yellow-500" />
+        <p className="text-lg font-medium text-gray-600 dark:text-gray-300">
+          Loading users...
+        </p>
+      </div>
     );
-  if (error)
+  }
+
+  if (error) {
     return (
-      <p className="text-center text-lg font-medium text-red-500">{error}</p>
+      <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
+        <div className="bg-red-100 dark:bg-red-900 p-4 rounded-lg">
+          <p className="text-lg font-medium text-red-600 dark:text-red-200">
+            {error}
+          </p>
+        </div>
+      </div>
     );
+  }
 
   return (
-    <div className="dark:bg-dark_2 p-6 rounded-b-md">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white border-b-2 border-yellow-400 pb-2">
-        User List
-      </h1>
-      <div className="mb-4">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search users..."
-          className="w-full px-4 py-2 border border-gray-300  rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white dark:bg-dark_3"
-        />
+    <div className="p-6 w-full mx-auto bg-white rounded-lg shadow-lg dark:bg-dark_2">
+      <div className="flex items-center mb-6">
+        <FaUser className="text-3xl text-yellow-500 mr-3" />
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+          User List
+        </h1>
       </div>
+
+      <div className="mb-6">
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <FaSearch className="text-gray-400" />
+          </div>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search by ID, Name, Role, or Department..."
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent dark:bg-dark_3 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+          />
+        </div>
+      </div>
+
       {filteredUsers.length === 0 ? (
-        <p className="text-center text-gray-600">No users found.</p>
+        <div className="text-center py-8">
+          <FaUser className="mx-auto text-4xl text-gray-400 mb-2" />
+          <p className="text-gray-500 dark:text-gray-400 text-lg">
+            No users found matching your search.
+          </p>
+        </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="table-auto w-full border-collapse border border-gray-300">
-            <thead>
-              <tr className="bg-white dark:bg-dark_2">
-                <th className="border border-gray-300 px-4 py-2 text-left">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-gray-50 dark:bg-dark_3">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   User ID
                 </th>
-                <th className="border border-gray-300 px-4 py-2 text-left">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Name
                 </th>
-
-                <th className="border border-gray-300 px-4 py-2 text-left">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   User Role
                 </th>
-                <th className="border border-gray-300 px-4 py-2 text-left">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Department
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="bg-white divide-y divide-gray-200 dark:bg-dark_1 dark:divide-gray-700">
               {filteredUsers.map((user) => (
                 <tr
                   key={user.id}
-                  className="even:bg-gray-50 dark:even:bg-dark_2 hover:bg-gray-100 dark:hover:bg-dark_3"
+                  className="hover:bg-gray-50 dark:hover:bg-dark_2 transition-colors duration-200"
                 >
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                     {user.userId}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                     {user.userName}
                   </td>
-
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                     {user.role}
                   </td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                     {user.department}
                   </td>
                 </tr>
