@@ -34,6 +34,12 @@ const SMSForm = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [smsValidation, setSmsValidation] = useState(null);
+  const [campaignName, setCampaignName] = useState("");
+  const [sender, setSender] = useState("");
+  const [validationErrors, setValidationErrors] = useState({
+    campaignName: false,
+    sender: false,
+  });
 
   // Update validation when SMS content changes
   useEffect(() => {
@@ -45,9 +51,31 @@ const SMSForm = ({
     }
   }, [smsContent]);
 
+  // Validate form fields
+  const validateForm = () => {
+    const errors = {
+      campaignName: !campaignName.trim(),
+      sender: !sender.trim(),
+    };
+    setValidationErrors(errors);
+    return !errors.campaignName && !errors.sender;
+  };
+
+  // Handle campaign name change
+  const handleCampaignNameChange = (e) => {
+    setCampaignName(e.target.value);
+    setValidationErrors((prev) => ({ ...prev, campaignName: false }));
+  };
+
+  // Handle sender change
+  const handleSenderChange = (e) => {
+    setSender(e.target.value);
+    setValidationErrors((prev) => ({ ...prev, sender: false }));
+  };
+
   // Wrap your functions with loading logic
   const handleSendSMSWithLoading = async () => {
-    if (smsValidation && !smsValidation.isValid) {
+    if (!validateForm() || (smsValidation && !smsValidation.isValid)) {
       return;
     }
     setLoading(true);
@@ -59,7 +87,7 @@ const SMSForm = ({
   };
 
   const handleTestCampaignWithLoading = async () => {
-    if (smsValidation && !smsValidation.isValid) {
+    if (!validateForm() || (smsValidation && !smsValidation.isValid)) {
       return;
     }
     setLoading(true);
@@ -91,8 +119,19 @@ const SMSForm = ({
           <input
             placeholder="Enter Campaign Name"
             type="text"
-            className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
+            value={campaignName}
+            onChange={handleCampaignNameChange}
+            className={`mt-1 block w-full pl-1 border ${
+              validationErrors.campaignName
+                ? "border-red-500"
+                : "border-gray-300"
+            } rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3`}
           />
+          {validationErrors.campaignName && (
+            <p className="text-red-500 text-sm mt-1">
+              Campaign name is required
+            </p>
+          )}
         </div>
 
         {/* Sender */}
@@ -100,10 +139,19 @@ const SMSForm = ({
           <label className="block text-gray-700 font-medium dark:text-white">
             Sender
           </label>
-          <select className="mt-1 block w-full pl-1 border border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3">
-            <option>Select Sender</option>
-            <option value={"BOC IT"}>BOC IT</option>
+          <select
+            value={sender}
+            onChange={handleSenderChange}
+            className={`mt-1 block w-full pl-1 border ${
+              validationErrors.sender ? "border-red-500" : "border-gray-300"
+            } rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3`}
+          >
+            <option value="">Select Sender</option>
+            <option value="BOC IT">BOC IT</option>
           </select>
+          {validationErrors.sender && (
+            <p className="text-red-500 text-sm mt-1">Sender is required</p>
+          )}
         </div>
 
         {/* Contact List Dropdown */}
@@ -310,13 +358,21 @@ const SMSForm = ({
         )}
 
         {/* Submit Button */}
-        <div className="flex flex-row-reverse mt-4 ">
+        <div className="flex flex-row-reverse mt-4">
           <button
             type="button"
             onClick={handleSendSMSWithLoading}
-            disabled={!smsContent || (smsValidation && !smsValidation.isValid)}
+            disabled={
+              !campaignName.trim() ||
+              !sender.trim() ||
+              !smsContent ||
+              (smsValidation && !smsValidation.isValid)
+            }
             className={`mx-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-transform hover:scale-105 ${
-              !smsContent || (smsValidation && !smsValidation.isValid)
+              !campaignName.trim() ||
+              !sender.trim() ||
+              !smsContent ||
+              (smsValidation && !smsValidation.isValid)
                 ? "opacity-50 cursor-not-allowed"
                 : ""
             }`}
@@ -327,9 +383,17 @@ const SMSForm = ({
           <button
             type="button"
             onClick={handleTestCampaignWithLoading}
-            disabled={!smsContent || (smsValidation && !smsValidation.isValid)}
+            disabled={
+              !campaignName.trim() ||
+              !sender.trim() ||
+              !smsContent ||
+              (smsValidation && !smsValidation.isValid)
+            }
             className={`mx-2 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-transform hover:scale-105 ${
-              !smsContent || (smsValidation && !smsValidation.isValid)
+              !campaignName.trim() ||
+              !sender.trim() ||
+              !smsContent ||
+              (smsValidation && !smsValidation.isValid)
                 ? "opacity-50 cursor-not-allowed"
                 : ""
             }`}
@@ -360,9 +424,17 @@ const SMSForm = ({
               </button>
               <button
                 onClick={handleSendTestSMS}
-                disabled={smsValidation && !smsValidation.isValid}
+                disabled={
+                  !campaignName.trim() ||
+                  !sender.trim() ||
+                  !smsContent ||
+                  (smsValidation && !smsValidation.isValid)
+                }
                 className={`bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-bold py-2 px-4 rounded transition-transform hover:scale-105 ${
-                  smsValidation && !smsValidation.isValid
+                  !campaignName.trim() ||
+                  !sender.trim() ||
+                  !smsContent ||
+                  (smsValidation && !smsValidation.isValid)
                     ? "opacity-50 cursor-not-allowed"
                     : ""
                 }`}
