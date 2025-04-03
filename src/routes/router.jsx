@@ -123,7 +123,16 @@ const RouterComponent = ({ darkMode, toggleDarkMode }) => {
           )
         }
       />
-      <Route path="/signup" element={<SignUpPage />} />
+      <Route
+        path="/signup"
+        element={
+          isTokenValid ? (
+            <Navigate to="/home" replace />
+          ) : (
+            <SignUpPage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+          )
+        }
+      />
       <Route path="/waiting" element={<WaitingPage />} />
 
       {/* Protected routes */}
