@@ -2,7 +2,7 @@ import React from "react";
 
 const MobilePreview = ({ smsContent }) => {
   return (
-    <div className="bg-white shadow-md rounded-b-lg p-4 w-full md:w-1/2 dark:bg-[#282828]">
+    <div className="bg-white shadow-md rounded-b-lg p-4 w-full md:w-1/2 dark:bg-[#282828] transition-transform hover:scale-[1.005]">
       <h2 className="text-gray-700 font-medium dark:text-white mb-4 border-b-2 border-yellow-400 pb-2">
         Preview
       </h2>

@@ -9,6 +9,7 @@ import LoadingScreen from "../../../components/LoadingScreen";
 import { jwtDecode } from "jwt-decode";
 import { FaSave, FaTag, FaSms, FaSpinner } from "react-icons/fa";
 import { validateSMSLength, hasEmoji } from "../../../utils/smsUtils";
+import { Paper, TextField, Button } from "@mui/material";
 
 const MsgCreate = () => {
   const [smsContent, setSmsContent] = useState("");
@@ -157,88 +158,108 @@ const MsgCreate = () => {
   return (
     <>
       {isLoading && <LoadingScreen />}
-      <div className="bg-white w-full md:w-11/12 shadow-lg rounded-lg p-6 mr-0 md:mr-6 dark:bg-[#282828]">
-        <div className="flex items-center mb-6">
-          <FaSms className="text-3xl text-yellow-500 mr-3" />
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
-            Create Message
-          </h1>
-        </div>
+      <Paper
+        elevation={5}
+        className="p-6 mx-4 dark:bg-dark_2 rounded-xl shadow-lg transition-transform hover:scale-[1.005] w-full "
+      >
+        <h1 className="text-lg font-bold mb-4 dark:text-white border-b-2 border-yellow-400 pb-2">
+          Create Message
+        </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Message Label */}
-          <div className="space-y-2">
-            <label className="flex items-center text-gray-700 font-medium dark:text-white">
-              <FaTag className="text-yellow-500 mr-2" />
-              Message Label
-            </label>
-            <input
-              type="text"
+          <div>
+            <TextField
+              fullWidth
+              label="Message Label"
               value={messageLabel}
               onChange={handleMessageLabelChange}
               placeholder="Enter a label for your message"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent dark:bg-dark_3 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 transition-colors duration-200"
+              className="dark:text-white"
+              InputProps={{
+                className:
+                  "bg-slate-100 dark:text-white dark:bg-dark_3 rounded-lg",
+              }}
+              InputLabelProps={{
+                className: "dark:text-slate-400 !text-sm",
+              }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": { border: "none" },
+                  "&:hover fieldset": { border: "none" },
+                },
+              }}
             />
           </div>
 
           {/* SMS Content */}
-          <div className="md:col-span-2 space-y-2">
-            <label className="flex items-center text-gray-700 font-medium dark:text-white">
-              <FaSms className="text-yellow-500 mr-2" />
-              SMS Content
-            </label>
-            <div className="relative">
-              <textarea
-                rows={8}
-                maxLength="1950"
+          <div className="md:col-span-2">
+            <div className="relative group">
+              <TextField
+                fullWidth
+                multiline
+                rows={12}
+                label="SMS Content"
                 value={smsContent}
                 onChange={handleSmsContentChange}
                 placeholder="Enter your message content..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent dark:bg-dark_3 dark:border-gray-600 dark:text-white dark:placeholder-gray-400 transition-colors duration-200 resize-none"
-              ></textarea>
-              <div className="absolute bottom-3 right-3 flex items-center space-x-4">
-                {smsValidation && (
-                  <span
-                    className={`text-sm font-mono ${
-                      smsValidation.isValid ? "text-secondary" : "text-red-500"
-                    }`}
-                  >
-                    {smsValidation.message}
-                    {hasEmoji(smsContent) && (
-                      <span className="ml-1 text-yellow-500">(with emoji)</span>
-                    )}
-                  </span>
-                )}
-              </div>
+                className="dark:text-white"
+                InputProps={{
+                  className:
+                    "bg-slate-100 dark:text-white dark:bg-dark_3 rounded-lg font-mono",
+                }}
+                InputLabelProps={{
+                  className: "dark:text-slate-400 !text-sm",
+                }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": { border: "none" },
+                    "&:hover fieldset": { border: "none" },
+                  },
+                }}
+              />
+              {smsValidation && (
+                <div
+                  className={`mt-2 text-sm ${
+                    smsValidation.isValid ? "text-green-500" : "text-red-500"
+                  }`}
+                >
+                  {smsValidation.message}
+                  {hasEmoji(smsContent) && (
+                    <span className="ml-1 text-yellow-500">(with emoji)</span>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
 
         {/* Buttons */}
         <div className="flex justify-end mt-8">
-          <button
+          <Button
+            variant="contained"
             onClick={handleSave}
             disabled={isSubmitting || (smsValidation && !smsValidation.isValid)}
-            className={`flex items-center px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ${
+            className={`w-full md:w-auto py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-bold text-lg rounded-xl shadow-lg transition-all duration-300 transform hover:scale-[1.02] ${
               isSubmitting || (smsValidation && !smsValidation.isValid)
                 ? "opacity-50 cursor-not-allowed"
                 : ""
             }`}
           >
             {isSubmitting ? (
-              <>
-                <FaSpinner className="animate-spin mr-2" />
+              <div className="flex items-center gap-2">
+                <FaSpinner className="animate-spin" />
                 Saving...
-              </>
+              </div>
             ) : (
-              <>
-                <FaSave className="mr-2" />
+              <div className="flex items-center gap-2">
+                <FaSave />
                 Save Message
-              </>
+              </div>
             )}
-          </button>
+          </Button>
         </div>
-      </div>
+      </Paper>
       <MobilePreview smsContent={smsContent} />
     </>
   );
