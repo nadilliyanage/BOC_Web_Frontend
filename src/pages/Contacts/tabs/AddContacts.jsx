@@ -96,7 +96,7 @@ const AddContacts = () => {
     <div className="p-6 w-full mx-auto bg-white rounded-lg shadow-lg dark:bg-dark_2">
       <div className="space-y-6">
         {/* Upload CSV File */}
-        <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-transform hover:scale-[1.005] ">
           <div className="flex items-center mb-4">
             <FaUpload className="text-yellow-500 mr-2" />
             <h2 className="text-lg font-bold text-gray-800 dark:text-white">
@@ -124,7 +124,7 @@ const AddContacts = () => {
         </div>
 
         {/* Uploaded Files List */}
-        <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-transform hover:scale-[1.005]">
           <div className="flex items-center mb-4">
             <FaFileAlt className="text-yellow-500 mr-2" />
             <h2 className="text-lg font-bold text-gray-800 dark:text-white">

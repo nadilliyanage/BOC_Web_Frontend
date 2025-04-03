@@ -213,7 +213,7 @@ const NumberBlocking = () => {
         {/* Left Column - Add Numbers and Upload */}
         <div className="space-y-6">
           {/* Add numbers manually */}
-          <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-transform hover:scale-[1.005]">
             <div className="flex items-center mb-4">
               <FaPlus className="text-yellow-500 mr-2" />
               <h2 className="text-lg font-bold text-gray-800 dark:text-white">
@@ -237,7 +237,7 @@ const NumberBlocking = () => {
           </div>
 
           {/* Upload CSV file */}
-          <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-transform hover:scale-[1.005]">
             <div className="flex items-center mb-4">
               <FaUpload className="text-yellow-500 mr-2" />
               <h2 className="text-lg font-bold text-gray-800 dark:text-white">
@@ -261,7 +261,7 @@ const NumberBlocking = () => {
         {/* Right Column - Search and Display */}
         <div className="space-y-6">
           {/* Search Bar */}
-          <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-transform hover:scale-[1.005]">
             <div className="flex items-center mb-4">
               <FaSearch className="text-yellow-500 mr-2" />
               <h2 className="text-lg font-bold text-gray-800 dark:text-white">
@@ -281,7 +281,7 @@ const NumberBlocking = () => {
           </div>
 
           {/* Display blocked numbers */}
-          <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-transform hover:scale-[1.005]">
             <div className="flex items-center mb-4">
               <FaPhone className="text-yellow-500 mr-2" />
               <h2 className="text-lg font-bold text-gray-800 dark:text-white">
