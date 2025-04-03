@@ -160,7 +160,7 @@ const MsgCreate = () => {
       {isLoading && <LoadingScreen />}
       <Paper
         elevation={5}
-        className="p-6 mx-4 dark:bg-dark_2 rounded-xl shadow-lg transition-transform hover:scale-[1.005] w-full "
+        className="p-6 mr-4 dark:bg-dark_2 rounded-xl shadow-lg transition-transform hover:scale-[1.005] w-full "
       >
         <h1 className="text-lg font-bold mb-4 dark:text-white border-b-2 border-yellow-400 pb-2">
           Create Message
