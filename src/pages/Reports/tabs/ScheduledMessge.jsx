@@ -8,7 +8,6 @@ const ScheduledMessage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [groupedMessages, setGroupedMessages] = useState({});
   const [expandedCampaigns, setExpandedCampaigns] = useState({});
-
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -33,7 +32,7 @@ const ScheduledMessage = () => {
       const campaignName = msg.campaignName || "Unnamed Campaign";
       if (!acc[campaignName]) {
         acc[campaignName] = {
-          created_at: msg.created_at || "No Date", // Use created_at instead of date
+          created_at: msg.created_at || "No Date",
           messages: [],
         };
       }
@@ -48,7 +47,7 @@ const ScheduledMessage = () => {
   const toggleCampaign = (campaignName) => {
     setExpandedCampaigns((prev) => ({
       ...prev,
-      [campaignName]: !prev[campaignName], // Toggle expanded state
+      [campaignName]: !prev[campaignName],
     }));
   };
 
@@ -78,7 +77,7 @@ const ScheduledMessage = () => {
       const campaignName = msg.campaignName || "Unnamed Campaign";
       if (!acc[campaignName]) {
         acc[campaignName] = {
-          created_at: msg.created_at || "No Date", // Use created_at instead of date
+          created_at: msg.created_at || "No Date",
           messages: [],
         };
       }
@@ -116,18 +115,15 @@ const ScheduledMessage = () => {
                 <p className="text-sm text-gray-500">
                   Date: {campaignData.created_at}
                 </p>
-
                 <p className="text-sm text-gray-500">
                   Message Count: {campaignData.messages.length}
                 </p>
               </div>
               <span className="text-lg">
-                {expandedCampaigns[campaignName] ? "▲" : "▼"}{" "}
-                {/* Toggle icon */}
+                {expandedCampaigns[campaignName] ? "▲" : "▼"}
               </span>
             </div>
 
-            {/* Collapsible message table */}
             {expandedCampaigns[campaignName] && (
               <table className="w-full border-collapse border border-gray-300 mt-2">
                 <thead>
@@ -144,7 +140,7 @@ const ScheduledMessage = () => {
                       Created At
                     </th>
                     <th className="border border-gray-300 px-4 py-2">
-                      ScheduleZ time
+                      Schedule Time
                     </th>
                   </tr>
                 </thead>
@@ -155,19 +151,19 @@ const ScheduledMessage = () => {
                         {msg.sender}
                       </td>
                       <td className="border border-gray-300 px-4 py-2">
-                        {msg.numbers.join(", ")}
+                        {msg.numbers?.join(", ")}
                       </td>
                       <td className="border border-gray-300 px-4 py-2 whitespace-pre-wrap">
                         {msg.message}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2 text-green-500">
+                      <td className="border border-gray-300 px-4 py-2 text-blue-500">
                         {msg.status}
                       </td>
                       <td className="border border-gray-300 px-4 py-2">
                         {msg.created_at}
                       </td>
                       <td className="border border-gray-300 px-4 py-2">
-                        {msg.schedule}
+                        {msg.schedule || "N/A"}
                       </td>
                     </tr>
                   ))}

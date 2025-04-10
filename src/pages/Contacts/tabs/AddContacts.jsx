@@ -4,6 +4,7 @@ import SuccessAlert from "../../../components/SuccessAlert";
 import ErrorAlert from "../../../components/ErrorAlert";
 import WarningAlert from "../../../components/WarningAlert";
 import ConfirmAlert from "../../../components/ConfirmAlert";
+import { FaUpload, FaFileAlt, FaTimes, FaSearch } from "react-icons/fa";
 
 const API_BASE_URL = "http://localhost:8080/api/v1/contact-list";
 
@@ -92,76 +93,98 @@ const AddContacts = () => {
   };
 
   return (
-    <div className="p-6 w-full mx-auto bg-white rounded-lg shadow-lg flex flex-row gap-10 min-h-[500px] dark:bg-dark_2">
-      <div className="w-1/2 m-auto border-r pr-4">
-        <h2 className="text-2xl font-bold mb-6 border-b-2 border-yellow-400 pb-2">
-          Upload CSV File
-        </h2>
-        <input
-          type="file"
-          onChange={handleFileChange}
-          accept=".csv"
-          className="border p-2 w-full mb-4"
-        />
-        <button
-          onClick={handleUpload}
-          className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 font-bold text-white px-4 py-2 rounded"
-        >
-          Upload
-        </button>
-      </div>
-      <div className="w-1/2">
-        <h2 className="text-gray-700 font-bold text-xl dark:text-white mb-4 border-b-2 border-yellow-400 pb-2">
-          Uploaded Files
-        </h2>
-        <div className="max-h-80 overflow-y-auto">
-          <ul>
-            {fileList.map((fileName, index) => (
-              <li
-                key={index}
-                className="flex justify-between items-center border-b p-2"
-              >
-                <span
-                  onClick={() => fetchContactsByFileName(fileName)}
-                  className="cursor-pointer text-secondary2 font-bold"
-                >
-                  {fileName}
-                </span>
-              </li>
-            ))}
-          </ul>
+    <div className="p-6 w-full mx-auto bg-white rounded-lg shadow-lg dark:bg-dark_2">
+      <div className="space-y-6">
+        {/* Upload CSV File */}
+        <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-transform hover:scale-[1.005] ">
+          <div className="flex items-center mb-4">
+            <FaUpload className="text-yellow-500 mr-2" />
+            <h2 className="text-lg font-bold text-gray-800 dark:text-white">
+              Upload CSV File
+            </h2>
+          </div>
+          <div className="relative">
+            <input
+              type="file"
+              onChange={handleFileChange}
+              accept=".csv"
+              className="w-full p-3 border-2 border-dashed border-gray-300 rounded-lg dark:bg-dark_2 hover:border-yellow-500 transition-all duration-200 cursor-pointer"
+            />
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <FaUpload className="text-gray-400 text-2xl" />
+            </div>
+          </div>
+          <button
+            onClick={handleUpload}
+            className="mt-4 w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center"
+          >
+            <FaUpload className="mr-2" />
+            Upload File
+          </button>
         </div>
-        {isModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-2 right-2 text-gray-600 text-xl"
-            >
-              &times;
-            </button>
-            <div className="bg-white rounded-lg shadow-xl p-6 w-96 relative max-h-[70%] overflow-x-auto dark:bg-dark_2">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="absolute top-2 right-2 text-gray-600 text-xl"
-              >
-                &times;
-              </button>
 
-              <h3 className="text-xl font-semibold mb-4">
+        {/* Uploaded Files List */}
+        <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-transform hover:scale-[1.005]">
+          <div className="flex items-center mb-4">
+            <FaFileAlt className="text-yellow-500 mr-2" />
+            <h2 className="text-lg font-bold text-gray-800 dark:text-white">
+              Uploaded Files
+            </h2>
+          </div>
+          <div className="max-h-[400px] overflow-y-auto">
+            <div className="space-y-2">
+              {fileList.map((fileName, index) => (
+                <div
+                  key={index}
+                  onClick={() => fetchContactsByFileName(fileName)}
+                  className="p-3 bg-gray-50 dark:bg-dark_2 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all duration-200 cursor-pointer group"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-800 dark:text-white group-hover:text-yellow-500 dark:group-hover:text-yellow-400 transition-colors duration-200">
+                      {fileName}
+                    </span>
+                    <FaSearch className="text-gray-400 group-hover:text-yellow-500 transition-colors duration-200" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Column - Contacts Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-dark_3 rounded-lg shadow-xl p-6 w-[90%] max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white">
                 Contacts in {selectedFileName}
               </h3>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                <FaTimes className="text-xl" />
+              </button>
+            </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex-1 overflow-y-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {contacts.map((contact, index) => (
-                  <div key={index} className="border p-2 rounded shadow-sm">
-                    {contact.number}
+                  <div
+                    key={index}
+                    className="p-4 bg-gray-50 dark:bg-dark_2 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all duration-200"
+                  >
+                    <span className="text-gray-800 dark:text-white">
+                      {contact.number}
+                    </span>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

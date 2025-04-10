@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/icon.png";
+import iconWhite from "../assets/iconWhite.png";
 import signupImg from "../assets/signupImg.jpg";
 import { Paper } from "@mui/material";
+import { FiSun, FiMoon } from "react-icons/fi";
 
-const SignUpPage = () => {
+const SignUpPage = ({ darkMode, toggleDarkMode }) => {
   const [name, setName] = useState("");
   const [userId, setUserId] = useState("");
   const [department, setDepartment] = useState("");
@@ -36,8 +38,14 @@ const SignUpPage = () => {
 
   return (
     <div className="dark:bg-dark_1 min-h-screen flex justify-center items-center">
-      <div className="absolute top-8 left-8 ">
-        <img src={logo} alt="logo" className="w-16 h-12" />
+      <div className="absolute top-8 left-8">
+        <div className="hidden lg:block">
+          <img
+            src={darkMode ? iconWhite : logo}
+            alt="logo"
+            className="w-fit h-12"
+          />
+        </div>
       </div>
 
       {/* Sign-Up Form and Image */}
@@ -59,7 +67,7 @@ const SignUpPage = () => {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded mt-1 dark:bg-dark_3 dark:text-white"
+                className="w-full p-2 border border-gray-300 rounded mt-1 dark:bg-dark_3 dark:text-white dark:border-gray-600"
                 required
               />
             </div>
@@ -70,7 +78,7 @@ const SignUpPage = () => {
                 type="text"
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded mt-1 dark:bg-dark_3 dark:text-white"
+                className="w-full p-2 border border-gray-300 rounded mt-1 dark:bg-dark_3 dark:text-white dark:border-gray-600"
                 required
               />
             </div>
@@ -80,7 +88,7 @@ const SignUpPage = () => {
                 type="text"
                 value={department}
                 onChange={(e) => setDepartment(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded mt-1 dark:bg-dark_3 dark:text-white"
+                className="w-full p-2 border border-gray-300 rounded mt-1 dark:bg-dark_3 dark:text-white dark:border-gray-600"
                 required
               />
             </div>
@@ -90,20 +98,23 @@ const SignUpPage = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded mt-1 dark:bg-dark_3 dark:text-white"
+                className="w-full p-2 border border-gray-300 rounded mt-1 dark:bg-dark_3 dark:text-white dark:border-gray-600"
                 required
               />
             </div>
             <button
               type="submit"
-              className="w-full bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600"
+              className="w-full bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600 transition-colors duration-300"
             >
               Sign Up
             </button>
           </form>
           <p className="text-center mt-4 dark:text-gray-300">
             Already have an account?{" "}
-            <a href="/login" className="text-secondary">
+            <a
+              href="/login"
+              className="text-secondary hover:text-secondary2 transition-colors duration-300"
+            >
               Login
             </a>
           </p>
@@ -118,6 +129,18 @@ const SignUpPage = () => {
           />
         </div>
       </Paper>
+
+      {/* Dark Mode Toggle */}
+      <button
+        onClick={toggleDarkMode}
+        className="fixed bottom-8 right-8 flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 transition duration-300"
+      >
+        {darkMode ? (
+          <FiMoon className="text-yellow-400 w-6 h-6" />
+        ) : (
+          <FiSun className="text-yellow-500 w-6 h-6" />
+        )}
+      </button>
     </div>
   );
 };

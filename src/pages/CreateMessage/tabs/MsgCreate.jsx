@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SuccessAlert from "../../../components/SuccessAlert";
 import ErrorAlert from "../../../components/ErrorAlert";
@@ -6,20 +6,78 @@ import WarningAlert from "../../../components/WarningAlert";
 import ConfirmAlert from "../../../components/ConfirmAlert";
 import MobilePreview from "./components/MobilePreview";
 import LoadingScreen from "../../../components/LoadingScreen";
+import { jwtDecode } from "jwt-decode";
+import { FaSave, FaTag, FaSms, FaSpinner } from "react-icons/fa";
+import { validateSMSLength, hasEmoji } from "../../../utils/smsUtils";
+import { Paper, TextField, Button } from "@mui/material";
 
 const MsgCreate = () => {
   const [smsContent, setSmsContent] = useState("");
   const [messageLabel, setMessageLabel] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [smsValidation, setSmsValidation] = useState(null);
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Please log in to create messages");
+      return;
+    }
+  }, []);
+
+  // Update validation when SMS content changes
+  useEffect(() => {
+    if (smsContent) {
+      const validation = validateSMSLength(smsContent);
+      setSmsValidation(validation);
+    } else {
+      setSmsValidation(null);
+    }
+  }, [smsContent]);
 
   const handleSmsContentChange = (event) => {
-    setSmsContent(event.target.value);
+    try {
+      setSmsContent(event.target.value);
+    } catch (err) {
+      console.error("Error updating SMS content:", err);
+      setError("Error updating message content");
+    }
   };
 
   const handleMessageLabelChange = (event) => {
-    setMessageLabel(event.target.value);
+    try {
+      setMessageLabel(event.target.value);
+    } catch (err) {
+      console.error("Error updating message label:", err);
+      setError("Error updating message label");
+    }
   };
+
+  // Get token from localStorage and decode it
+  const token = localStorage.getItem("token");
+  let user = null;
+
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      user = {
+        id: decoded.id,
+        name: decoded.name,
+        userId: decoded.userId,
+      };
+    } catch (err) {
+      console.error("Invalid token:", err);
+      localStorage.removeItem("token");
+      setError("Invalid session. Please log in again.");
+    }
+  }
+
+  const id = user ? user.id : null;
+  const name = user ? user.name : null;
+  const userId = user ? user.userId : null;
 
   const handleSave = async () => {
     if (!messageLabel.trim() || !smsContent.trim()) {
@@ -30,12 +88,20 @@ const MsgCreate = () => {
       return;
     }
 
+    if (smsValidation && !smsValidation.isValid) {
+      WarningAlert({
+        title: "Message Too Long",
+        text: "Your message exceeds the maximum length of 1950 characters.",
+      });
+      return;
+    }
+
     const isConfirmed = await ConfirmAlert({
       title: "Are you sure?",
       text: "Do you want to save this message?",
     });
 
-    if (!isConfirmed) return; // Exit if not confirmed
+    if (!isConfirmed) return;
 
     setIsSubmitting(true);
     setIsLoading(true);
@@ -46,6 +112,9 @@ const MsgCreate = () => {
         {
           label: messageLabel,
           message: smsContent,
+          created_by: name,
+          created_by_id: id,
+          created_by_userId: userId,
         }
       );
 
@@ -74,11 +143,25 @@ const MsgCreate = () => {
     }
   };
 
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
+        <div className="bg-red-100 dark:bg-red-900 p-4 rounded-lg">
+          <p className="text-lg font-medium text-red-600 dark:text-red-200">
+            {error}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
-      {isLoading && <LoadingScreen />} {/* Show loading screen while saving */}
-      {/* Form Section */}
-      <div className="bg-white w-full md:w-11/12 shadow-md rounded-b-lg p-6 mr-0 md:mr-6 dark:bg-[#282828]">
+      {isLoading && <LoadingScreen />}
+      <Paper
+        elevation={5}
+        className="p-6 mr-4 dark:bg-dark_2 rounded-xl shadow-lg transition-transform hover:scale-[1.005] w-full "
+      >
         <h1 className="text-lg font-bold mb-4 dark:text-white border-b-2 border-yellow-400 pb-2">
           Create Message
         </h1>
@@ -86,48 +169,97 @@ const MsgCreate = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Message Label */}
           <div>
-            <label className="block text-gray-700 font-medium dark:text-white mt-4">
-              Message Label
-            </label>
-            <input
-              type="text"
+            <TextField
+              fullWidth
+              label="Message Label"
               value={messageLabel}
               onChange={handleMessageLabelChange}
-              className="mt-1 block w-full border pl-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
+              placeholder="Enter a label for your message"
+              className="dark:text-white"
+              InputProps={{
+                className:
+                  "bg-slate-100 dark:text-white dark:bg-dark_3 rounded-lg",
+              }}
+              InputLabelProps={{
+                className: "dark:text-slate-400 !text-sm",
+              }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": { border: "none" },
+                  "&:hover fieldset": { border: "none" },
+                },
+              }}
             />
           </div>
 
           {/* SMS Content */}
-          <div className="md:col-span-2 mt-6">
-            <label className="block text-gray-700 font-medium dark:text-white">
-              SMS Content
-            </label>
-            <textarea
-              rows={10}
-              value={smsContent}
-              onChange={handleSmsContentChange}
-              className="mt-1 block w-full border pl-1 border-gray-300 rounded-md shadow-sm focus:ring-yellow-400 focus:border-yellow-400 dark:text-white dark:bg-dark_3"
-            ></textarea>
-            <span className="text-gray-500 text-sm">
-              {smsContent.length} / 225
-            </span>
+          <div className="md:col-span-2">
+            <div className="relative group">
+              <TextField
+                fullWidth
+                multiline
+                rows={12}
+                label="SMS Content"
+                value={smsContent}
+                onChange={handleSmsContentChange}
+                placeholder="Enter your message content..."
+                className="dark:text-white"
+                InputProps={{
+                  className:
+                    "bg-slate-100 dark:text-white dark:bg-dark_3 rounded-lg font-mono",
+                }}
+                InputLabelProps={{
+                  className: "dark:text-slate-400 !text-sm",
+                }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": { border: "none" },
+                    "&:hover fieldset": { border: "none" },
+                  },
+                }}
+              />
+              {smsValidation && (
+                <div
+                  className={`mt-2 text-sm ${
+                    smsValidation.isValid ? "text-green-500" : "text-red-500"
+                  }`}
+                >
+                  {smsValidation.message}
+                  {hasEmoji(smsContent) && (
+                    <span className="ml-1 text-yellow-500">(with emoji)</span>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Buttons */}
-        <div className="flex justify-end space-x-4 my-8">
-          <button
+        <div className="flex justify-end mt-8">
+          <Button
+            variant="contained"
             onClick={handleSave}
-            className={`bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 py-2 rounded-lg  ${
-              isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+            disabled={isSubmitting || (smsValidation && !smsValidation.isValid)}
+            className={`w-full md:w-auto py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-bold text-lg rounded-xl shadow-lg transition-all duration-300 transform hover:scale-[1.02] ${
+              isSubmitting || (smsValidation && !smsValidation.isValid)
+                ? "opacity-50 cursor-not-allowed"
+                : ""
             }`}
-            disabled={isSubmitting}
           >
-            {isSubmitting ? "Saving..." : "Save"}
-          </button>
+            {isSubmitting ? (
+              <div className="flex items-center gap-2">
+                <FaSpinner className="animate-spin" />
+                Saving...
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <FaSave />
+                Save Message
+              </div>
+            )}
+          </Button>
         </div>
-      </div>
-      {/* Mobile Preview Section */}
+      </Paper>
       <MobilePreview smsContent={smsContent} />
     </>
   );

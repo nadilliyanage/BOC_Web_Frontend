@@ -2,6 +2,15 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
+import {
+  FaSearch,
+  FaUpload,
+  FaPlus,
+  FaPhone,
+  FaEdit,
+  FaTrash,
+  FaTimes,
+} from "react-icons/fa";
 
 const ManageBlockNumbers = () => {
   const [numbers, setNumbers] = useState("");
@@ -325,116 +334,168 @@ const ManageBlockNumbers = () => {
   );
 
   return (
-    <div className="p-6 w-full mx-auto bg-white rounded-lg shadow-lg dark:bg-dark_2 flex flex-row">
-      <div className="w-2/3 m-4">
-        {/* Search Bar */}
-        <div className="mb-4">
-          <label className="block  font-medium mb-2">Search Numbers</label>
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search numbers..."
-            className="w-full px-4 py-2 border border-gray-300  rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white dark:bg-dark_3"
-          />
-        </div>
-
-        {/* Display blocked numbers in 3 columns */}
-        <div>
-          <h2 className="text-xl font-bold mb-2">Blocked Numbers</h2>
-          {filteredNumbers.length === 0 ? (
-            <p>No numbers found.</p>
-          ) : (
-            <div className="grid grid-cols-4 gap-4 overflow-scroll max-h-80">
-              {filteredNumbers.map((numberBlock) => (
-                <div
-                  key={numberBlock.id}
-                  className="p-2 border-b flex dark:hover:bg-slate-950 hover:transition-opacity duration-700"
-                >
-                  <span>{numberBlock.number}</span>
-                  <div>
-                    <button
-                      onClick={() => openEditModal(numberBlock)}
-                      className="text-blue-500 hover:text-blue-700 mx-4"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteNumber(numberBlock.id)}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
+    <div className="p-6 w-full mx-auto bg-white rounded-lg shadow-lg dark:bg-dark_2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Content - Search and Display */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Search Bar */}
+          <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-transform hover:scale-[1.005]">
+            <div className="flex items-center mb-4">
+              <FaSearch className="text-yellow-500 mr-2" />
+              <h2 className="text-lg font-bold text-gray-800 dark:text-white">
+                Search Numbers
+              </h2>
             </div>
-          )}
-        </div>
-      </div>
-      <div className="w-1/3 m-4 border-l-2 p-8 ">
-        {/* Add numbers manually */}
-        <div className="mb-8">
-          <label className="block font-medium mb-4 border-b-2 border-yellow-400 pb-2">
-            Add Numbers
-          </label>
-          <textarea
-            value={numbers}
-            onChange={(e) => setNumbers(e.target.value)}
-            placeholder="Enter numbers separated by commas or newlines"
-            className="w-full px-4 py-2 border border-gray-300  rounded-md focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white dark:bg-dark_3"
-            rows="4"
-          />
-          <button
-            onClick={handleAddNumbers}
-            className="mt-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 py-2 rounded-md  font-bold "
-          >
-            Add Numbers
-          </button>
+            <div className="relative">
+              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search numbers..."
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:text-white dark:bg-dark_2 transition-all duration-200"
+              />
+            </div>
+          </div>
+
+          {/* Display blocked numbers */}
+          <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-transform hover:scale-[1.005]">
+            <div className="flex items-center mb-4">
+              <FaPhone className="text-yellow-500 mr-2" />
+              <h2 className="text-lg font-bold text-gray-800 dark:text-white">
+                Blocked Numbers
+              </h2>
+            </div>
+            {filteredNumbers.length === 0 ? (
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                <FaPhone className="text-4xl mx-auto mb-2" />
+                <p>No numbers found</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[600px] overflow-y-auto">
+                {filteredNumbers.map((numberBlock) => (
+                  <div
+                    key={numberBlock.id}
+                    className="p-4 bg-gray-50 dark:bg-dark_2 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all duration-200"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-800 dark:text-white">
+                        {numberBlock.number}
+                      </span>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => openEditModal(numberBlock)}
+                          className="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900 rounded-full transition-colors duration-200"
+                        >
+                          <FaEdit />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteNumber(numberBlock.id)}
+                          className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900 rounded-full transition-colors duration-200"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Upload CSV file */}
-        <div className="mb-4">
-          <label className="block font-medium m-2 mb-4 border-b-2 border-yellow-400 pb-2">
-            Upload CSV File
-          </label>
-          <input
-            type="file"
-            accept=".csv"
-            onChange={handleFileUpload}
-            className="w-full p-2 border border-gray-300 rounded-md dark:bg-dark_2"
-          />
+        {/* Sidebar - Add Numbers and Upload */}
+        <div className="space-y-6">
+          {/* Add numbers manually */}
+          <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-transform hover:scale-[1.005]">
+            <div className="flex items-center mb-4">
+              <FaPlus className="text-yellow-500 mr-2" />
+              <h2 className="text-lg font-bold text-gray-800 dark:text-white">
+                Add Numbers
+              </h2>
+            </div>
+            <textarea
+              value={numbers}
+              onChange={(e) => setNumbers(e.target.value)}
+              placeholder="Enter numbers separated by commas or newlines"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:text-white dark:bg-dark_2 transition-all duration-200"
+              rows="4"
+            />
+            <button
+              onClick={handleAddNumbers}
+              className="mt-4 w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center"
+            >
+              <FaPlus className="mr-2" />
+              Add Numbers
+            </button>
+          </div>
+
+          {/* Upload CSV file */}
+          <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-transform hover:scale-[1.005]">
+            <div className="flex items-center mb-4">
+              <FaUpload className="text-yellow-500 mr-2" />
+              <h2 className="text-lg font-bold text-gray-800 dark:text-white">
+                Upload CSV File
+              </h2>
+            </div>
+            <div className="relative">
+              <input
+                type="file"
+                accept=".csv"
+                onChange={handleFileUpload}
+                className="w-full p-3 border-2 border-dashed border-gray-300 rounded-lg dark:bg-dark_2 hover:border-yellow-500 transition-all duration-200 cursor-pointer"
+              />
+              <div className="absolute inset-0 flex items-center justify-end pointer-events-none mr-4">
+                <FaUpload className="text-gray-400 text-2xl " />
+              </div>
+            </div>
+          </div>
         </div>
-        {/* Error message */}
-        {error && <p className="text-red-500 mt-4">{error}</p>}
       </div>
 
       {/* Edit Modal */}
       {editingNumber && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg dark:bg-dark_2">
-            <h2 className="text-xl font-bold mb-4">Edit Number</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white">
+                Edit Number
+              </h2>
+              <button
+                onClick={closeEditModal}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                <FaTimes />
+              </button>
+            </div>
             <input
               type="text"
               value={editValue}
               onChange={(e) => setEditValue(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md dark:bg-dark_2"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:text-white dark:bg-dark_2 transition-all duration-200"
             />
-            <div className="mt-4 flex justify-end">
+            <div className="mt-6 flex justify-end gap-3">
               <button
                 onClick={closeEditModal}
-                className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 mr-2"
+                className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
               >
                 Cancel
               </button>
               <button
                 onClick={handleUpdateNumber}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                className="px-4 py-2 bg-yellow-500 text-white hover:bg-yellow-600 rounded-lg transition-colors duration-200"
               >
-                Save
+                Save Changes
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Error message */}
+      {error && (
+        <div className="mt-4 p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-100 rounded-lg">
+          {error}
         </div>
       )}
     </div>

@@ -59,7 +59,7 @@ const CreateMessage = () => {
       </div>
 
       {/* Content for each tab */}
-      <div className="flex flex-col md:flex-row items-start mt-6">
+      <div className="flex flex-col md:flex-row items-start mt-4 dark:bg-dark_1 p-4 rounded-b-lg ">
         {activeTab === "msgCreate" && <MsgCreate />}
 
         {activeTab === "msgReview" && <MsgReview />}

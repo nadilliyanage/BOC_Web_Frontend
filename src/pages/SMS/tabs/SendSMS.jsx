@@ -167,7 +167,7 @@ const SendSMS = () => {
       removeBlockedNumbers, // Include checkbox value
       created_by: name,
       created_by_id: id,
-      creted_by_userId: userId,
+      created_by_userId: userId,
     };
 
     try {

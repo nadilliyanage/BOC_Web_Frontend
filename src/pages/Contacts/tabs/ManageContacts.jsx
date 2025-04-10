@@ -4,6 +4,15 @@ import SuccessAlert from "../../../components/SuccessAlert";
 import ErrorAlert from "../../../components/ErrorAlert";
 import WarningAlert from "../../../components/WarningAlert";
 import ConfirmAlert from "../../../components/ConfirmAlert";
+import {
+  FaUpload,
+  FaFileAlt,
+  FaTrash,
+  FaEdit,
+  FaSave,
+  FaTimes,
+  FaSearch,
+} from "react-icons/fa";
 
 const API_BASE_URL = "http://localhost:8080/api/v1/contact-list";
 
@@ -186,119 +195,137 @@ const ContactList = () => {
   };
 
   return (
-    <div className="p-6 w-full mx-auto bg-white rounded-lg shadow-lg min-h-[550px] dark:bg-dark_2">
-      <h2 className="text-2xl font-bold mb-6  border-b-2 border-yellow-400 pb-2">
-        Upload CSV File
-      </h2>
-      <input
-        type="file"
-        onChange={handleFileChange}
-        accept=".csv"
-        className="border p-2 w-full mb-4"
-      />
-      <button
-        onClick={handleUpload}
-        className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 font-bold text-white px-4 py-2 rounded"
-      >
-        Upload
-      </button>
+    <div className="p-6 w-full mx-auto bg-white rounded-lg shadow-lg dark:bg-dark_2">
+      <div className="space-y-6">
+        {/* Upload CSV File */}
+        <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-transform hover:scale-[1.005]">
+          <div className="flex items-center mb-4">
+            <FaUpload className="text-yellow-500 mr-2" />
+            <h2 className="text-lg font-bold text-gray-800 dark:text-white">
+              Upload CSV File
+            </h2>
+          </div>
+          <div className="relative">
+            <input
+              type="file"
+              onChange={handleFileChange}
+              accept=".csv"
+              className="w-full p-3 border-2 border-dashed border-gray-300 rounded-lg dark:bg-dark_2 hover:border-yellow-500 transition-all duration-200 cursor-pointer"
+            />
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <FaUpload className="text-gray-400 text-2xl" />
+            </div>
+          </div>
+          <button
+            onClick={handleUpload}
+            className="mt-4 w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center"
+          >
+            <FaUpload className="mr-2" />
+            Upload File
+          </button>
+        </div>
 
-      <h3 className="text-xl font-bold mt-8 mb-4 border-b-2 border-yellow-400 pb-2">
-        Uploaded Files
-      </h3>
-      <div className="max-h-52 overflow-auto">
-        <ul>
-          {fileList.map((fileName, index) => (
-            <li
-              key={index}
-              className="flex justify-between items-center border-b p-2"
-            >
-              <span
-                onClick={() => fetchContactsByFileName(fileName)}
-                className="cursor-pointer text-secondary2 dark:text-secondary font-bold"
-              >
-                {fileName}
-              </span>
-              <button
-                onClick={() => handleDeleteFile(fileName)}
-                className="bg-red-500 text-white px-2 py-1 rounded"
-              >
-                Delete
-              </button>
-            </li>
-          ))}
-        </ul>
+        {/* Uploaded Files List */}
+        <div className="bg-white dark:bg-dark_3 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-transform hover:scale-[1.005]">
+          <div className="flex items-center mb-4">
+            <FaFileAlt className="text-yellow-500 mr-2" />
+            <h2 className="text-lg font-bold text-gray-800 dark:text-white">
+              Uploaded Files
+            </h2>
+          </div>
+          <div className="max-h-[400px] overflow-y-auto">
+            <div className="space-y-2">
+              {fileList.map((fileName, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark_2 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all duration-200"
+                >
+                  <span
+                    onClick={() => fetchContactsByFileName(fileName)}
+                    className="cursor-pointer text-gray-800 dark:text-white hover:text-yellow-500 dark:hover:text-yellow-400 transition-colors duration-200"
+                  >
+                    {fileName}
+                  </span>
+                  <button
+                    onClick={() => handleDeleteFile(fileName)}
+                    className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900 rounded-full transition-colors duration-200"
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Modal for displaying contacts */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <button
-            onClick={closeModal}
-            className="absolute top-2 right-4 text-gray-600 dark:text-white text-xl"
-          >
-            &times;
-          </button>
-          <div className="bg-white dark:bg-dark_2 rounded-lg shadow-xl p-6 w-[30%] relative max-h-[70%] overflow-x-auto">
-            <button
-              onClick={closeModal}
-              className="absolute top-2 right-4 text-gray-600 dark:text-white text-xl"
-            >
-              &times;
-            </button>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-dark_3 rounded-lg shadow-xl p-6 w-[90%] max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white">
+                Contacts in {selectedFileName}
+              </h3>
+              <button
+                onClick={closeModal}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                <FaTimes className="text-xl" />
+              </button>
+            </div>
 
-            <h3 className="text-xl font-semibold mb-4">
-              Contacts in {selectedFileName}
-            </h3>
-            <ul className="mt-10">
-              {contacts.map((contact) => (
-                <li
-                  key={contact.id}
-                  className="flex justify-between items-center border-b p-2"
-                >
-                  {editNumberData?.id === contact.id ? (
-                    // Show input field if editing this number
-                    <>
-                      <input
-                        type="text"
-                        value={editNumberData.newNumber}
-                        onChange={(e) =>
-                          setEditNumberData({
-                            ...editNumberData,
-                            newNumber: e.target.value,
-                          })
-                        }
-                        className="border p-1 dark:bg-dark_2 w-28"
-                      />
-
-                      <button
-                        onClick={handleEditNumber}
-                        className="bg-green-500 text-white px-2 py-1 rounded"
-                      >
-                        Save
-                      </button>
-                    </>
-                  ) : (
-                    // Show normal text with Edit button
-                    <>
-                      <span>{contact.number}</span>
-                      <button
-                        onClick={() => handleEditClick(contact)}
-                        className="bg-yellow-500 text-white px-2 py-1 rounded"
-                      >
-                        Edit
-                      </button>
-                    </>
-                  )}
-                  <button
-                    onClick={() => handleDeleteNumber(contact.id)}
-                    className="bg-red-500 text-white px-2 py-1 rounded"
+            <div className="flex-1 overflow-y-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {contacts.map((contact) => (
+                  <div
+                    key={contact.id}
+                    className="p-4 bg-gray-50 dark:bg-dark_2 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all duration-200"
                   >
-                    Delete
-                  </button>
-                </li>
-              ))}
-            </ul>
+                    <div className="flex items-center justify-between">
+                      {editNumberData?.id === contact.id ? (
+                        <div className="flex-1 flex items-center gap-2">
+                          <input
+                            type="text"
+                            value={editNumberData.newNumber}
+                            onChange={(e) =>
+                              setEditNumberData({
+                                ...editNumberData,
+                                newNumber: e.target.value,
+                              })
+                            }
+                            className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-dark_3 dark:text-white"
+                          />
+                          <button
+                            onClick={handleEditNumber}
+                            className="p-2 text-green-500 hover:text-green-700 hover:bg-green-50 dark:hover:bg-green-900 rounded-full transition-colors duration-200"
+                          >
+                            <FaSave />
+                          </button>
+                        </div>
+                      ) : (
+                        <>
+                          <span className="text-gray-800 dark:text-white">
+                            {contact.number}
+                          </span>
+                          <button
+                            onClick={() => handleEditClick(contact)}
+                            className="p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900 rounded-full transition-colors duration-200"
+                          >
+                            <FaEdit />
+                          </button>
+                        </>
+                      )}
+                      <button
+                        onClick={() => handleDeleteNumber(contact.id)}
+                        className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900 rounded-full transition-colors duration-200"
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       )}
