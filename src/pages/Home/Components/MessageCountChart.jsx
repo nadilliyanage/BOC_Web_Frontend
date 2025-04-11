@@ -8,6 +8,8 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  Area,
+  AreaChart,
 } from "recharts";
 import axios from "axios";
 import {
@@ -16,14 +18,18 @@ import {
   FormControl,
   InputLabel,
   Paper,
+  ToggleButtonGroup,
+  ToggleButton,
 } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { motion } from "framer-motion";
 
 const MessageCountChart = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("daily");
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [loading, setLoading] = useState(true);
 
   const formatDate = (dateString) => {
     const options = { day: "numeric", month: "short" };
@@ -32,6 +38,7 @@ const MessageCountChart = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         let url = "";
 
@@ -62,152 +69,190 @@ const MessageCountChart = () => {
         setData(formattedData);
       } catch (error) {
         console.error("Error fetching message count data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
   }, [filter, year, month]);
 
+  // Custom tooltip component
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+          <p className="font-bold text-gray-800 dark:text-white">{label}</p>
+          <p className="text-yellow-500">
+            Messages: <span className="font-bold">{payload[0].value}</span>
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Generate years for the year selector
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
+
+  // Generate months for the month selector
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
   return (
-    <Paper
-      elevation={5}
-      className="text-center p-8 m-4 bg-primary_1 h-full flex flex-col rounded-md dark:bg-dark_1 "
-    >
-      <h2 className="text-3xl font-bold mb-6 dark:text-white">
-        Message Count Chart
-      </h2>
+    <div className="w-full">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4 md:mb-0">
+          Message Statistics
+        </h2>
 
-      <div className="bg-white shadow-md rounded-lg flex flex-wrap gap-4 p-2 ml-auto -mt-10 dark:bg-dark_1">
-        <FormControl className="w-[120px]">
-          <InputLabel className="dark:text-white">Filter</InputLabel>
-          <Select
-            className="dark:bg-dark_1 dark:text-white border dark:border-slate-500"
+        <div className="flex flex-wrap gap-3">
+          {/* Filter Toggle Buttons */}
+          <ToggleButtonGroup
             value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            MenuProps={{
-              PaperProps: { className: "dark:bg-dark_1 dark:text-white" },
-            }}
-            IconComponent={(props) => (
-              <ArrowDropDownIcon {...props} className="dark:text-white" />
-            )}
+            exclusive
+            onChange={(e, newValue) => newValue && setFilter(newValue)}
+            aria-label="filter"
+            size="small"
+            className="bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden"
           >
-            <MenuItem value="daily">Daily</MenuItem>
-            <MenuItem value="monthly">Monthly</MenuItem>
-            <MenuItem value="yearly">Yearly</MenuItem>
-          </Select>
-        </FormControl>
-
-        {filter !== "yearly" && (
-          <FormControl className="w-[120px]">
-            <InputLabel className="dark:text-white">Year</InputLabel>
-            <Select
-              className="dark:bg-dark_1 dark:text-white border dark:border-slate-500"
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
-              MenuProps={{
-                PaperProps: { className: "dark:bg-dark_1 dark:text-white" },
-              }}
-              IconComponent={(props) => (
-                <ArrowDropDownIcon {...props} className="dark:text-white" />
-              )}
+            <ToggleButton
+              value="daily"
+              aria-label="daily"
+              className="dark:text-white"
             >
-              {Array.from(
-                { length: 10 },
-                (_, i) => new Date().getFullYear() - i
-              ).map((y) => (
-                <MenuItem key={y} value={y}>
-                  {y}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        )}
-
-        {filter === "daily" && (
-          <FormControl className="w-[140px]">
-            <InputLabel className="dark:text-white">Month</InputLabel>
-            <Select
-              className="dark:bg-dark_1 dark:text-white border dark:border-slate-500"
-              value={month}
-              onChange={(e) => setMonth(e.target.value)}
-              MenuProps={{
-                PaperProps: { className: "dark:bg-dark_1 dark:text-white" },
-              }}
-              IconComponent={(props) => (
-                <ArrowDropDownIcon {...props} className="dark:text-white" />
-              )}
+              Daily
+            </ToggleButton>
+            <ToggleButton
+              value="monthly"
+              aria-label="monthly"
+              className="dark:text-white"
             >
-              {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
-                <MenuItem key={m} value={m}>
-                  {new Date(year, m - 1).toLocaleString("default", {
-                    month: "long",
-                  })}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        )}
+              Monthly
+            </ToggleButton>
+            <ToggleButton
+              value="yearly"
+              aria-label="yearly"
+              className="dark:text-white"
+            >
+              Yearly
+            </ToggleButton>
+          </ToggleButtonGroup>
+
+          {/* Year Selector */}
+          {filter !== "yearly" && (
+            <FormControl size="small" className="min-w-[120px]">
+              <Select
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                className="bg-white dark:bg-gray-700 dark:text-white"
+                MenuProps={{
+                  PaperProps: { className: "dark:bg-gray-700 dark:text-white" },
+                }}
+              >
+                {years.map((y) => (
+                  <MenuItem key={y} value={y}>
+                    {y}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+
+          {/* Month Selector */}
+          {filter === "daily" && (
+            <FormControl size="small" className="min-w-[120px]">
+              <Select
+                value={month}
+                onChange={(e) => setMonth(e.target.value)}
+                className="bg-white dark:bg-gray-700 dark:text-white"
+                MenuProps={{
+                  PaperProps: { className: "dark:bg-gray-700 dark:text-white" },
+                }}
+              >
+                {months.map((m, i) => (
+                  <MenuItem key={i + 1} value={i + 1}>
+                    {m}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+        </div>
       </div>
 
-      <div className="max-w-full h-[500px] bg-white shadow-lg rounded-lg p-4 mt-2 dark:bg-dark_1">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart
-            data={data}
-            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-            <XAxis
-              dataKey={
-                filter === "daily"
-                  ? "date"
-                  : filter === "monthly"
-                  ? "month"
-                  : "year"
-              }
-              stroke={
-                document.documentElement.classList.contains("dark")
-                  ? "#fff"
-                  : "#4b5563"
-              }
-            />
-            <YAxis
-              stroke={
-                document.documentElement.classList.contains("dark")
-                  ? "#fff"
-                  : "#4b5563"
-              }
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: document.documentElement.classList.contains(
-                  "dark"
-                )
-                  ? "#1f2937"
-                  : "#f9fafb",
-                color: document.documentElement.classList.contains("dark")
-                  ? "#fff"
-                  : "#000",
-                borderRadius: "8px",
-              }}
-            />
-            <Legend
-              wrapperStyle={{
-                color: document.documentElement.classList.contains("dark")
-                  ? "#fff"
-                  : "#374151",
-              }}
-            />
-            <Line
-              type="monotone"
-              dataKey="count"
-              stroke="#eab308"
-              strokeWidth={3}
-              activeDot={{ r: 8, fill: "#ce9b03" }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-    </Paper>
+      {loading ? (
+        <div className="flex justify-center items-center h-80">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
+        </div>
+      ) : data.length === 0 ? (
+        <div className="flex flex-col items-center justify-center h-80 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <p className="text-gray-500 dark:text-gray-400 text-lg">
+            No data available
+          </p>
+          <p className="text-gray-400 dark:text-gray-500 text-sm">
+            Try selecting a different time period
+          </p>
+        </div>
+      ) : (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="h-80"
+        >
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart
+              data={data}
+              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+            >
+              <defs>
+                <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#FCD34D" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#FCD34D" stopOpacity={0.1} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+              <XAxis
+                dataKey={
+                  filter === "daily"
+                    ? "date"
+                    : filter === "monthly"
+                    ? "month"
+                    : "year"
+                }
+                stroke="#6B7280"
+                tick={{ fill: "#6B7280" }}
+              />
+              <YAxis stroke="#6B7280" tick={{ fill: "#6B7280" }} />
+              <Tooltip content={<CustomTooltip />} />
+              <Area
+                type="monotone"
+                dataKey="count"
+                stroke="#FCD34D"
+                fillOpacity={1}
+                fill="url(#colorCount)"
+                strokeWidth={2}
+                activeDot={{ r: 8, fill: "#FCD34D" }}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </motion.div>
+      )}
+    </div>
   );
 };
 
