@@ -12,6 +12,18 @@ const Card = ({ title, count, icon: Icon, iconColor, bgColor, onClick }) => {
     }
   };
 
+  // Get the background color class based on the icon color
+  const getBgColorClass = () => {
+    if (iconColor.includes("yellow")) return "bg-yellow-100 dark:bg-yellow-900";
+    if (iconColor.includes("green")) return "bg-green-100 dark:bg-green-900";
+    if (iconColor.includes("red")) return "bg-red-100 dark:bg-red-900";
+    if (iconColor.includes("purple")) return "bg-purple-100 dark:bg-purple-900";
+    if (iconColor.includes("blue")) return "bg-blue-100 dark:bg-blue-900";
+    return "bg-gray-100 dark:bg-gray-900";
+  };
+
+  const bgColorClass = getBgColorClass();
+
   return (
     <motion.div
       whileHover={{
@@ -47,10 +59,7 @@ const Card = ({ title, count, icon: Icon, iconColor, bgColor, onClick }) => {
 
         {/* Icon */}
         <div
-          className={`p-4 rounded-full ${iconColor.replace(
-            "text-",
-            "bg-"
-          )} bg-opacity-10 dark:bg-opacity-20`}
+          className={`p-4 rounded-full ${bgColorClass} bg-opacity-20 dark:bg-opacity-30`}
         >
           <Icon className={`text-3xl ${iconColor}`} />
         </div>

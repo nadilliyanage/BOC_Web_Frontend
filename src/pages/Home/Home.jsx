@@ -239,7 +239,7 @@ const Home = () => {
             count={errorMessageCount}
             icon={BiSolidMessageSquareError}
             bgColor="bg-gradient-to-br from-white to-gray-50 dark:from-dark_1 dark:to-dark_2"
-            iconColor="text-red-600"
+            iconColor="text-red-500"
             onClick={handleErrorSMS}
           />
         </motion.div>
@@ -251,7 +251,7 @@ const Home = () => {
             count={toReviewMessageCount}
             icon={MdReviews}
             bgColor="bg-gradient-to-br from-white to-gray-50 dark:from-dark_1 dark:to-dark_2"
-            iconColor="text-purple-600"
+            iconColor="text-purple-500"
             onClick={handleReviewSMS}
           />
         </motion.div>
