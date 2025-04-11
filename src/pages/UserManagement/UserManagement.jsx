@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import CreateUser from "./tabs/CreateUser";
 import ManageUser from "./tabs/ManageUser";
 import Users from "./tabs/Users";
+import DeletedUsers from "./tabs/DeletedUsers";
 
 const UserManagement = () => {
   const [activeTab, setActiveTab] = useState("users"); // Active tab state
@@ -46,6 +47,19 @@ const UserManagement = () => {
             Manage User
           </button>
         )}
+
+        {user === "admin" && (
+          <button
+            onClick={() => setActiveTab("deletedusers")}
+            className={`px-4 py-2 ${
+              activeTab === "deletedusers"
+                ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
+                : "text-gray-600 hover:text-gray-800 dark:text-white"
+            }`}
+          >
+            Deleted Users
+          </button>
+        )}
       </div>
 
       {/* Content for each tab */}
@@ -65,6 +79,12 @@ const UserManagement = () => {
         {activeTab === "manageuser" && (
           <div className="w-full">
             <ManageUser />
+          </div>
+        )}
+
+        {activeTab === "deletedusers" && (
+          <div className="w-full">
+            <DeletedUsers />
           </div>
         )}
       </div>
