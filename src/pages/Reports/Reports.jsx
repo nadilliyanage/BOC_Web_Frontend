@@ -6,87 +6,64 @@ import PendingMessage from "./tabs/PendingMessage";
 import ScheduleMessage from "./tabs/ScheduledMessge";
 import ErrorMessage from "./tabs/ErrorMessage";
 import FinishedMessage from "./tabs/FinishedMessage";
+import OverallReport from "./OverallReport";
 
 const Reports = () => {
   const location = useLocation();
-  const [activeTab, setActiveTab] = useState(
-    location.state?.activeTab || "pendingMessage"
-  );
+  const [activeTab, setActiveTab] = useState("overall");
+
+  const tabs = [
+    { id: "overall", label: "Overall Report" },
+    { id: "pending", label: "Pending Messages" },
+    { id: "scheduled", label: "Scheduled Messages" },
+    { id: "error", label: "Error Messages" },
+    { id: "finished", label: "Finished Messages" },
+    { id: "package", label: "Package Details" },
+    { id: "sender", label: "Sender Stats" },
+  ];
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "overall":
+        return <OverallReport />;
+      case "pending":
+        return <PendingMessage />;
+      case "scheduled":
+        return <ScheduleMessage />;
+      case "error":
+        return <ErrorMessage />;
+      case "finished":
+        return <FinishedMessage />;
+      case "package":
+        return <PackageDetails />;
+      case "sender":
+        return <SenderStats />;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div className="flex flex-col w-full bg-primary_2 p-6 mt-4 dark:bg-[#404040]">
-      {/* Tabs */}
-      <div className="flex space-x-4 border-b border-gray-300 rounded-t-lg pb-2 dark:bg-[#282828]">
-        <button
-          onClick={() => setActiveTab("pendingMessage")}
-          className={`px-4 py-2 transition-all duration-300 ${
-            activeTab === "pendingMessage"
-              ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-              : "text-gray-600 hover:text-gray-800 dark:text-white"
-          }`}
-        >
-          Pending Messages
-        </button>
-        <button
-          onClick={() => setActiveTab("scheduleMessage")}
-          className={`px-4 py-2 transition-all duration-300 ${
-            activeTab === "scheduleMessage"
-              ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-              : "text-gray-600 hover:text-gray-800 dark:text-white"
-          }`}
-        >
-          Schedule Messages
-        </button>
-        <button
-          onClick={() => setActiveTab("errorMessage")}
-          className={`px-4 py-2 transition-all duration-300 ${
-            activeTab === "errorMessage"
-              ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-              : "text-gray-600 hover:text-gray-800 dark:text-white"
-          }`}
-        >
-          Error Messages
-        </button>
-        <button
-          onClick={() => setActiveTab("finishedMessage")}
-          className={`px-4 py-2 transition-all duration-300 ${
-            activeTab === "finishedMessage"
-              ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-              : "text-gray-600 hover:text-gray-800 dark:text-white"
-          }`}
-        >
-          Finished Messages
-        </button>
-        <button
-          onClick={() => setActiveTab("packageDetails")}
-          className={`px-4 py-2 transition-all duration-300 ${
-            activeTab === "packageDetails"
-              ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-              : "text-gray-600 hover:text-gray-800 dark:text-white"
-          }`}
-        >
-          Package Details
-        </button>
-        <button
-          onClick={() => setActiveTab("senderStats")}
-          className={`px-4 py-2 transition-all duration-300 ${
-            activeTab === "senderStats"
-              ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-              : "text-gray-600 hover:text-gray-800 dark:text-white"
-          }`}
-        >
-          Sender Stats
-        </button>
-      </div>
-
-      {/* Content for each tab */}
-      <div className="flex flex-col mt-6">
-        {activeTab === "pendingMessage" && <PendingMessage />}
-        {activeTab === "scheduleMessage" && <ScheduleMessage />}
-        {activeTab === "errorMessage" && <ErrorMessage />}
-        {activeTab === "finishedMessage" && <FinishedMessage />}
-        {activeTab === "packageDetails" && <PackageDetails />}
-        {activeTab === "senderStats" && <SenderStats />}
+    <div className="container mx-auto px-4 py-8">
+      <div className="bg-white dark:bg-dark_2 rounded-lg shadow-md">
+        <div className="border-b border-gray-200 dark:border-gray-700">
+          <nav className="flex -mb-px">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`${
+                  activeTab === tab.id
+                    ? "border-secondary text-secondary"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
+                } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors duration-200`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+        <div className="p-6">{renderTabContent()}</div>
       </div>
     </div>
   );

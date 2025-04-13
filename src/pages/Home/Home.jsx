@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import MessageCountChart from "./Components/MessageCountChart";
 import Card from "./Components/Card";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const Home = () => {
   const [userCount, setUserCount] = useState(0);
@@ -15,6 +16,8 @@ const Home = () => {
   const [toReviewMessageCount, setToReviewMessageCount] = useState(0);
   const [errorMessageCount, setErrorMessageCount] = useState(0);
   const [userName, setUserName] = useState("");
+  const [userId, setUserId] = useState(null);
+  const [userRole, setUserRole] = useState("");
   const navigate = useNavigate();
 
   // Get user info from localStorage
@@ -22,8 +25,10 @@ const Home = () => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
+        const payload = jwtDecode(token);
         setUserName(payload.name || "User");
+        setUserId(payload.id);
+        setUserRole(payload.role);
       } catch (error) {
         console.error("Error parsing token:", error);
         setUserName("User");
@@ -52,49 +57,55 @@ const Home = () => {
   // Fetch the pending message count from the backend API
   useEffect(() => {
     const fetchPendingMessageCount = async () => {
+      if (!userId) return;
+
       try {
         const response = await fetch(
-          "http://localhost:8080/api/v1/send-message/pending-sms-count"
+          `http://localhost:8080/api/v1/send-message/pending/by-user/${userId}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch pending message count");
         }
         const data = await response.json();
-        setPendingMessageCount(data);
+        setPendingMessageCount(data.length);
       } catch (error) {
         console.error("Error fetching pending message count:", error);
       }
     };
 
     fetchPendingMessageCount();
-  }, []);
+  }, [userId]);
 
   // Fetch the Scheduled message count from the backend API
   useEffect(() => {
     const fetchScheduledMessageCount = async () => {
+      if (!userId) return;
+
       try {
         const response = await fetch(
-          "http://localhost:8080/api/v1/send-message/scheduled-sms-count"
+          `http://localhost:8080/api/v1/send-message/scheduled/by-user/${userId}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch scheduled message count");
         }
         const data = await response.json();
-        setScheduledMessageCount(data);
+        setScheduledMessageCount(data.length);
       } catch (error) {
         console.error("Error fetching scheduled message count:", error);
       }
     };
 
     fetchScheduledMessageCount();
-  }, []);
+  }, [userId]);
 
   // Fetch the to review message count from the backend API
   useEffect(() => {
     const fetchToReviewMessageCount = async () => {
+      if (!userId || !["ADMIN", "SUPERADMIN"].includes(userRole)) return;
+
       try {
         const response = await fetch(
-          "http://localhost:8080/api/v1/create-message/to-review-sms-count"
+          `http://localhost:8080/api/v1/create-message/to-review-sms-count`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch ToReview message count");
@@ -107,27 +118,29 @@ const Home = () => {
     };
 
     fetchToReviewMessageCount();
-  }, []);
+  }, [userId, userRole]);
 
   // Fetch the Error message count from the backend API
   useEffect(() => {
     const fetchErrorMessageCount = async () => {
+      if (!userId) return;
+
       try {
         const response = await fetch(
-          "http://localhost:8080/api/v1/send-message/error-sms-count"
+          `http://localhost:8080/api/v1/send-message/error/by-user/${userId}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch Error message count");
         }
         const data = await response.json();
-        setErrorMessageCount(data);
+        setErrorMessageCount(data.length);
       } catch (error) {
         console.error("Error fetching Error message count:", error);
       }
     };
 
     fetchErrorMessageCount();
-  }, []);
+  }, [userId]);
 
   // Handler for Pending SMS card click
   const handlePendingSMS = () => {
@@ -206,7 +219,11 @@ const Home = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+        className={`grid grid-cols-1 md:grid-cols-2 ${
+          ["ADMIN", "SUPERADMIN"].includes(userRole)
+            ? "lg:grid-cols-4"
+            : "lg:grid-cols-3"
+        } gap-6 mb-8`}
       >
         {/* Pending SMS Card */}
         <motion.div variants={itemVariants}>
@@ -244,17 +261,19 @@ const Home = () => {
           />
         </motion.div>
 
-        {/* SMS to Review Card */}
-        <motion.div variants={itemVariants}>
-          <Card
-            title="SMS to Review"
-            count={toReviewMessageCount}
-            icon={MdReviews}
-            bgColor="bg-gradient-to-br from-white to-gray-50 dark:from-dark_1 dark:to-dark_2"
-            iconColor="text-purple-500"
-            onClick={handleReviewSMS}
-          />
-        </motion.div>
+        {/* SMS to Review Card - Only show for ADMIN and SUPERADMIN */}
+        {["ADMIN", "SUPERADMIN"].includes(userRole) && (
+          <motion.div variants={itemVariants}>
+            <Card
+              title="SMS to Review"
+              count={toReviewMessageCount}
+              icon={MdReviews}
+              bgColor="bg-gradient-to-br from-white to-gray-50 dark:from-dark_1 dark:to-dark_2"
+              iconColor="text-purple-500"
+              onClick={handleReviewSMS}
+            />
+          </motion.div>
+        )}
       </motion.div>
 
       {/* Chart Section */}
@@ -264,7 +283,7 @@ const Home = () => {
         transition={{ delay: 0.3, duration: 0.5 }}
         className="bg-white dark:bg-dark_1 rounded-xl shadow-lg p-6"
       >
-        <MessageCountChart />
+        <MessageCountChart userId={userId} />
       </motion.div>
     </div>
   );
