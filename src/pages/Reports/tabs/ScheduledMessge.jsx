@@ -8,6 +8,11 @@ import {
   FaChevronDown,
   FaChevronUp,
 } from "react-icons/fa";
+import {
+  formatDate,
+  formatDateTime,
+  formatTime,
+} from "../../../utils/dateFormatter";
 
 const ScheduledMessage = () => {
   const [messages, setMessages] = useState([]);
@@ -231,7 +236,7 @@ const ScheduledMessage = () => {
                   </span>
                   <span className="flex items-center">
                     <span className="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
-                    Date: {campaignData.created_at}
+                    Date: {formatDate(campaignData.created_at)}
                   </span>
                 </div>
               </div>
@@ -290,10 +295,10 @@ const ScheduledMessage = () => {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                          {msg.created_at}
+                          {formatDateTime(msg.created_at)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                          {msg.schedule || "N/A"}
+                          {msg.schedule ? formatDateTime(msg.schedule) : "N/A"}
                         </td>
                       </tr>
                     ))}

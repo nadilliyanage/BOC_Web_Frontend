@@ -8,6 +8,7 @@ import {
   FaChevronDown,
   FaChevronUp,
 } from "react-icons/fa";
+import { formatDate, formatDateTime } from "../../../utils/dateFormatter";
 
 const FinishedMessage = () => {
   const [messages, setMessages] = useState([]);
@@ -235,7 +236,7 @@ const FinishedMessage = () => {
                   </span>
                   <span className="flex items-center">
                     <span className="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
-                    Date: {campaignData.created_at}
+                    Date: {formatDate(campaignData.created_at)}
                   </span>
                 </div>
               </div>
@@ -297,7 +298,7 @@ const FinishedMessage = () => {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                          {msg.created_at}
+                          {formatDateTime(msg.created_at)}
                         </td>
                       </tr>
                     ))}
