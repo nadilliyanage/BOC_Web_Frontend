@@ -197,12 +197,16 @@ const PendingMessage = () => {
                 </h2>
                 <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-300">
                   <span className="flex items-center">
-                    <span className="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
-                    Date: {formatDate(campaignData.created_at)}
+                    <span className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></span>
+                    Status: Pending
                   </span>
                   <span className="flex items-center">
-                    <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                    <span className="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
                     Messages: {campaignData.messages.length}
+                  </span>
+                  <span className="flex items-center">
+                    <span className="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
+                    Date: {formatDate(campaignData.created_at)}
                   </span>
                 </div>
               </div>
