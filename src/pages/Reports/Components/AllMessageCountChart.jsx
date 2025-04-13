@@ -24,7 +24,7 @@ import {
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { motion } from "framer-motion";
 
-const MessageCountChart = ({ userId }) => {
+const AllMessageCountChart = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("daily");
   const [year, setYear] = useState(new Date().getFullYear());
@@ -38,18 +38,16 @@ const MessageCountChart = ({ userId }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!userId) return;
-
       setLoading(true);
       try {
         let url = "";
 
         if (filter === "daily") {
-          url = `http://localhost:8080/api/v1/send-message/message-count-by-date/by-user/${userId}?year=${year}&month=${month}`;
+          url = `http://localhost:8080/api/v1/send-message/message-count-by-date?year=${year}&month=${month}`;
         } else if (filter === "monthly") {
-          url = `http://localhost:8080/api/v1/send-message/message-count-by-month/by-user/${userId}?year=${year}`;
+          url = `http://localhost:8080/api/v1/send-message/message-count-by-month?year=${year}`;
         } else if (filter === "yearly") {
-          url = `http://localhost:8080/api/v1/send-message/message-count-by-year/by-user/${userId}`;
+          url = `http://localhost:8080/api/v1/send-message/message-count-by-year`;
         }
 
         const response = await axios.get(url);
@@ -77,7 +75,7 @@ const MessageCountChart = ({ userId }) => {
     };
 
     fetchData();
-  }, [filter, year, month, userId]);
+  }, [filter, year, month]);
 
   // Custom tooltip component
   const CustomTooltip = ({ active, payload, label }) => {
@@ -118,7 +116,7 @@ const MessageCountChart = ({ userId }) => {
     <div className="w-full">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4 md:mb-0">
-          Your Message Statistics
+          Message Statistics for All Messages
         </h2>
 
         <div className="flex flex-wrap gap-3">
@@ -258,4 +256,4 @@ const MessageCountChart = ({ userId }) => {
   );
 };
 
-export default MessageCountChart;
+export default AllMessageCountChart;

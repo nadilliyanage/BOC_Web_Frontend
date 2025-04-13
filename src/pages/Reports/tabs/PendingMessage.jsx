@@ -8,6 +8,7 @@ import {
   FaChevronDown,
   FaChevronUp,
 } from "react-icons/fa";
+import { formatDate, formatDateTime } from "../../../utils/dateFormatter";
 
 const PendingMessage = () => {
   const [messages, setMessages] = useState([]);
@@ -197,11 +198,15 @@ const PendingMessage = () => {
                 <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-300">
                   <span className="flex items-center">
                     <span className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></span>
-                    Status: {campaignData.created_at}
+                    Status: Pending
                   </span>
                   <span className="flex items-center">
-                    <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                    <span className="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
                     Messages: {campaignData.messages.length}
+                  </span>
+                  <span className="flex items-center">
+                    <span className="w-2 h-2 bg-gray-500 rounded-full mr-2"></span>
+                    Date: {formatDate(campaignData.created_at)}
                   </span>
                 </div>
               </div>
@@ -263,7 +268,7 @@ const PendingMessage = () => {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                          {msg.created_at}
+                          {formatDateTime(msg.created_at)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                           {msg.created_by || "N/A"}

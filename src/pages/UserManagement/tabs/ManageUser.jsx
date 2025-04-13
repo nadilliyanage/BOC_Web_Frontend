@@ -32,14 +32,14 @@ const ManageUser = () => {
   const handleDelete = (id) => {
     ConfirmDialog({
       title: "Are you sure?",
-      text: "This action cannot be undone!",
+      text: "This user will be marked as deleted and moved to the Deleted Users tab.",
       icon: "warning",
     }).then((result) => {
       if (result.isConfirmed) {
         axios
           .delete(`http://localhost:8080/api/v1/deleteuser/${id}`)
           .then(() => {
-            toast.success("User deleted successfully!", {
+            toast.success("User marked as deleted successfully!", {
               className:
                 "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-lg shadow-lg",
               bodyClassName: "text-sm font-medium",
@@ -47,7 +47,7 @@ const ManageUser = () => {
             fetchUsers();
           })
           .catch(() => {
-            toast.error("Failed to delete user.");
+            toast.error("Failed to mark user as deleted.");
           });
       }
     });
