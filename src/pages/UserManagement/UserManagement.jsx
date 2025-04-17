@@ -10,83 +10,65 @@ const UserManagement = () => {
   const user = "admin"; // Change this value to "user1" or "user2" to test other roles
 
   return (
-    <div className="flex flex-col w-full bg-gray-100 p-6 mt-4 dark:bg-[#404040]">
-      {/* Tabs */}
-      <div className="flex space-x-4 border-b border-gray-300 pb-2 rounded-t-lg dark:bg-[#282828]">
-        <button
-          onClick={() => setActiveTab("users")}
-          className={`px-4 py-2 ${
-            activeTab === "users"
-              ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-              : "text-gray-600 hover:text-gray-800 dark:text-white"
-          }`}
-        >
-          Users
-        </button>
+    <div className="container mx-auto px-4 py-8">
+      <div className="bg-white dark:bg-dark_2 rounded-lg shadow-md">
+        <div className="border-b border-gray-200 dark:border-gray-700">
+          <nav className="flex -mb-px">
+            <button
+              onClick={() => setActiveTab("users")}
+              className={`${
+                activeTab === "users"
+                  ? "border-secondary text-secondary"
+                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
+              } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors duration-200`}
+            >
+              Users
+            </button>
 
-        <button
-          onClick={() => setActiveTab("createUser")}
-          className={`px-4 py-2 ${
-            activeTab === "createUser"
-              ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-              : "text-gray-600 hover:text-gray-800 dark:text-white"
-          }`}
-        >
-          Create User
-        </button>
+            <button
+              onClick={() => setActiveTab("createUser")}
+              className={`${
+                activeTab === "createUser"
+                  ? "border-secondary text-secondary"
+                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
+              } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors duration-200`}
+            >
+              Create User
+            </button>
 
-        {user === "admin" && (
-          <button
-            onClick={() => setActiveTab("manageuser")}
-            className={`px-4 py-2 ${
-              activeTab === "manageuser"
-                ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-                : "text-gray-600 hover:text-gray-800 dark:text-white"
-            }`}
-          >
-            Manage User
-          </button>
-        )}
+            {user === "admin" && (
+              <button
+                onClick={() => setActiveTab("manageuser")}
+                className={`${
+                  activeTab === "manageuser"
+                    ? "border-secondary text-secondary"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
+                } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors duration-200`}
+              >
+                Manage User
+              </button>
+            )}
 
-        {user === "admin" && (
-          <button
-            onClick={() => setActiveTab("deletedusers")}
-            className={`px-4 py-2 ${
-              activeTab === "deletedusers"
-                ? "border-b-2 border-yellow-500 text-yellow-500 font-medium"
-                : "text-gray-600 hover:text-gray-800 dark:text-white"
-            }`}
-          >
-            Deleted Users
-          </button>
-        )}
-      </div>
-
-      {/* Content for each tab */}
-      <div className="flex-grow mt-6">
-        {activeTab === "users" && (
-          <div className="w-full">
-            <Users />
-          </div>
-        )}
-
-        {activeTab === "createUser" && (
-          <div className="w-full">
-            <CreateUser />
-          </div>
-        )}
-
-        {activeTab === "manageuser" && (
-          <div className="w-full">
-            <ManageUser />
-          </div>
-        )}
-
-        {activeTab === "deletedusers" && (
-          <div className="w-full">
-            <DeletedUsers />
-          </div>
-        )}
+            {user === "admin" && (
+              <button
+                onClick={() => setActiveTab("deletedusers")}
+                className={`${
+                  activeTab === "deletedusers"
+                    ? "border-secondary text-secondary"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
+                } whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm transition-colors duration-200`}
+              >
+                Deleted Users
+              </button>
+            )}
+          </nav>
+        </div>
+        <div className="p-6">
+          {activeTab === "users" && <Users />}
+          {activeTab === "createUser" && <CreateUser />}
+          {activeTab === "manageuser" && <ManageUser />}
+          {activeTab === "deletedusers" && <DeletedUsers />}
+        </div>
       </div>
     </div>
   );
